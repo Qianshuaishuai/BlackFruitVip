@@ -12,6 +12,8 @@ public class BlackFruitVipApplication extends Application {
         super.onCreate();
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG);
-        Log.d(TAG ,"init Xuitils");
+        if(Constant.DEBUG) {
+            Log.d(TAG ,"init Xuitils");
+        }
     }
 }
