@@ -1,9 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e1e3e7"
+    android:orientation="vertical"
     tools:context=".ui.RegisterActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="fill_parent"
+        android:layout_height="48dip"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/close"
+                android:layout_width="18dip"
+                android:layout_height="18dip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dip"
+                android:background="@mipmap/ic_common_close" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:background="@null"
+            android:text="登录"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dip"
+        android:layout_marginTop="18dip"
+        android:layout_marginRight="18dip"
+        android:hint="请输入手机号" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dip"
+        android:layout_marginTop="18dip"
+        android:layout_marginRight="18dip"
+        android:hint="请输入密码" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dip">
+
+        <EditText
+            android:id="@+id/code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dip"
+            android:layout_marginRight="18dip"
+            android:hint="请输入短信验证码" />
+
+        <Button
+            android:background="@null"
+            android:id="@+id/send_code"
+            android:text="发送验证码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="-6dip"
+            android:layout_marginRight="36.5dip"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="18dip"
+        android:layout_marginLeft="18dip"
+        android:layout_marginRight="18dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/agree"
+            android:layout_width="28dip"
+            android:layout_height="28dip" />
+        <TextView
+            android:text="我同意《黑果会员用户协议》"
+            android:layout_toRightOf="@+id/agree"
+            android:layout_marginTop="4dip"
+            android:layout_marginLeft="12dip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/register"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="52dip"
+        android:layout_marginTop="18dip"
+        android:layout_marginLeft="18dip"
+        android:layout_marginRight="18dip"
+        android:background="#252525"
+        android:textColor="#FEC637"
+        android:text="注册"/>
+
+</LinearLayout>
