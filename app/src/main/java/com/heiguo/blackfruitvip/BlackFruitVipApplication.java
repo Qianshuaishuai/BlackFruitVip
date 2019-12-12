@@ -3,6 +3,8 @@ package com.heiguo.blackfruitvip;
 import android.app.Application;
 import android.util.Log;
 
+import com.heiguo.blackfruitvip.util.T;
+
 import org.xutils.x;
 
 public class BlackFruitVipApplication extends Application {
@@ -12,6 +14,7 @@ public class BlackFruitVipApplication extends Application {
         super.onCreate();
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG);
+        T.init(this);
         if(Constant.DEBUG) {
             Log.d(TAG ,"init Xuitils");
         }

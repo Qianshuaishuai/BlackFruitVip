@@ -49,6 +49,7 @@
         android:layout_marginTop="18dip"
         android:id="@+id/password"
         android:hint="请输入密码"
+        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dip"
