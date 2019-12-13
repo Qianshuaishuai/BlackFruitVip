@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dip"
+        android:layout_marginTop="56dip"
+        android:layout_marginRight="28dip"
+        android:layout_marginBottom="56dip"
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dip"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_dialog_left_button"
+            android:paddingLeft="24dip"
+            android:paddingTop="10dip"
+            android:paddingRight="24dip"
+            android:paddingBottom="10dip"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:background="@drawable/shape_dialog_right_button"
+            android:paddingLeft="24dip"
+            android:paddingTop="10dip"
+            android:paddingRight="24dip"
+            android:paddingBottom="10dip"
+            android:textColor="#EBAF16"
+            android:textSize="17sp" />
+    </LinearLayout>
+</LinearLayout>

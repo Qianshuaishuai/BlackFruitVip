@@ -1,12 +1,15 @@
-package com.heiguo.blackfruitvip.ui;
+package com.heiguo.blackfruitvip.ui.user;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
@@ -25,6 +28,8 @@ import org.xutils.x;
 @ContentView(R.layout.activity_login)
 public class LoginActivity extends BaseActivity {
 
+    private Dialog userDialog;
+
     @ViewInject(R.id.phone)
     private EditText phoneEditText;
 
@@ -32,7 +37,7 @@ public class LoginActivity extends BaseActivity {
     private EditText passwordEditText;
 
     @Event(R.id.login)
-    private void login(View view){
+    private void login(View view) {
         if (phoneEditText.getText().toString().length() != 11) {
             T.s("手机号码格式不对");
             return;
@@ -51,10 +56,10 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                     T.s("登录成功");
-                }else {
-                    T.s(response.getF_responseMsg());
+                } else {
+                    userDialog.show();
                 }
             }
 
@@ -76,24 +81,70 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Event(R.id.close)
-    private void close(View view){
+    private void close(View view) {
         finish();
     }
 
     @Event(R.id.forget)
-    private void forget(View view){
-        Intent intent=new Intent(this, ForgetActivity.class);
+    private void forget(View view) {
+        Intent intent = new Intent(this, ForgetActivity.class);
         startActivity(intent);
     }
 
     @Event(R.id.register)
-    private void register(View view){
-        Intent intent=new Intent(this, RegisterActivity.class);
+    private void register(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initUserDialog();
+    }
+
+    private void initUserDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        userDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("密码错误请重新输入或找回密码");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("找回密码");
+        rightButton.setText("重新输入");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                userDialog.cancel();
+                Intent intent = new Intent(LoginActivity.this, ForgetActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                userDialog.cancel();
+                passwordEditText.setText("");
+            }
+        });
+
+        userDialog.setCancelable(false);
     }
 }

@@ -1,12 +1,15 @@
-package com.heiguo.blackfruitvip.ui;
+package com.heiguo.blackfruitvip.ui.user;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
@@ -15,6 +18,7 @@ import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.CommonResponse;
 import com.heiguo.blackfruitvip.util.T;
 
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -25,8 +29,8 @@ import org.xutils.x;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@ContentView(R.layout.activity_forget)
-public class ForgetActivity extends BaseActivity {
+@ContentView(R.layout.activity_register)
+public class RegisterActivity extends BaseActivity {
 
     private int codeNotClickTime = 0;
     private Timer timer;
@@ -41,23 +45,31 @@ public class ForgetActivity extends BaseActivity {
     @ViewInject(R.id.code)
     private TextView codeTextView;
 
+    @ViewInject(R.id.agree)
+    private CheckBox agreeCheckBox;
+
     @ViewInject(R.id.send_code)
     private Button sendCodeButton;
+
+    @Event(R.id.close)
+    private void close(View view) {
+        finish();
+    }
 
     @Event(R.id.login)
     private void login(View view) {
         finish();
     }
 
-    @Event(R.id.forget)
-    private void forget(View view) {
+    @Event(R.id.register)
+    private void register(View view) {
         if (phoneTextView.getText().toString().length() != 11) {
             T.s("手机号码格式不对");
             return;
         }
 
         if (passwordTextView.getText().toString().length() == 0) {
-            T.s("新密码不能为空");
+            T.s("密码不能为空");
             return;
         }
 
@@ -66,7 +78,12 @@ public class ForgetActivity extends BaseActivity {
             return;
         }
 
-        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_FORGET);
+        if (!agreeCheckBox.isChecked()) {
+            T.s("请先同意用户协议");
+            return;
+        }
+
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_REGISTER);
         params.addQueryStringParameter("phone", phoneTextView.getText().toString());
         params.addQueryStringParameter("password", passwordTextView.getText().toString());
         params.addQueryStringParameter("code", codeTextView.getText().toString());
@@ -76,7 +93,7 @@ public class ForgetActivity extends BaseActivity {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
                 if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
-                    T.s("修改成功");
+                    T.s("注册成功");
                 }else {
                     T.s(response.getF_responseMsg());
                 }
@@ -99,11 +116,6 @@ public class ForgetActivity extends BaseActivity {
         });
     }
 
-    @Event(R.id.close)
-    private void close(View view) {
-        finish();
-    }
-
     @Event(R.id.send_code)
     private void sendCode(View view) {
         if (phoneTextView.getText().toString().length() != 11) {
@@ -118,9 +130,9 @@ public class ForgetActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
                     T.s("发送成功");
-                } else {
+                }else {
                     T.s(response.getF_responseMsg());
                 }
             }
@@ -168,5 +180,6 @@ public class ForgetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 }

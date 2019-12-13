@@ -1,4 +1,4 @@
-package com.heiguo.blackfruitvip.ui;
+package com.heiguo.blackfruitvip.ui.user;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
