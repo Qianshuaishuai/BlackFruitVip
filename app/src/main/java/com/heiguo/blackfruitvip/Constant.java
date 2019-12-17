@@ -18,4 +18,5 @@ public class Constant {
     public static final String URL_REGISTER = "/v1/user/register";
     public static final String URL_LOGIN = "/v1/user/login";
     public static final String URL_FORGET = "/v1/user/forget";
+    public static final String URL_MAIN_ALL = "/v1/home/all";
 }
