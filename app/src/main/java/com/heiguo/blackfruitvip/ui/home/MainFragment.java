@@ -12,6 +12,7 @@ import android.widget.GridView;
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.adapter.MenuAdapter;
 import com.heiguo.blackfruitvip.bean.CommonResponse;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.bean.MainResponse;
@@ -47,6 +48,7 @@ public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Banner banner;
     private GridView menu;
+    private MenuAdapter menuAdapter;
     private List<String> bannerImages = new ArrayList<>();
 
     private List<MainBean> adList = new ArrayList<>();
@@ -98,6 +100,14 @@ public class MainFragment extends Fragment {
 
     private void initMenu(){
         menu = getActivity().findViewById(R.id.menu);
+        menuAdapter = new MenuAdapter(this.getActivity(), menuList, new MenuAdapter.MenuClickListener() {
+            @Override
+            public void clickListener(View v) {
+                MenuAdapter.ViewHolder holder = (MenuAdapter.ViewHolder)v.getTag();
+                System.out.println(holder.menuImg.getTag());
+            }
+        });
+        menu.setAdapter(menuAdapter);
     }
 
     private void loadMainData() {
