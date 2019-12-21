@@ -1,24 +1,19 @@
 package com.heiguo.blackfruitvip.ui.user;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
-import com.heiguo.blackfruitvip.bean.CommonResponse;
+import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.util.T;
 
-import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;

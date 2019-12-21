@@ -21,7 +21,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 @ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener {
+public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener {
 
     @ViewInject(R.id.navigation)
     private BottomNavigationView navigation;
@@ -31,7 +31,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
 
     private MainFragment mainFragment;
     private MainFragment orderFragment;
-    private MainFragment meFragment;
+    private MeFragment meFragment;
     private Fragment[] fragments;
     private int lastfragment = 0;
 
@@ -88,7 +88,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         //加入fragment
         mainFragment = new MainFragment();
         orderFragment = new MainFragment();
-        meFragment = new MainFragment();
+        meFragment = new MeFragment();
         fragments = new Fragment[]{mainFragment, orderFragment, meFragment};
 
         getSupportFragmentManager().beginTransaction().replace(R.id.layout, mainFragment).show(mainFragment).commit();

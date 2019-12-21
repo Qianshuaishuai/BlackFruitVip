@@ -4,18 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.MenuAdapter;
-import com.heiguo.blackfruitvip.bean.CommonResponse;
+import com.heiguo.blackfruitvip.adapter.PicAdapter;
 import com.heiguo.blackfruitvip.bean.MainBean;
-import com.heiguo.blackfruitvip.bean.MainResponse;
+import com.heiguo.blackfruitvip.response.MainResponse;
 import com.heiguo.blackfruitvip.util.BannerImageLoader;
 import com.heiguo.blackfruitvip.util.T;
 import com.youth.banner.Banner;
@@ -49,8 +54,13 @@ public class MainFragment extends Fragment {
     private Banner banner;
     private GridView menu;
     private MenuAdapter menuAdapter;
-    private List<String> bannerImages = new ArrayList<>();
+    private PicAdapter picAdapter;
+    private RecyclerView picRecycleView;
+    private LinearLayout cityLayout;
+    private TextView cityTip;
+    private ImageView search;
 
+    private List<String> bannerImages = new ArrayList<>();
     private List<MainBean> adList = new ArrayList<>();
     private List<MainBean> menuList = new ArrayList<>();
     private List<MainBean> picList = new ArrayList<>();
@@ -88,6 +98,26 @@ public class MainFragment extends Fragment {
         loadMainData();
     }
 
+    private void initBaseView() {
+        cityLayout = (LinearLayout) getActivity().findViewById(R.id.city);
+        cityTip = (TextView) getActivity().findViewById(R.id.city_tip);
+        search = (ImageView) getActivity().findViewById(R.id.search);
+
+        cityLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
     private void initBanner() {
         banner = getActivity().findViewById(R.id.banner);
         //设置图片加载器
@@ -98,12 +128,12 @@ public class MainFragment extends Fragment {
         banner.start();
     }
 
-    private void initMenu(){
+    private void initMenu() {
         menu = getActivity().findViewById(R.id.menu);
         menuAdapter = new MenuAdapter(this.getActivity(), menuList, new MenuAdapter.MenuClickListener() {
             @Override
             public void clickListener(View v) {
-                MenuAdapter.ViewHolder holder = (MenuAdapter.ViewHolder)v.getTag();
+                MenuAdapter.ViewHolder holder = (MenuAdapter.ViewHolder) v.getTag();
                 System.out.println(holder.menuImg.getTag());
             }
         });
@@ -123,15 +153,17 @@ public class MainFragment extends Fragment {
                     if (list.get(i).getType() == 1) {
                         adList.add(list.get(i));
                         bannerImages.add(list.get(i).getImage());
-                    }else if(list.get(i).getType() == 2){
+                    } else if (list.get(i).getType() == 2) {
                         menuList.add(list.get(i));
-                    }else if(list.get(i).getType() == 3){
+                    } else if (list.get(i).getType() == 3) {
                         picList.add(list.get(i));
                     }
                 }
 
                 initBanner();
                 initMenu();
+                initPic();
+                initBaseView();
             }
 
             @Override
@@ -149,6 +181,14 @@ public class MainFragment extends Fragment {
 
             }
         });
+    }
+
+    private void initPic() {
+        picRecycleView = (RecyclerView) getActivity().findViewById(R.id.pic);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+        picRecycleView.setLayoutManager(layoutManager);
+        picAdapter = new PicAdapter(picList);
+        picRecycleView.setAdapter(picAdapter);
     }
 
     @Override

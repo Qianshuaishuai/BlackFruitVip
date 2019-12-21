@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
-import com.heiguo.blackfruitvip.bean.CommonResponse;
+import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;

@@ -13,19 +13,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity
-            android:name=".ui.home.HomeActivity"
-            android:label="@string/title_activity_home">
+        <activity android:name=".ui.info.VipActivity">
+
+        </activity>
+        <activity android:name=".ui.order.GoodDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.order.ShopDetailActivity">
+
+        </activity>
+        <activity android:name=".ui.info.AddressEditActivity" />
+        <activity android:name=".ui.info.AddressActivity" />
+        <activity android:name=".ui.home.SearchActivity" />
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:label="@string/title_activity_home" />
         <activity android:name=".ui.main.WelcomeActivity" />
         <activity android:name=".ui.user.ForgetActivity" />
         <activity android:name=".ui.user.RegisterActivity" />
-        <activity android:name=".ui.user.LoginActivity"></activity>
+        <activity android:name=".ui.user.LoginActivity" />
         <activity android:name=".ui.user.MainActivity" />
     </application>
 

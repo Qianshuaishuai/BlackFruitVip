@@ -1,8 +1,21 @@
-package com.heiguo.blackfruitvip.bean;
+package com.heiguo.blackfruitvip.response;
 
-public class CommonResponse {
+import com.heiguo.blackfruitvip.bean.MainBean;
+
+import java.util.List;
+
+public class MainResponse {
     private String F_responseMsg;
     private int F_responseNo;
+    private List<MainBean> F_data;
+
+    public List<MainBean> getF_data() {
+        return F_data;
+    }
+
+    public void setF_data(List<MainBean> f_data) {
+        F_data = f_data;
+    }
 
     public String getF_responseMsg() {
         return F_responseMsg;
