@@ -14,14 +14,23 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
+import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
+import com.heiguo.blackfruitvip.response.CommonResponse;
+import com.heiguo.blackfruitvip.response.UserInfoResponse;
+import com.heiguo.blackfruitvip.util.T;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 @ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener {
+public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
 
     @ViewInject(R.id.navigation)
     private BottomNavigationView navigation;
@@ -30,7 +39,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
     private FrameLayout layout;
 
     private MainFragment mainFragment;
-    private MainFragment orderFragment;
+    private OrderFragment orderFragment;
     private MeFragment meFragment;
     private Fragment[] fragments;
     private int lastfragment = 0;
@@ -74,6 +83,38 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         super.onCreate(savedInstanceState);
 
         initNavigationBar();
+        initData();
+    }
+
+    private void initData() {
+        String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_GET);
+        params.addQueryStringParameter("phone", phone);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                UserInfoResponse response = gson.fromJson(result, UserInfoResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    ((BlackFruitVipApplication) getApplication()).saveUserInfo(response.getF_data());
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                T.s("请求出错，请检查网络");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     private void initNavigationBar() {
@@ -87,7 +128,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
 
         //加入fragment
         mainFragment = new MainFragment();
-        orderFragment = new MainFragment();
+        orderFragment = new OrderFragment();
         meFragment = new MeFragment();
         fragments = new Fragment[]{mainFragment, orderFragment, meFragment};
 

@@ -15,8 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
+import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.UserBean;
+import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.ui.info.AddressActivity;
+import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
+import com.heiguo.blackfruitvip.util.T;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,7 +117,7 @@ public class MeFragment extends Fragment {
         changeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startForgetActivity();
             }
         });
 
@@ -120,9 +132,55 @@ public class MeFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_LOGOUT);
+                params.addQueryStringParameter("phone", ((BlackFruitVipApplication) getActivity().getApplication()).getLoginPhone());
+                x.http().post(params, new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Gson gson = new Gson();
+                        CommonResponse response = gson.fromJson(result, CommonResponse.class);
+                        if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                            T.s("登出成功");
+                            backLoginActivity();
+                        }
+                    }
 
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+                        T.s("请求出错，请检查网络");
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
             }
         });
+
+        //更新数据
+        UserBean userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
+        phone.setText(userInfo.getPhone());
+        balance.setText(Float.toString(userInfo.getBalance()) + "元");
+        save.setText(Float.toString(userInfo.getSaveCount()) + "元");
+        vipDay.setText(Integer.toString(userInfo.getVipDay()) + "天");
+    }
+
+    private void backLoginActivity() {
+        Intent newIntent = new Intent(getContext(), LoginActivity.class);
+        startActivity(newIntent);
+        getActivity().finish();
+    }
+
+    private void startForgetActivity() {
+        Intent newIntent = new Intent(getContext(), ForgetActivity.class);
+        newIntent.putExtra("forget-mode", "1");
+        startActivity(newIntent);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.heiguo.blackfruitvip.ui.user;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,9 @@ public class ForgetActivity extends BaseActivity {
     @ViewInject(R.id.send_code)
     private Button sendCodeButton;
 
+    @ViewInject(R.id.login)
+    private Button loginButton;
+
     @Event(R.id.login)
     private void login(View view) {
         finish();
@@ -73,9 +77,9 @@ public class ForgetActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                     T.s("修改成功");
-                }else {
+                } else {
                     T.s(response.getF_responseMsg());
                 }
             }
@@ -166,5 +170,17 @@ public class ForgetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initView();
+    }
+
+    private void initView() {
+        Intent intent = getIntent();
+        String forgetMode = intent.getStringExtra("forget-mode");
+
+        if (forgetMode.equals("1")) {
+            System.out.println(forgetMode);
+            loginButton.setVisibility(View.GONE);
+        }
     }
 }

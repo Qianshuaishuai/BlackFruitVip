@@ -226,14 +226,15 @@
                             android:layout_marginRight="3dip"
                             android:background="@null"
                             android:gravity="right"
-                            android:hint="支付宝"
+                            android:text="支付宝"
+                            android:textColor="#333333"
                             android:textSize="13sp" />
 
                         <ImageView
                             android:layout_width="13dip"
                             android:layout_height="13dip"
                             android:layout_marginRight="15dip"
-                            android:src="@mipmap/ic_common_right" />
+                            android:src="@mipmap/ic_common_right_black" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

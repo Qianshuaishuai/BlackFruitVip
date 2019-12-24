@@ -1,6 +1,7 @@
 package com.heiguo.blackfruitvip.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.heiguo.blackfruitvip.adapter.MenuAdapter;
 import com.heiguo.blackfruitvip.adapter.PicAdapter;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.response.MainResponse;
+import com.heiguo.blackfruitvip.ui.info.CityActivity;
 import com.heiguo.blackfruitvip.util.BannerImageLoader;
 import com.heiguo.blackfruitvip.util.T;
 import com.youth.banner.Banner;
@@ -106,7 +108,7 @@ public class MainFragment extends Fragment {
         cityLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startCityActivity();
             }
         });
 
@@ -116,6 +118,10 @@ public class MainFragment extends Fragment {
 
             }
         });
+    }
+    private void startCityActivity(){
+        Intent intent = new Intent(getContext(), CityActivity.class);
+        startActivity(intent);
     }
 
     private void initBanner() {

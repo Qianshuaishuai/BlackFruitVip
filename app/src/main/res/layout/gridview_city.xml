@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:layout_marginBottom="10dip"
+        android:background="@drawable/shape_city_bg"
+        android:gravity="center"
+        android:paddingLeft="10dip"
+        android:paddingTop="6dip"
+        android:paddingRight="10dip"
+        android:paddingBottom="6dip"
+        android:text="潮州"
+        android:textColor="#333333"
+        android:textSize="14sp" />
+</LinearLayout>
