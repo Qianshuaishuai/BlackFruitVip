@@ -45,16 +45,17 @@
         <activity
             android:name=".ui.home.HomeActivity"
             android:label="@string/title_activity_home">
+        </activity>
+        <activity android:name=".ui.main.WelcomeActivity" />
+        <activity android:name=".ui.user.ForgetActivity" />
+        <activity android:name=".ui.user.RegisterActivity" />
+        <activity android:name=".ui.user.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.WelcomeActivity" />
-        <activity android:name=".ui.user.ForgetActivity" />
-        <activity android:name=".ui.user.RegisterActivity" />
-        <activity android:name=".ui.user.LoginActivity"></activity>
         <activity android:name=".ui.user.MainActivity" />
     </application>
 
