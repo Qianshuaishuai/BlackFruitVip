@@ -9,15 +9,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SearchMapAdapter extends RecyclerView.Adapter<SearchMapAdapter.ViewHolder> {
 
     private List<PoiItem> mList;
+    private LatLonPoint point;
     private int selectPosition;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -34,6 +39,10 @@ public class SearchMapAdapter extends RecyclerView.Adapter<SearchMapAdapter.View
 
     public SearchMapAdapter(List<PoiItem> mList) {
         this.mList = mList;
+    }
+
+    public void setLatLonPoint(LatLonPoint point) {
+        this.point = point;
     }
 
     @Override
@@ -58,6 +67,14 @@ public class SearchMapAdapter extends RecyclerView.Adapter<SearchMapAdapter.View
         holder.nameTxt.setText(mList.get(position).getTitle());
         holder.addressTxt.setText(mList.get(position).getCityName() + mList.get(position).getAdName() + mList.get(position).getSnippet());
 
+        LatLonPoint currentPoint = mList.get(position).getLatLonPoint();
+        double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(point.getLatitude(), point.getLongitude()));
+        if (distance < 1000) {
+            holder.distanceTxt.setText((int) distance + "m");
+        } else {
+            DecimalFormat df = new DecimalFormat("#.0");
+            holder.distanceTxt.setText(df.format(distance / 1000) + "km");
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 
@@ -21,10 +22,10 @@ import java.util.List;
 public class HistoryCityAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context context;
-    private List<ShopBean> list = new ArrayList();
+    private List<CityBean> list = new ArrayList();
     private HistoryCityListener listener;
 
-    public HistoryCityAdapter(Context context, List<ShopBean> list, HistoryCityListener listener) {
+    public HistoryCityAdapter(Context context, List<CityBean> list, HistoryCityListener listener) {
         this.context = context;
         this.list = list;
         this.listener = listener;
@@ -42,12 +43,12 @@ public class HistoryCityAdapter extends BaseAdapter implements View.OnClickListe
 
     @Override
     public long getItemId(int i) {
-        return list.get(i).getId();
+        return Integer.parseInt(list.get(i).getCode());
     }
 
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
-        ShopBean bean = list.get(i);
+        CityBean bean = list.get(i);
 
         ViewHolder holder = null;
         if (convertView == null) {
@@ -60,6 +61,7 @@ public class HistoryCityAdapter extends BaseAdapter implements View.OnClickListe
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.nameTv.setText(bean.getAddress());
         convertView.setOnClickListener(this);
         holder.nameTv.setTag(i);
 

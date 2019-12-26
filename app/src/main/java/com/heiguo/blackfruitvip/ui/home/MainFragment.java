@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.MenuAdapter;
 import com.heiguo.blackfruitvip.adapter.PicAdapter;
+import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.response.MainResponse;
 import com.heiguo.blackfruitvip.ui.info.CityActivity;
@@ -115,12 +119,18 @@ public class MainFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startSearchActivity();
             }
         });
     }
-    private void startCityActivity(){
+
+    private void startCityActivity() {
         Intent intent = new Intent(getContext(), CityActivity.class);
+        startActivity(intent);
+    }
+
+    private void startSearchActivity() {
+        Intent intent = new Intent(getContext(), SearchActivity.class);
         startActivity(intent);
     }
 
@@ -169,7 +179,6 @@ public class MainFragment extends Fragment {
                 initBanner();
                 initMenu();
                 initPic();
-                initBaseView();
             }
 
             @Override
@@ -225,6 +234,25 @@ public class MainFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initBaseView();
+    }
+
+    private void updateCityTip() {
+        CityBean bean = ((BlackFruitVipApplication) getActivity().getApplication()).getCityPick();
+        if (bean != null && cityTip != null) {
+            cityTip.setText(bean.getCity());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCityTip();
     }
 
     @Override

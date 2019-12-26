@@ -16,6 +16,7 @@ public class Constant {
     public static final String BASE_URL = "http://010.ming123.net";
     public static final String URL_CODE = "/v1/user/code";
     public static final String URL_AUTO = "/v1/user/auto";
+    public static final String URL_STORE_LIST = "/v1/store/list";
     public static final String URL_GET = "/v1/user/get";
     public static final String URL_LOGOUT = "/v1/user/logout";
     public static final String URL_REGISTER = "/v1/user/register";

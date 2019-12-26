@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.amap.api:location:latest.integration'
     //搜索功能
     implementation 'com.amap.api:search:latest.integration'
+    //地图包
+    implementation 'com.amap.api:map2d:latest.integration'
     implementation 'com.zaaach:citypicker:2.0.3'    //必选
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

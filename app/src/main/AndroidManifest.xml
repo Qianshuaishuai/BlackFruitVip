@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heiguo.blackfruitvip">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序打开网络套接字 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序设置内置sd卡的写权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序获取网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序读写手机状态和身份 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
         android:name=".BlackFruitVipApplication"
@@ -19,22 +20,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ui.home.MapActivity">
+        </activity>
+        <activity
+            android:name=".ui.info.CityPickerActivity"
+            android:theme="@style/DefaultCityPickerTheme" />
         <activity
             android:name=".ui.test.TestActivity"
-            android:theme="@style/DefaultCityPickerTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/DefaultCityPickerTheme" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="dc4596d9f78ee20f2d2435a73b40cf5f" />
 
-        <activity android:name=".ui.info.CityActivity"></activity>
-        <activity android:name=".ui.order.OrderDetailActivity"></activity>
+        <activity
+            android:name=".ui.info.CityActivity"
+            android:theme="@style/CityPickDiyStyle"></activity>
+        <activity android:name=".ui.order.OrderDetailActivity" />
         <activity android:name=".ui.order.MenuActivity" />
         <activity android:name=".ui.info.VipActivity" />
         <activity android:name=".ui.order.GoodDetailActivity" />
@@ -44,14 +46,20 @@
         <activity android:name=".ui.home.SearchActivity" />
         <activity
             android:name=".ui.home.HomeActivity"
-            android:label="@string/title_activity_home" />
+            android:label="@string/title_activity_home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.main.WelcomeActivity" />
         <activity android:name=".ui.user.ForgetActivity" />
         <activity android:name=".ui.user.RegisterActivity" />
-        <activity android:name=".ui.user.LoginActivity">
-
-        </activity>
+        <activity android:name=".ui.user.LoginActivity"></activity>
         <activity android:name=".ui.user.MainActivity" />
+
+        <service android:name="com.amap.api.location.APSService" />
     </application>
 
 </manifest>

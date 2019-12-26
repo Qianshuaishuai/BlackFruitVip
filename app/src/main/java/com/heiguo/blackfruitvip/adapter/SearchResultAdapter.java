@@ -7,17 +7,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.bean.StoreBean;
 
 import org.xutils.x;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<StoreBean> mList;
+    private LatLonPoint point;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView picImage;
@@ -34,8 +40,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     }
 
-    public SearchResultAdapter(List<ShopBean> mList) {
+    public SearchResultAdapter(List<StoreBean> mList) {
         this.mList = mList;
+    }
+
+
+    public void setLatLonPoint(LatLonPoint point) {
+        this.point = point;
     }
 
     @Override
@@ -55,6 +66,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                 }
             }
         });
+
+        holder.nameTxt.setText(mList.get(position).getName());
+        holder.addressTxt.setText(mList.get(position).getAddress());
+        holder.tipTxt.setText(mList.get(position).getAnnoun());
+
+        LatLonPoint currentPoint = new LatLonPoint(mList.get(position).getLatitude(),mList.get(position).getLongitude());
+        double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(point.getLatitude(), point.getLongitude()));
+        if (distance < 1000) {
+            holder.distanceTxt.setText((int) distance + "m");
+        } else {
+            DecimalFormat df = new DecimalFormat("#.0");
+            holder.distanceTxt.setText(df.format(distance / 1000) + "km");
+        }
+
+        x.image().bind(holder.picImage,mList.get(position).getImage());
     }
 
     @Override
