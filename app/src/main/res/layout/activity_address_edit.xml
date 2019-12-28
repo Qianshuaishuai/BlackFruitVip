@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f3f3f3"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context=".ui.info.AddressEditActivity">
 
@@ -23,6 +25,7 @@
             android:src="@mipmap/ic_common_back_black" />
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -108,7 +111,7 @@
                 android:layout_marginLeft="6dip"
                 android:background="@drawable/select_sex_bg"
                 android:button="@null"
-                android:checked="true"
+                android:checked="false"
                 android:gravity="center"
                 android:text="女士"
                 android:textColor="#363636"
@@ -152,6 +155,7 @@
                 android:background="@null"
                 android:gravity="right"
                 android:hint="联系电话"
+                android:inputType="number"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
@@ -208,6 +212,46 @@
         android:layout_height="1dip"
         android:background="#f3f3f3"></View>
 
+    <!--门牌号-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dip"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:text="门牌号"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dip"
+                android:background="@null"
+                android:gravity="right"
+                android:hint="例：5楼203室"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#f3f3f3"></View>
+
     <!--标签-->
 
     <LinearLayout
@@ -231,15 +275,53 @@
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/tag"
+
+            <RadioGroup
+                android:id="@+id/group_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dip"
-                android:background="@null"
-                android:gravity="right"
-                android:hint="例如:家、公司"
-                android:textSize="13sp" />
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/bt1_tag"
+                    android:layout_width="82dip"
+                    android:layout_height="32dip"
+                    android:background="@drawable/select_sex_bg"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="家"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
+
+
+                <RadioButton
+                    android:id="@+id/bt2_tag"
+                    android:layout_width="82dip"
+                    android:layout_height="32dip"
+                    android:layout_marginLeft="6dip"
+                    android:background="@drawable/select_sex_bg"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="公司"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/bt3_tag"
+                    android:layout_width="82dip"
+                    android:layout_height="32dip"
+                    android:layout_marginLeft="6dip"
+                    android:background="@drawable/select_sex_bg"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="学校"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
+            </RadioGroup>
         </LinearLayout>
     </LinearLayout>
 

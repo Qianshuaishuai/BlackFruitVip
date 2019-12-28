@@ -1,39 +1,32 @@
 package com.heiguo.blackfruitvip.adapter;
 
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.GoodBean;
-import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.ui.order.GoodDetailActivity;
 import com.heiguo.blackfruitvip.ui.order.MenuActivity;
-
-import org.xutils.x;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.ViewHolder> {
+public class GoodBuyCarAdapter extends RecyclerView.Adapter<GoodBuyCarAdapter.ViewHolder> {
 
     private List<GoodBean> mList;
-    private MenuActivity context;
+    private GoodDetailActivity context;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView picImage, addImg, reduceImg;
-        TextView nameTxt, priceTxt, oldPriceTxt, countTxt;
+        ImageView addImg,reduceImg;
+        TextView nameTxt,priceTxt,oldPriceTxt,countTxt;
 
         public ViewHolder(View view) {
             super(view);
-            picImage = (ImageView) view.findViewById(R.id.img);
             addImg = (ImageView) view.findViewById(R.id.add);
             reduceImg = (ImageView) view.findViewById(R.id.reduce);
             nameTxt = (TextView) view.findViewById(R.id.name);
@@ -44,14 +37,14 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
 
     }
 
-    public ShopDetailAdapter(MenuActivity context, List<GoodBean> mList) {
-        this.context = context;
+    public GoodBuyCarAdapter(GoodDetailActivity context, List<GoodBean> mList) {
         this.mList = mList;
+        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_detail, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_buy_car, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -75,7 +68,6 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.oldPriceTxt.setText("" + df.format(mList.get(position).getoPrice()));
         holder.priceTxt.setText("" + df.format(mList.get(position).getPrice()));
         holder.countTxt.setText("" + mList.get(position).getCount());
-        x.image().bind(holder.picImage, mList.get(position).getImage());
 
 
         holder.addImg.setOnClickListener(new View.OnClickListener() {

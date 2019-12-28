@@ -12,7 +12,8 @@
     <ImageView
         android:id="@+id/img"
         android:layout_width="140dip"
-        android:layout_height="140dip"
+        android:layout_height="120dip"
+        android:layout_marginLeft="10dip"
         android:src="@mipmap/test_good2" />
 
     <LinearLayout
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dip"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView

@@ -4,10 +4,13 @@ import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
+import com.heiguo.blackfruitvip.util.T;
 
 import org.w3c.dom.Text;
 import org.xutils.view.annotation.ContentView;
@@ -17,8 +20,10 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_vip)
 public class VipActivity extends BaseActivity {
 
+    private String phone = "";
+
     @ViewInject(R.id.header)
-    private TextView headerTextView;
+    private ImageView headerImageView;
 
     @ViewInject(R.id.phone)
     private TextView phoneTextView;
@@ -31,7 +36,7 @@ public class VipActivity extends BaseActivity {
 
     @Event(R.id.back)
     private void back(View view) {
-
+        finish();
     }
 
     @Event(R.id.detail)
@@ -48,6 +53,17 @@ public class VipActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
+
+        if (phone==""){
+            T.s("获取登录信息失败");
+            finish();
+            return;
+        }
     }
 
     private void initView() {

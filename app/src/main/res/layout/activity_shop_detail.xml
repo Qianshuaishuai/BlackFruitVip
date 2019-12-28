@@ -122,6 +122,54 @@
                     android:text="就餐方式"
                     android:textColor="#333333"
                     android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/group_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dip"
+                    android:layout_marginLeft="14.5dip"
+                    android:layout_marginTop="15dip"
+                    android:layout_marginRight="14.5dip"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_left"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/selected_service_left_bg"
+                        android:button="@null"
+                        android:checked="false"
+                        android:gravity="center"
+                        android:text="店内就餐"
+                        android:textColor="#363636"
+                        android:textSize="16sp" />
+
+
+                    <RadioButton
+                        android:id="@+id/rb_middle"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/selected_service_middle_bg"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="打包带走"
+                        android:textColor="#363636"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_right"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/selected_service_right_bg"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="外卖到家"
+                        android:textColor="#363636"
+                        android:textSize="16sp" />
+                </RadioGroup>
             </LinearLayout>
 
             <!--支付方式-->
@@ -245,6 +293,43 @@
                 android:layout_marginTop="10dip"
                 android:background="#ffffff"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="42dip"
+                    android:layout_marginLeft="15dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="送货地址"
+                        android:textColor="#333333"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right|center_vertical">
+
+                        <Button
+                            android:id="@+id/change_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:text="[切换地址]"
+                            android:textColor="#48D1CC"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="#f3f3f3"></View>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.heiguo.blackfruitvip.bean.ShopBean;
 import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.StoreListResponse;
+import com.heiguo.blackfruitvip.ui.order.MenuActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;
@@ -46,6 +48,7 @@ public class SearchActivity extends BaseActivity {
     private List<StoreBean> storeList = new ArrayList<>();
 
     private StoreBean selectBean;
+    private int serviceIndex = 0;
 
     @ViewInject(R.id.search)
     private EditText searchEditText;
@@ -131,9 +134,30 @@ public class SearchActivity extends BaseActivity {
         groupService.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (rbLeft.isChecked()){
+                    serviceIndex = 0;
+                }
 
+                if (rbMiddle.isChecked()){
+                    serviceIndex = 1;
+                }
+
+                if (rbRight.isChecked()){
+                    serviceIndex = 2;
+                }
+                startMenuActivity();
             }
         });
+    }
+
+    private void startMenuActivity() {
+        Gson gson = new Gson();
+        String selectBeanStr = gson.toJson(selectBean);
+
+        Intent newIntent = new Intent(this, MenuActivity.class);
+        newIntent.putExtra("store", selectBeanStr);
+        newIntent.putExtra("serviceIndex", serviceIndex);
+        startActivity(newIntent);
     }
 
     private void getCurrentCityBean() {

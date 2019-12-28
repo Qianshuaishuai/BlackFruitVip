@@ -145,6 +145,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="48dip"
         android:layout_alignParentBottom="true"
@@ -206,4 +207,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
+    <!--购物车-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/car_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom"
+        android:visibility="gone"></android.support.v7.widget.RecyclerView>
 </RelativeLayout>

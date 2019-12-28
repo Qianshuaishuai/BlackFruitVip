@@ -9,13 +9,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.ui.order.MenuActivity;
 
+import org.xutils.x;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class BuyCarAdapter extends RecyclerView.Adapter<BuyCarAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<GoodBean> mList;
+    private MenuActivity context;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView addImg,reduceImg;
@@ -33,8 +39,9 @@ public class BuyCarAdapter extends RecyclerView.Adapter<BuyCarAdapter.ViewHolder
 
     }
 
-    public BuyCarAdapter(List<ShopBean> mList) {
+    public BuyCarAdapter(MenuActivity context, List<GoodBean> mList) {
         this.mList = mList;
+        this.context = context;
     }
 
     @Override
@@ -57,6 +64,33 @@ public class BuyCarAdapter extends RecyclerView.Adapter<BuyCarAdapter.ViewHolder
 
         holder.oldPriceTxt.getPaint().setAntiAlias(true);
         holder.oldPriceTxt.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        holder.nameTxt.setText(mList.get(position).getName());
+        holder.oldPriceTxt.setText("" + df.format(mList.get(position).getoPrice()));
+        holder.priceTxt.setText("" + df.format(mList.get(position).getPrice()));
+        holder.countTxt.setText("" + mList.get(position).getCount());
+
+
+        holder.addImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mList.get(position).setCount(mList.get(position).getCount() + 1);
+                holder.countTxt.setText("" + mList.get(position).getCount());
+                context.updateBuyCarAndTotal();
+            }
+        });
+
+        holder.reduceImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mList.get(position).getCount() > 0) {
+                    mList.get(position).setCount(mList.get(position).getCount() - 1);
+                    holder.countTxt.setText("" + mList.get(position).getCount());
+                    context.updateBuyCarAndTotal();
+                }
+            }
+        });
     }
 
     @Override

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于申请调用A-GPS模块 -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".BlackFruitVipApplication"
@@ -20,8 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ui.home.MapActivity">
-        </activity>
+        <activity android:name=".ui.home.MapActivity"></activity>
         <activity
             android:name=".ui.info.CityPickerActivity"
             android:theme="@style/DefaultCityPickerTheme" />
@@ -46,17 +46,17 @@
         <activity android:name=".ui.home.SearchActivity" />
         <activity
             android:name=".ui.home.HomeActivity"
-            android:label="@string/title_activity_home">
+            android:label="@string/title_activity_home"></activity>
+        <activity android:name=".ui.main.WelcomeActivity" />
+        <activity android:name=".ui.user.ForgetActivity" />
+        <activity android:name=".ui.user.RegisterActivity" />
+        <activity android:name=".ui.user.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.WelcomeActivity" />
-        <activity android:name=".ui.user.ForgetActivity" />
-        <activity android:name=".ui.user.RegisterActivity" />
-        <activity android:name=".ui.user.LoginActivity"></activity>
         <activity android:name=".ui.user.MainActivity" />
 
         <service android:name="com.amap.api.location.APSService" />

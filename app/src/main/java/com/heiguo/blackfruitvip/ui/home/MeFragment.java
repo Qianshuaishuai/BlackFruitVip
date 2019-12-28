@@ -22,6 +22,7 @@ import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.UserBean;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.ui.info.AddressActivity;
+import com.heiguo.blackfruitvip.ui.info.VipActivity;
 import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
@@ -48,10 +49,13 @@ public class MeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private UserBean userInfo;
+
     private OnFragmentInteractionListener mListener;
 
     private ImageView header;
     private ImageView img;
+    private ImageView vip;
     private TextView phone;
     private TextView save;
     private TextView balance;
@@ -96,6 +100,7 @@ public class MeFragment extends Fragment {
     private void initView() {
         header = (ImageView) getActivity().findViewById(R.id.header);
         img = (ImageView) getActivity().findViewById(R.id.img);
+        vip = (ImageView) getActivity().findViewById(R.id.go_vip);
         phone = (TextView) getActivity().findViewById(R.id.phone);
         save = (TextView) getActivity().findViewById(R.id.save);
         balance = (TextView) getActivity().findViewById(R.id.balance);
@@ -107,10 +112,30 @@ public class MeFragment extends Fragment {
 
         logout = (Button) getActivity().findViewById(R.id.logout);
 
+        userInfo = new UserBean();
+
         phoneLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                callPhone();
+            }
+        });
 
+        vip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (userInfo.getPhone() == "默认用户") {
+                    T.s("请先登录");
+                    return;
+                }
+
+                if (userInfo.getVipDay() >= 0) {
+                    T.s("你的Vip会员暂未过期！");
+                    return;
+                }
+
+                Intent intent = new Intent(getContext(), VipActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -124,7 +149,17 @@ public class MeFragment extends Fragment {
         addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //获取当前登录的手机号码
+                String phone = ((BlackFruitVipApplication) getActivity().getApplication()).getLoginPhone();
+
+                if (phone == "") {
+                    T.s("请先登录");
+                    return;
+                }
+
                 Intent newIntent = new Intent(getContext(), AddressActivity.class);
+                newIntent.putExtra("phone", phone);
+                newIntent.putExtra("mode", Constant.ADDRESS_LIST_MODE_NORMAL);
                 getActivity().startActivity(newIntent);
             }
         });
@@ -164,11 +199,18 @@ public class MeFragment extends Fragment {
         });
 
         //更新数据
-        UserBean userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
+        userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
         phone.setText(userInfo.getPhone());
         balance.setText(Float.toString(userInfo.getBalance()) + "元");
         save.setText(Float.toString(userInfo.getSaveCount()) + "元");
         vipDay.setText(Integer.toString(userInfo.getVipDay()) + "天");
+    }
+
+    private void callPhone() {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + Constant.CONNECTION_PHONE);
+        intent.setData(data);
+        startActivity(intent);
     }
 
     private void backLoginActivity() {

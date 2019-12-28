@@ -3,7 +3,7 @@ package com.heiguo.blackfruitvip.ui.order;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,20 +12,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.BuyCarAdapter;
 import com.heiguo.blackfruitvip.adapter.ShopDetailAdapter;
 import com.heiguo.blackfruitvip.adapter.ShopMenuAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
-import com.heiguo.blackfruitvip.bean.ShopBean;
-import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
-import com.heiguo.blackfruitvip.ui.user.LoginActivity;
+import com.heiguo.blackfruitvip.bean.GoodBean;
+import com.heiguo.blackfruitvip.bean.StoreBean;
+import com.heiguo.blackfruitvip.bean.TypeBean;
+import com.heiguo.blackfruitvip.response.GoodListResponse;
+import com.heiguo.blackfruitvip.util.T;
 
-import org.w3c.dom.Text;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +43,16 @@ public class MenuActivity extends BaseActivity {
     private ShopMenuAdapter adapter;
     private ShopDetailAdapter dAdapter;
     private BuyCarAdapter bAdapter;
+
+    private StoreBean storeBean;
+    private int serviceIndex = 0;
+
+    private List<GoodBean> allList;
+    private List<GoodBean> currentList;
+    private List<GoodBean> buycayList;
+    private List<TypeBean> typeList;
+
+    private int selectPoistion = 0;
 
     private Dialog carDialog;
 
@@ -47,8 +65,8 @@ public class MenuActivity extends BaseActivity {
     @ViewInject(R.id.car_list)
     private RecyclerView buylList;
 
-    @ViewInject(R.id.price)
-    private TextView priceTextView;
+    @ViewInject(R.id.vip_price)
+    private TextView vpriceTextView;
 
     @ViewInject(R.id.old_price)
     private TextView oldPriceTextView;
@@ -58,12 +76,23 @@ public class MenuActivity extends BaseActivity {
 
     @Event(R.id.back)
     private void back(View view) {
-
+        if (buycayList.size() != 0) {
+            carDialog.show();
+        } else {
+            finish();
+        }
     }
 
     @Event(R.id.go_pay)
     private void goPay(View view) {
-
+        Gson gson = new Gson();
+        Intent intent = new Intent(this, ShopDetailActivity.class);
+        String beanStr = gson.toJson(buycayList);
+        String storeBeanStr = gson.toJson(storeBean);
+        intent.putExtra("buycar", beanStr);
+        intent.putExtra("store", storeBeanStr);
+        intent.putExtra("serviceIndex", serviceIndex);
+        startActivity(intent);
     }
 
     @Override
@@ -71,6 +100,64 @@ public class MenuActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initDialog();
+        initData();
+    }
+
+    private void initData() {
+        Intent newIntent = getIntent();
+        String beanStr = newIntent.getStringExtra("store");
+        serviceIndex = newIntent.getIntExtra("serviceIndex", 0);
+        if (beanStr != null) {
+            Gson gson = new Gson();
+            storeBean = gson.fromJson(beanStr, StoreBean.class);
+
+            RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_GOOD_LIST);
+            params.addQueryStringParameter("store_id", storeBean.getId());
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    GoodListResponse response = gson.fromJson(result, GoodListResponse.class);
+                    if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                        allList = response.getF_data().getGoods();
+
+                        typeList.clear();
+                        for (int t = 0; t < response.getF_data().getStoreTypes().size(); t++) {
+                            typeList.add(response.getF_data().getStoreTypes().get(t));
+                        }
+                        updateList();
+                    } else {
+                        T.s("获取商品列表失败");
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    T.s("请求出错，请检查网络");
+                    finish();
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        } else {
+            T.s("获取商品列表失败");
+            finish();
+        }
+    }
+
+    private void updateList() {
+        adapter.setSelectPosition(selectPoistion);
+        adapter.notifyDataSetChanged();
+        selectGoodList(selectPoistion);
     }
 
     private void initDialog() {
@@ -115,29 +202,28 @@ public class MenuActivity extends BaseActivity {
     }
 
     private void initView() {
-        List<ShopBean> testList = new ArrayList<>();
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        adapter = new ShopMenuAdapter(testList);
-        dAdapter = new ShopDetailAdapter(testList);
-        bAdapter = new BuyCarAdapter(testList);
+        typeList = new ArrayList<>();
+        currentList = new ArrayList<>();
+        buycayList = new ArrayList<>();
+
+        storeBean = new StoreBean();
+
+        adapter = new ShopMenuAdapter(typeList);
+        dAdapter = new ShopDetailAdapter(this, currentList);
+        bAdapter = new BuyCarAdapter(this, buycayList);
 
         adapter.setOnItemClickListener(new ShopMenuAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                adapter.notifyDataSetChanged();
+                selectPoistion = position;
+                selectGoodList(position);
             }
         });
 
         dAdapter.setOnItemClickListener(new ShopDetailAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-
+                startGoodDetailActivity(position);
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -153,5 +239,86 @@ public class MenuActivity extends BaseActivity {
         buylList.setLayoutManager(bLayoutManager);
         buylList.setAdapter(bAdapter);
 
+        vpriceTextView.setText("未选购商品");
+        oldPriceTextView.setVisibility(View.GONE);
+    }
+
+    private void startGoodDetailActivity(int position) {
+        Gson gson = new Gson();
+        String beanString = gson.toJson(allList);
+
+        Intent newIntent = new Intent(this, GoodDetailActivity.class);
+        newIntent.putExtra("good-list", beanString);
+        newIntent.putExtra("position", allListPosition(position));
+        startActivityForResult(newIntent, Constant.GOOD_DETAIL_BACK_REQUEST_CODE);
+    }
+
+    private int allListPosition(int currnetPosition) {
+        int id = currentList.get(currnetPosition).getId();
+        int newPosition = -1;
+        for (int a = 0; a < allList.size(); a++) {
+            if (allList.get(a).getId() == id) {
+                newPosition = a;
+            }
+        }
+
+        return newPosition;
+    }
+
+    private void selectGoodList(int position) {
+        int type = typeList.get(position).getId();
+
+        currentList.clear();
+        for (int a = 0; a < allList.size(); a++) {
+            if (allList.get(a).getId() == type) {
+                currentList.add(allList.get(a));
+            }
+        }
+        adapter.notifyDataSetChanged();
+        dAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.GOOD_DETAIL_BACK_REQUEST_CODE && resultCode == Constant.GOOD_DETAIL_BACK_REQUEST_CODE) {
+            Gson gson = new Gson();
+            allList = gson.fromJson(data.getStringExtra("back-list"), new TypeToken<List<GoodBean>>() {
+            }.getType());
+
+            updateList();
+            updateBuyCarAndTotal();
+        }
+    }
+
+    public void updateBuyCarAndTotal() {
+        buycayList.clear();
+        DecimalFormat df = new DecimalFormat("#.00");
+        double allPrice = 0;
+        double allOldPrice = 0;
+        for (int a = 0; a < allList.size(); a++) {
+            allPrice = allPrice + (allList.get(a).getPrice() * allList.get(a).getCount());
+            allOldPrice = allOldPrice + (allList.get(a).getoPrice() * allList.get(a).getCount());
+            if (allList.get(a).getCount() > 0) {
+                buycayList.add(allList.get(a));
+            }
+        }
+
+        oldPriceTextView.getPaint().setAntiAlias(true);
+        oldPriceTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+
+        bAdapter.notifyDataSetChanged();
+        dAdapter.notifyDataSetChanged();
+
+        if (buycayList.size() == 0) {
+            buylList.setVisibility(View.GONE);
+            vpriceTextView.setText("未选购商品");
+            oldPriceTextView.setVisibility(View.GONE);
+        } else {
+            buylList.setVisibility(View.VISIBLE);
+            vpriceTextView.setText("" + df.format(allPrice));
+            oldPriceTextView.setText("" + df.format(allOldPrice));
+            oldPriceTextView.setVisibility(View.VISIBLE);
+        }
     }
 }

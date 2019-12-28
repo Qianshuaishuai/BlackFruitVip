@@ -38,6 +38,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/go_vip"
             android:layout_width="336dip"
             android:layout_height="212dip"
             android:layout_centerHorizontal="true"

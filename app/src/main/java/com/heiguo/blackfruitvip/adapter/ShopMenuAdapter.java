@@ -11,12 +11,13 @@ import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.bean.TypeBean;
 
 import java.util.List;
 
 public class ShopMenuAdapter extends RecyclerView.Adapter<ShopMenuAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<TypeBean> mList;
     private int selectPosition;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -33,7 +34,11 @@ public class ShopMenuAdapter extends RecyclerView.Adapter<ShopMenuAdapter.ViewHo
 
     }
 
-    public ShopMenuAdapter(List<ShopBean> mList) {
+    public void setSelectPosition(int selectPosition) {
+        this.selectPosition = selectPosition;
+    }
+
+    public ShopMenuAdapter(List<TypeBean> mList) {
         this.mList = mList;
     }
 
@@ -61,6 +66,8 @@ public class ShopMenuAdapter extends RecyclerView.Adapter<ShopMenuAdapter.ViewHo
         } else {
             holder.layout.setBackgroundColor(Color.parseColor("#e5e5e5"));
         }
+
+        holder.nameTxt.setText(mList.get(position).getName());
     }
 
     @Override

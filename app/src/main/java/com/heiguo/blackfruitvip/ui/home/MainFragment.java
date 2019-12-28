@@ -126,6 +126,7 @@ public class MainFragment extends Fragment {
 
     private void startCityActivity() {
         Intent intent = new Intent(getContext(), CityActivity.class);
+        intent.putExtra("mode", Constant.CITY_MODE_FROM_MAIN);
         startActivity(intent);
     }
 

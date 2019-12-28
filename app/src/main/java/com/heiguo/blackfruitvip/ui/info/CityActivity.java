@@ -1,5 +1,6 @@
 package com.heiguo.blackfruitvip.ui.info;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.BlackFruitVipApplication;
+import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.HistoryCityAdapter;
 import com.heiguo.blackfruitvip.adapter.MenuAdapter;
@@ -78,6 +81,8 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
     private String selectCity = "北京";
     private String selectCode = "101010100";
 
+    private int mode = Constant.CITY_MODE_FROM_MAIN;
+
     private CityPicker picker;
 
     @ViewInject(R.id.history)
@@ -116,6 +121,12 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
         initCityPicker();
         initLocationOption();
         startLocation();
+        initData();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        mode = intent.getIntExtra("mode", Constant.CITY_MODE_FROM_MAIN);
     }
 
     private void initCityPicker() {
@@ -214,7 +225,14 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
             public void clickListener(View v) {
                 HistoryCityAdapter.ViewHolder holder = (HistoryCityAdapter.ViewHolder) v.getTag();
                 int index = (int) holder.nameTv.getTag();
-                ((BlackFruitVipApplication) getApplication()).saveCityPick(hList.get(index));
+                if (mode == Constant.CITY_MODE_FROM_MAIN) {
+                    ((BlackFruitVipApplication) getApplication()).saveCityPick(hList.get(index));
+                }else {
+                    Gson gson = new Gson();
+                    Intent intent = new Intent();
+                    intent.putExtra("city", gson.toJson(hList.get(index)));
+                    setResult(Constant.CITY_MODE_FROM_ADDRESS, intent);
+                }
                 finish();
             }
         });
@@ -259,7 +277,14 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
                 bean.setLatitude(item.getLatLonPoint().getLatitude());
                 bean.setLongitude(item.getLatLonPoint().getLongitude());
 
-                ((BlackFruitVipApplication) getApplication()).saveCityPick(bean);
+                if (mode == Constant.CITY_MODE_FROM_MAIN) {
+                    ((BlackFruitVipApplication) getApplication()).saveCityPick(bean);
+                } else {
+                    Gson gson = new Gson();
+                    Intent intent = new Intent();
+                    intent.putExtra("city", gson.toJson(bean));
+                    setResult(Constant.CITY_MODE_FROM_ADDRESS, intent);
+                }
 
                 //更新本地历史记录
                 addNewHistoryList(bean);

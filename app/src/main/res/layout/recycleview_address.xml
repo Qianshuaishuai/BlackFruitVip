@@ -18,13 +18,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tag"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="家庭地址"
-                android:textColor="#333333"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="家庭地址"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dip"
+                    android:background="@drawable/shape_sex_selected"
+                    android:paddingLeft="5dip"
+                    android:paddingTop="3dip"
+                    android:paddingRight="5dip"
+                    android:paddingBottom="3dip"
+                    android:text="家"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/address"
@@ -40,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
-                android:text="黄13188882374"
+                android:text="黄 13188882374"
                 android:textColor="#999999"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -55,7 +76,7 @@
                 android:id="@+id/edit"
                 android:layout_width="14dip"
                 android:layout_height="14dip"
-                android:src="@mipmap/ic_common_close" />
+                android:src="@mipmap/ic_common_address_edit" />
         </LinearLayout>
     </LinearLayout>
 

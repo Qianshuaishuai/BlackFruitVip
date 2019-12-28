@@ -43,7 +43,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/menu_list"
-                android:layout_width="60dip"
+                android:layout_width="75dip"
                 android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
             <android.support.v7.widget.RecyclerView
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dip"
-            android:text="￥62.00"
+            android:text="￥0.00"
             android:textColor="@color/colorYellow"
             android:textSize="16sp" />
 
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dip"
-            android:text="￥68.00"
+            android:text="￥0.00"
             android:textColor="#999999"
             android:textSize="11sp" />
 
@@ -116,6 +116,7 @@
         android:id="@+id/car_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom"></android.support.v7.widget.RecyclerView>
+        android:layout_above="@+id/bottom"
+        android:visibility="gone"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

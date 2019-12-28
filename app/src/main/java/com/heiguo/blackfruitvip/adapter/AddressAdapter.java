@@ -8,22 +8,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.AddressBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.ui.info.AddressActivity;
 
 import java.util.List;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<AddressBean> mList;
+    private AddressActivity context;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tagTxt, addressTxt, namePhoneTxt;
+        TextView tagTxt, addressTxt, namePhoneTxt, detailTxt;
         ImageView editButton;
 
         public ViewHolder(View view) {
             super(view);
             tagTxt = (TextView) view.findViewById(R.id.tag);
+            detailTxt = (TextView) view.findViewById(R.id.detail);
             addressTxt = (TextView) view.findViewById(R.id.address);
             namePhoneTxt = (TextView) view.findViewById(R.id.name_phone);
             editButton = (ImageView) view.findViewById(R.id.edit);
@@ -31,7 +36,8 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
 
     }
 
-    public AddressAdapter(List<ShopBean> mList) {
+    public AddressAdapter(AddressActivity context, List<AddressBean> mList) {
+        this.context = context;
         this.mList = mList;
     }
 
@@ -50,6 +56,40 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
                 if (listener != null) {
                     listener.onClick(position);
                 }
+            }
+        });
+
+        String tagStr = "";
+        switch (mList.get(position).getTag()) {
+            case 0:
+                tagStr = "家";
+                break;
+            case 1:
+                tagStr = "公司";
+                break;
+            case 2:
+                tagStr = "学校";
+                break;
+        }
+
+        String sexStr = "";
+        switch (mList.get(position).getSex()) {
+            case 0:
+                sexStr = "先生";
+                break;
+            case 1:
+                sexStr = "女士";
+        }
+
+        holder.addressTxt.setText(mList.get(position).getAddress());
+        holder.namePhoneTxt.setText(mList.get(position).getName() + "(" + sexStr + ")" + mList.get(position).getPhone());
+        holder.detailTxt.setText(mList.get(position).getDetail());
+        holder.tagTxt.setText(tagStr);
+
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startEditActivity(position, Constant.ADDRESS_MODE_GO_EDIT);
             }
         });
     }

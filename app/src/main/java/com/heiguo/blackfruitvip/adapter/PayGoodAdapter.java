@@ -8,13 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class PayGoodAdapter extends RecyclerView.Adapter<PayGoodAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<GoodBean> mList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTxt, priceTxt;
@@ -27,7 +29,7 @@ public class PayGoodAdapter extends RecyclerView.Adapter<PayGoodAdapter.ViewHold
 
     }
 
-    public PayGoodAdapter(List<ShopBean> mList) {
+    public PayGoodAdapter(List<GoodBean> mList) {
         this.mList = mList;
     }
 
@@ -48,6 +50,11 @@ public class PayGoodAdapter extends RecyclerView.Adapter<PayGoodAdapter.ViewHold
                 }
             }
         });
+
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        holder.nameTxt.setText(mList.get(position).getName());
+        holder.priceTxt.setText("￥" + df.format(mList.get(position).getPrice()) + " × " + mList.get(position).getCount());
     }
 
     @Override
