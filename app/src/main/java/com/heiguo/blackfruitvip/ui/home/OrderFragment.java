@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.OrderAdapter;
+import com.heiguo.blackfruitvip.bean.OrderBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ public class OrderFragment extends Fragment {
     private View rightView;
 
     private RecyclerView orderList;
-    private OrderAdapter adapter;
+    private OrderAdapter adapter1;
+    private OrderAdapter adapter2;
+    private OrderAdapter adapter3;
 
     private int order_type = 0;
 
@@ -154,18 +157,18 @@ public class OrderFragment extends Fragment {
             }
         });
 
-        List<ShopBean> testList = new ArrayList<>();
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
-        testList.add(new ShopBean());
+        List<OrderBean> testList = new ArrayList<>();
+        testList.add(new OrderBean());
+        testList.add(new OrderBean());
+        testList.add(new OrderBean());
+        testList.add(new OrderBean());
+        testList.add(new OrderBean());
 
-        adapter = new OrderAdapter(testList);
+        adapter1 = new OrderAdapter(testList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         orderList.setLayoutManager(layoutManager);
-        orderList.setAdapter(adapter);
+        orderList.setAdapter(adapter1);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

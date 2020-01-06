@@ -1,95 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="68dip"
-    android:layout_marginTop="12dip"
-    android:background="#ffffff"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dip"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="您本次订单共计"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginRight="4dip"
-                android:text="2"
-                android:textColor="@color/colorYellow"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dip"
-                android:text="份餐品"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dip"
-            android:text="2019-11-25"
-            android:textColor="#999999"
-            android:textSize="12sp" />
-    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="right|center_vertical"
-        android:orientation="vertical">
+        android:layout_height="68dip"
+        android:layout_marginTop="12dip"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dip"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="待支付"
-                android:textColor="@color/colorYellow"
-                android:textSize="15sp" />
+                android:layout_marginLeft="15dip"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="14dip"
-                android:layout_height="14dip"
-                android:layout_marginLeft="10dip"
-                android:src="@mipmap/ic_common_right_yellow" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="您本次订单共计"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dip"
+                    android:layout_marginRight="4dip"
+                    android:text="2"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dip"
+                    android:text="份餐品"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:text="2019-11-25"
+                android:textColor="#999999"
+                android:textSize="12sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dip"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="待支付"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="14dip"
+                    android:layout_height="14dip"
+                    android:layout_marginLeft="10dip"
+                    android:src="@mipmap/ic_common_right_yellow" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dip"
+                android:layout_marginRight="15dip"
+                android:text="￥62.00"
+                android:textColor="@color/colorYellow"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#f3f3f3"></View>
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="62dip"
+        android:background="#ffffff"
+        android:gravity="right|center_vertical">
+
+        <Button
+            android:id="@+id/bt_one"
+            android:layout_width="100dip"
+            android:layout_height="32dip"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/shape_order_one_bt"
+            android:text="联系商家"
+            android:textColor="#666666"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/bt_two"
+            android:layout_width="100dip"
+            android:layout_height="32dip"
             android:layout_marginRight="15dip"
-            android:text="￥62.00"
+            android:background="@drawable/shape_order_two_bt"
+            android:text="确认收货"
             android:textColor="@color/colorYellow"
-            android:textSize="17sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 </LinearLayout>
