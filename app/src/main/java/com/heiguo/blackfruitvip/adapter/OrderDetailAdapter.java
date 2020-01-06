@@ -10,13 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.heiguo.blackfruitvip.R;
+import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 
+import org.xutils.x;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHolder> {
 
-    private List<ShopBean> mList;
+    private List<GoodBean> mList;
     private int selectPosition;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -32,7 +36,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
     }
 
-    public OrderDetailAdapter(List<ShopBean> mList) {
+    public OrderDetailAdapter(List<GoodBean> mList) {
         this.mList = mList;
     }
 
@@ -54,6 +58,13 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 }
             }
         });
+
+        x.image().bind(holder.picImage, mList.get(position).getImage());
+        holder.nameTxt.setText(mList.get(position).getName());
+
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        holder.priceTxt.setText("￥" + df.format(mList.get(position).getPrice()) + " × " + mList.get(position).getCount());
     }
 
     @Override

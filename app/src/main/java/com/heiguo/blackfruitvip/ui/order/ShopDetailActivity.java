@@ -19,11 +19,14 @@ import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.PayGoodAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.AddressBean;
+import com.heiguo.blackfruitvip.bean.BuildGoodBean;
 import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.bean.UserBean;
 import com.heiguo.blackfruitvip.response.AddressListResponse;
+import com.heiguo.blackfruitvip.response.CommonResponse;
+import com.heiguo.blackfruitvip.response.OrderBuildResponse;
 import com.heiguo.blackfruitvip.ui.info.AddressActivity;
 import com.heiguo.blackfruitvip.util.T;
 
@@ -35,6 +38,8 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,7 @@ public class ShopDetailActivity extends BaseActivity {
     private StoreBean storeBean;
     private int serviceIndex = 0;
     private UserBean userBean;
+    private AddressBean addressBean;
     private List<AddressBean> addressList;
 
     private double totalPrice = 0.00;
@@ -115,7 +121,7 @@ public class ShopDetailActivity extends BaseActivity {
 
     @Event(R.id.go_pay)
     private void goPay(View view) {
-
+        buildNewOrder();
     }
 
     @Event(R.id.back)
@@ -132,6 +138,69 @@ public class ShopDetailActivity extends BaseActivity {
         getAddressList();
     }
 
+    private void buildNewOrder() {
+        //把商品信息转为string
+        List<BuildGoodBean> buildGoodList = new ArrayList<>();
+        for (int b = 0; b < buyCarList.size(); b++) {
+            BuildGoodBean bean = new BuildGoodBean();
+            bean.setId(buyCarList.get(b).getId());
+            bean.setOldPrice(buyCarList.get(b).getoPrice());
+            bean.setRealPrice(buyCarList.get(b).getvPrice());
+            bean.setCount(buyCarList.get(b).getCount());
+            buildGoodList.add(bean);
+        }
+
+        Gson gson = new Gson();
+        String goodBeanListStr = gson.toJson(buildGoodList);
+
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_ORDER_BUILD);
+        params.setBodyContentType("application/json;charset=utf-8");
+        params.addQueryStringParameter("phone", userBean.getPhone());
+        params.addQueryStringParameter("storeId", storeBean.getId());
+        params.addQueryStringParameter("oldPrice", totalOldPrice);
+        params.addQueryStringParameter("realPrice", totalPrice);
+        params.addQueryStringParameter("service", serviceIndex);
+        params.addQueryStringParameter("address", addressBean.getAddress());
+        params.addQueryStringParameter("addressDetail", addressBean.getDetail());
+        params.addQueryStringParameter("lat", addressBean.getLatitude());
+        params.addQueryStringParameter("long", addressBean.getLongitude());
+        params.setBodyContent(goodBeanListStr);
+
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                OrderBuildResponse response = gson.fromJson(result, OrderBuildResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    T.s("创建成功");
+                    startOrderDetailActivity(response.getF_data());
+                } else {
+                    T.s("创建订单失败");
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                T.s("请求出错，请检查网络");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void startOrderDetailActivity(long orderId) {
+        Intent intent = new Intent(this, OrderDetailActivity.class);
+        intent.putExtra("order-id", orderId);
+        startActivity(intent);
+    }
 
     private void startAddressActivity() {
         Intent intent = new Intent(this, AddressActivity.class);
@@ -155,6 +224,7 @@ public class ShopDetailActivity extends BaseActivity {
                     }
                     //默认取第一个地址信息
                     if (addressList.size() != 0) {
+                        addressBean = addressList.get(0);
                         conPhoneTextView.setText(addressList.get(0).getPhone());
                         conNameTextView.setText(addressList.get(0).getName());
                         conAddressTextView.setText(addressList.get(0).getAddress() + " " + addressList.get(0).getDetail());
@@ -312,10 +382,10 @@ public class ShopDetailActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.ADDRESS_LIST_MODE_PICKER && resultCode == Constant.ADDRESS_LIST_MODE_PICKER) {
             Gson gson = new Gson();
-            AddressBean bean = gson.fromJson(data.getStringExtra("select-address"), AddressBean.class);
-            conPhoneTextView.setText(bean.getPhone());
-            conNameTextView.setText(bean.getName());
-            conAddressTextView.setText(bean.getAddress() + " " + bean.getDetail());
+            addressBean = gson.fromJson(data.getStringExtra("select-address"), AddressBean.class);
+            conPhoneTextView.setText(addressBean.getPhone());
+            conNameTextView.setText(addressBean.getName());
+            conAddressTextView.setText(addressBean.getAddress() + " " + addressBean.getDetail());
         }
     }
 }
