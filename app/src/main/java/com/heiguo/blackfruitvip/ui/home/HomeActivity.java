@@ -83,39 +83,14 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         super.onCreate(savedInstanceState);
 
         initNavigationBar();
-        initData();
+        ((BlackFruitVipApplication) getApplication()).updateUserInfo();
     }
 
-    private void initData() {
-        String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
-        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_GET);
-        params.addQueryStringParameter("phone", phone);
-        x.http().get(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Gson gson = new Gson();
-                UserInfoResponse response = gson.fromJson(result, UserInfoResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
-                    ((BlackFruitVipApplication) getApplication()).saveUserInfo(response.getF_data());
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                T.s("请求出错，请检查网络");
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
+
 
     private void initNavigationBar() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

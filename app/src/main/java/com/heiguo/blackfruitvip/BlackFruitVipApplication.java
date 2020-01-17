@@ -14,8 +14,15 @@ import com.google.gson.reflect.TypeToken;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.LocationBean;
 import com.heiguo.blackfruitvip.bean.UserBean;
+import com.heiguo.blackfruitvip.bean.event.UpdateInfoEvent;
+import com.heiguo.blackfruitvip.response.UserInfoResponse;
 import com.heiguo.blackfruitvip.util.T;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.List;
@@ -26,6 +33,9 @@ public class BlackFruitVipApplication extends Application {
     private SharedPreferences.Editor editor;
     private Gson gson;
 
+
+    //微信支付客户端
+    private IWXAPI wxApi;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient;
@@ -54,6 +64,13 @@ public class BlackFruitVipApplication extends Application {
 //        startLocation();
         initCityBean();
         initUserInfo();
+
+        //初始化注册
+        wxApi = WXAPIFactory.createWXAPI(this, Constant.WeChatAppId);
+    }
+
+    public IWXAPI getWxApi() {
+        return wxApi;
     }
 
     private void initUserInfo() {
@@ -78,6 +95,38 @@ public class BlackFruitVipApplication extends Application {
             bean.setAddress("北京");
             saveCityPick(bean);
         }
+    }
+
+    public void updateUserInfo() {
+        String phone = getLoginPhone();
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_GET);
+        params.addQueryStringParameter("phone", phone);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                UserInfoResponse response = gson.fromJson(result, UserInfoResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    saveUserInfo(response.getF_data());
+                    EventBus.getDefault().post(new UpdateInfoEvent());
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     private void startLocation() {
@@ -168,5 +217,10 @@ public class BlackFruitVipApplication extends Application {
         String beanString = gson.toJson(list);
         editor.putString("history-city", beanString);
         editor.commit();
+    }
+
+    public boolean isCurrentVip() {
+        UserBean bean = getUserInfo();
+        return bean.getVipDay() != -1;
     }
 }

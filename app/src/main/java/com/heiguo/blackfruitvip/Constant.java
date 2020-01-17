@@ -3,9 +3,24 @@ package com.heiguo.blackfruitvip;
 public class Constant {
     public static final Boolean DEBUG = true;
 
+    //微信支付AppID
+    public static final String WeChatAppId = "wxfdc5fb80436c453a";
+
+    //Vip购买相关信息
+    public static final String VIP_BUY_NAME = "黑果会员购买";
+    public static final String VIP_BUY_COUNT = "9.9";
+
     //支付对象
     public static final int PAY_FOR_ORDER = 1;
     public static final int PAY_FOR_VIP = 2;
+
+    //支付方式
+    public static final int PAY_TYPE_ALI = 1;
+    public static final int PAY_TYPE_WECHAT = 2;
+
+    //是否全部用余额支付
+    public static final int IS_BALANCE = 1;
+    public static final int IS_NOT_ALL_BALANCE = 0;
 
     //店家服务对应号码
     public static final String[] SERVICETIPS = {"店内就餐", "打包带走", "外卖到家"};
@@ -35,6 +50,10 @@ public class Constant {
     public static final int CODE_CHANGE_PASSWORD = 102;
     public static final int CODE_GET_ADDRESS = 201;
 
+    //订单进入方式
+    public static final int ORDER_DETAIL_TYPE_BUILD = 100001;
+    public static final int ORDER_DETAIL_TYPE_COMMON = 100000;
+
     //Api请求相关数据
 //    public static final String BASE_URL = "http://010.ming123.net";
     public static final String BASE_URL = "http://192.168.1.239:6490";
@@ -46,6 +65,7 @@ public class Constant {
     public static final String URL_LOGIN = "/v1/user/login";
     public static final String URL_FORGET = "/v1/user/forget";
     public static final String URL_BUY_VIP = "/v1/user/vip";
+    public static final String URL_BUY_BALANCE = "/v1/user/balance";
 
     public static final String URL_MAIN_ALL = "/v1/home/all";
 
@@ -62,4 +82,8 @@ public class Constant {
     public static final String URL_ORDER_UPDATE = "/v1/order/update";
     public static final String URL_ORDER_DETAIL = "/v1/order/detail";
     public static final String URL_ORDER_CANCEL = "/v1/order/cancel";
+    public static final String URL_ORDER_COMPLETE = "/v1/order/complete";
+
+    public static final String URL_PAY_ALI_CONFIG = "/v1/pay/ali/config";
+    public static final String URL_PAY_WECHAT_CONFIG = "/v1/pay/wechat/config";
 }

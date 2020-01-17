@@ -1,17 +1,21 @@
 package com.heiguo.blackfruitvip.ui.order;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.BuyCarAdapter;
@@ -19,6 +23,10 @@ import com.heiguo.blackfruitvip.adapter.GoodBuyCarAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.GoodBean;
+import com.heiguo.blackfruitvip.bean.StoreBean;
+import com.heiguo.blackfruitvip.ui.info.VipActivity;
+import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.view.annotation.ContentView;
@@ -36,8 +44,13 @@ public class GoodDetailActivity extends BaseActivity {
     private List<GoodBean> allList = new ArrayList<>();
     private List<GoodBean> buycayList;
 
+    private StoreBean storeBean;
+    private int serviceIndex = 0;
+
     private GoodBuyCarAdapter bAdapter;
     private int selectPosition = 0;
+
+    private AlertDialog noVipDialog;
 
     @ViewInject(R.id.name)
     private TextView nameTextView;
@@ -68,7 +81,19 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.go_pay)
     private void goPay(View view) {
+        if (buycayList.size() <= 0) {
+            T.s("请先选择商品！");
+            return;
+        }
 
+        Gson gson = new Gson();
+        Intent intent = new Intent(this, ShopDetailActivity.class);
+        String beanStr = gson.toJson(buycayList);
+        String storeBeanStr = gson.toJson(storeBean);
+        intent.putExtra("buycar", beanStr);
+        intent.putExtra("store", storeBeanStr);
+        intent.putExtra("serviceIndex", serviceIndex);
+        startActivity(intent);
     }
 
     @Event(R.id.back)
@@ -78,15 +103,20 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.reduce)
     private void reduce(View view) {
+        if (!checkIsVip()){
+            return;
+        }
         if (allList.get(selectPosition).getCount() > 0) {
             allList.get(selectPosition).setCount(allList.get(selectPosition).getCount() - 1);
             updateBuyCarAndTotal();
         }
-
     }
 
     @Event(R.id.add)
     private void add(View view) {
+        if (!checkIsVip()){
+            return;
+        }
         allList.get(selectPosition).setCount(allList.get(selectPosition).getCount() + 1);
         updateBuyCarAndTotal();
     }
@@ -106,12 +136,25 @@ public class GoodDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initData();
+
+        initNoVipDialog();
+    }
+
+    public boolean checkIsVip(){
+        if (!((BlackFruitVipApplication) getApplication()).isCurrentVip()) {
+            noVipDialog.show();
+            return false;
+        }
+
+        return true;
     }
 
     private void initData() {
         Gson gson = new Gson();
         Intent newIntent = getIntent();
         int position = newIntent.getIntExtra("position", -1);
+        serviceIndex = newIntent.getIntExtra("serviceIndex", 0);
+        storeBean = gson.fromJson(newIntent.getStringExtra("store"), StoreBean.class);
         allList = gson.fromJson(newIntent.getStringExtra("good-list"), new TypeToken<List<GoodBean>>() {
         }.getType());
 
@@ -188,5 +231,52 @@ public class GoodDetailActivity extends BaseActivity {
             opTextView.setText("" + df.format(allOldPrice));
             opTextView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void initNoVipDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noVipDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你当前还不是黑果会员，不能选择购买商品，是否前去购买？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("返回退出");
+        rightButton.setText("前往购买");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noVipDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noVipDialog.cancel();
+                startVipActivity();
+            }
+        });
+
+        noVipDialog.setCancelable(false);
+    }
+
+    private void startVipActivity() {
+        Intent intent = new Intent(this, VipActivity.class);
+        startActivity(intent);
     }
 }

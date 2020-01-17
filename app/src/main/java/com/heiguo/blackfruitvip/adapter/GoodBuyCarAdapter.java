@@ -73,6 +73,9 @@ public class GoodBuyCarAdapter extends RecyclerView.Adapter<GoodBuyCarAdapter.Vi
         holder.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsVip()){
+                    return;
+                }
                 mList.get(position).setCount(mList.get(position).getCount() + 1);
                 holder.countTxt.setText("" + mList.get(position).getCount());
                 context.updateBuyCarAndTotal();
@@ -82,6 +85,9 @@ public class GoodBuyCarAdapter extends RecyclerView.Adapter<GoodBuyCarAdapter.Vi
         holder.reduceImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsVip()){
+                    return;
+                }
                 if (mList.get(position).getCount() > 0) {
                     mList.get(position).setCount(mList.get(position).getCount() - 1);
                     holder.countTxt.setText("" + mList.get(position).getCount());

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="150dip"
-    android:layout_height="100dip"
+    android:layout_height="wrap_content"
     android:background="@drawable/shape_loading_dialog_bg"
     android:gravity="center"
     android:orientation="vertical">
@@ -11,8 +11,9 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dip"
         android:indeterminateBehavior="repeat"
-        android:indeterminateDrawable="@mipmap/ic_common_loading_white"
+        android:indeterminateDrawable="@drawable/anim_loading"
         android:indeterminateOnly="true" />
 
     <TextView
@@ -20,10 +21,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dip"
-        android:layout_marginTop="8dip"
+        android:layout_marginTop="12dip"
         android:layout_marginRight="12dip"
+        android:layout_marginBottom="16dip"
         android:gravity="center"
-        android:text="正在生成订单"
+        android:text=""
         android:textColor="#ffffff"
         android:textSize="17sp" />
 </LinearLayout>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dip"
+        android:gravity="center"
+        android:text="付款方式"
+        android:textColor="#333333"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dip"
+        android:text="请选择付款方式"
+        android:textColor="#999999"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_ali"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:src="@mipmap/ic_common_ali" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:text="支付宝"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/ali_bt"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:background="@drawable/select_pay_type"
+                android:button="@null"
+                android:checked="true"
+                android:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_wechat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:src="@mipmap/ic_common_wechat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:text="微信支付"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/wechat_bt"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:background="@drawable/select_pay_type"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/sure"
+        android:layout_width="match_parent"
+        android:layout_height="38dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="20dip"
+        android:layout_marginRight="15dip"
+        android:layout_marginBottom="15dip"
+        android:background="@drawable/shape_logout_bg"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+</LinearLayout>

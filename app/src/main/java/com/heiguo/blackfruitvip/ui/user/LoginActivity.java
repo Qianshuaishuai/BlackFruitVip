@@ -34,6 +34,7 @@ import org.xutils.x;
 public class LoginActivity extends BaseActivity {
 
     private Dialog userDialog;
+    private Dialog loadingDialog;
 
     @ViewInject(R.id.phone)
     private EditText phoneEditText;
@@ -52,7 +53,7 @@ public class LoginActivity extends BaseActivity {
             T.s("密码不能为空");
             return;
         }
-
+        loadingDialog.show();
         RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_LOGIN);
         params.addQueryStringParameter("phone", phoneEditText.getText().toString());
         params.addQueryStringParameter("password", passwordEditText.getText().toString());
@@ -83,7 +84,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFinished() {
-
+                loadingDialog.cancel();
             }
         });
     }
@@ -111,6 +112,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         initUserDialog();
+        initLoadingDialog();
         jdugeCanAutoLogin();
     }
 
@@ -126,7 +128,7 @@ public class LoginActivity extends BaseActivity {
             return;
         } else {
             phoneEditText.setText(phone);
-
+            loadingDialog.show();
             RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_AUTO);
             params.addQueryStringParameter("phone", phone);
             x.http().get(params, new Callback.CommonCallback<String>() {
@@ -154,10 +156,29 @@ public class LoginActivity extends BaseActivity {
 
                 @Override
                 public void onFinished() {
-
+                    loadingDialog.cancel();
                 }
             });
         }
+    }
+
+    private void initLoadingDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_loading, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        loadingDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("登录中");
+
+        loadingDialog.setCancelable(false);
+        loadingDialog.show();
     }
 
     private void initUserDialog() {

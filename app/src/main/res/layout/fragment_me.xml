@@ -32,277 +32,290 @@
     </LinearLayout>
 
 
-    <RelativeLayout
-        android:layout_marginTop="20dip"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/go_vip"
-            android:layout_width="336dip"
-            android:layout_height="212dip"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/ic_common_vip" />
-
         <LinearLayout
-            android:layout_marginTop="40dip"
             android:layout_width="match_parent"
-            android:layout_height="180dip"
-            android:background="@mipmap/ic_common_person_bg"
-            android:paddingTop="40dip"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--中间钱包明细开始-->
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dip"
-                android:layout_marginRight="20dip"
-                android:orientation="horizontal">
+                android:layout_marginTop="20dip">
+
+                <ImageView
+                    android:id="@+id/go_vip"
+                    android:layout_width="336dip"
+                    android:layout_height="212dip"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/ic_common_vip" />
 
                 <LinearLayout
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/save"
-                        android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dip"
+                    android:layout_marginTop="40dip"
+                    android:background="@mipmap/ic_common_person_bg"
+                    android:orientation="vertical"
+                    android:paddingTop="40dip">
+                    <!--中间钱包明细开始-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="9 元"
-                        android:textColor="#333333"
-                        android:textSize="18sp" />
+                        android:layout_marginLeft="20dip"
+                        android:layout_marginRight="20dip"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dip"
-                        android:text="已节省"
-                        android:textColor="#999999"
-                        android:textSize="12sp" />
+                        <LinearLayout
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/save"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9 元"
+                                android:textColor="#333333"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dip"
+                                android:text="已节省"
+                                android:textColor="#999999"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="31dip"
+                            android:layout_gravity="center_vertical"
+                            android:background="#f3f3f3"></View>
+
+                        <LinearLayout
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/balance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="13 元"
+                                android:textColor="#333333"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dip"
+                                android:text="钱包余额"
+                                android:textColor="#999999"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="31dip"
+                            android:layout_gravity="center_vertical"
+                            android:background="#f3f3f3"></View>
+
+                        <LinearLayout
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/vip_day"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 天"
+                                android:textColor="#333333"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dip"
+                                android:text="VIP剩余"
+                                android:textColor="#999999"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <!--中间钱包明细结束-->
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dip"
+                        android:layout_marginLeft="15dip"
+                        android:layout_marginTop="18dip"
+                        android:layout_marginRight="15dip"
+                        android:background="#f3f3f3" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="31dip"
-                    android:layout_gravity="center_vertical"
-                    android:background="#f3f3f3"></View>
+            </RelativeLayout>
+
+            <!--个人信息操作栏开始-->
+            <LinearLayout
+                android:id="@+id/layout_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dip"
+                android:layout_marginTop="15dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="15dip"
+                android:paddingBottom="15dip">
+
+                <ImageView
+                    android:layout_width="18dip"
+                    android:layout_height="18dip"
+                    android:src="@mipmap/ic_me_address" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9dip"
+                    android:text="配送地址"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
 
                 <LinearLayout
-                    android:layout_width="0dip"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:gravity="right"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/balance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="13 元"
-                        android:textColor="#333333"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dip"
-                        android:text="钱包余额"
-                        android:textColor="#999999"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dip"
-                    android:layout_height="31dip"
-                    android:layout_gravity="center_vertical"
-                    android:background="#f3f3f3"></View>
-
-                <LinearLayout
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/vip_day"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0 天"
-                        android:textColor="#333333"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dip"
-                        android:text="VIP剩余"
-                        android:textColor="#999999"
-                        android:textSize="12sp" />
+                    <ImageView
+                        android:layout_width="16dip"
+                        android:layout_height="16dip"
+                        android:layout_marginRight="15dip"
+                        android:src="@mipmap/ic_common_right" />
                 </LinearLayout>
             </LinearLayout>
-            <!--中间钱包明细结束-->
 
-            <ImageView
-                android:id="@+id/img"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="70dip"
-                android:layout_marginLeft="15dip"
-                android:layout_marginTop="18dip"
-                android:layout_marginRight="15dip"
-                android:background="#f3f3f3" />
+                android:layout_height="0.5dip"
+                android:background="#f3f3f3"></View>
+
+            <LinearLayout
+                android:id="@+id/layout_change_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="15dip"
+                android:paddingBottom="15dip">
+
+                <ImageView
+                    android:layout_width="18dip"
+                    android:layout_height="18dip"
+                    android:src="@mipmap/ic_me_change_password" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9dip"
+                    android:text="修改密码"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dip"
+                        android:layout_height="16dip"
+                        android:layout_marginRight="15dip"
+                        android:src="@mipmap/ic_common_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="#f3f3f3"></View>
+
+            <LinearLayout
+                android:id="@+id/layout_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="15dip"
+                android:paddingBottom="15dip">
+
+                <ImageView
+                    android:layout_width="18dip"
+                    android:layout_height="18dip"
+                    android:src="@mipmap/ic_me_phone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="9dip"
+                    android:text="联系我们"
+                    android:textColor="#363636"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dip"
+                        android:layout_height="16dip"
+                        android:layout_marginRight="15dip"
+                        android:src="@mipmap/ic_common_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="#f3f3f3"></View>
+
+            <!--个人信息操作栏结束-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f3f3f3"
+                android:gravity="center_horizontal"
+                android:paddingTop="48dip"
+                android:paddingBottom="80dip">
+
+                <Button
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dip"
+                    android:layout_marginLeft="15dip"
+                    android:layout_marginTop="20dip"
+                    android:layout_marginRight="15dip"
+                    android:background="@drawable/shape_logout_bg"
+                    android:text="退出登录"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
-
-    </RelativeLayout>
-
-    <!--个人信息操作栏开始-->
-    <LinearLayout
-        android:id="@+id/layout_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dip"
-        android:layout_marginTop="30dip"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="18dip"
-            android:layout_height="18dip"
-            android:src="@mipmap/ic_me_address" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dip"
-            android:text="配送地址"
-            android:textColor="#363636"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="16dip"
-                android:layout_height="16dip"
-                android:layout_marginRight="15dip"
-                android:src="@mipmap/ic_common_right" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_marginTop="15dip"
-        android:background="#f3f3f3"></View>
-
-    <LinearLayout
-        android:id="@+id/layout_change_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dip"
-        android:layout_marginTop="15dip"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="18dip"
-            android:layout_height="18dip"
-            android:src="@mipmap/ic_me_change_password" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dip"
-            android:text="修改密码"
-            android:textColor="#363636"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="16dip"
-                android:layout_height="16dip"
-                android:layout_marginRight="15dip"
-                android:src="@mipmap/ic_common_right" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_marginTop="15dip"
-        android:background="#f3f3f3"></View>
-
-    <LinearLayout
-        android:id="@+id/layout_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dip"
-        android:layout_marginTop="15dip"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="18dip"
-            android:layout_height="18dip"
-            android:src="@mipmap/ic_me_phone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="9dip"
-            android:text="联系我们"
-            android:textColor="#363636"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="16dip"
-                android:layout_height="16dip"
-                android:layout_marginRight="15dip"
-                android:src="@mipmap/ic_common_right" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dip"
-        android:layout_marginTop="15dip"
-        android:background="#f3f3f3"></View>
-
-    <!--个人信息操作栏结束-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="48dip"
-        android:background="#f3f3f3"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="42dip"
-            android:layout_marginLeft="15dip"
-            android:layout_marginTop="20dip"
-            android:layout_marginRight="15dip"
-            android:background="@drawable/shape_logout_bg"
-            android:text="退出登录"
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

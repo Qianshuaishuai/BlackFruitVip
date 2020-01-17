@@ -45,6 +45,7 @@ import java.util.List;
 public class SearchActivity extends BaseActivity {
 
     private SearchResultAdapter adapter;
+    private CityBean cityBean;
     private List<StoreBean> storeList = new ArrayList<>();
 
     private StoreBean selectBean;
@@ -103,11 +104,17 @@ public class SearchActivity extends BaseActivity {
         startActivity(newIntent);
     }
 
+    @Event(R.id.go_in)
+    private void goIn(View view) {
+        startMenuActivity();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //暂时测试
+        getCurrentCityBean();
         getStoreList("");
 
         initView();
@@ -134,18 +141,17 @@ public class SearchActivity extends BaseActivity {
         groupService.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (rbLeft.isChecked()){
+                if (rbLeft.isChecked()) {
                     serviceIndex = 0;
                 }
 
-                if (rbMiddle.isChecked()){
+                if (rbMiddle.isChecked()) {
                     serviceIndex = 1;
                 }
 
-                if (rbRight.isChecked()){
+                if (rbRight.isChecked()) {
                     serviceIndex = 2;
                 }
-                startMenuActivity();
             }
         });
     }
@@ -161,15 +167,15 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void getCurrentCityBean() {
-        CityBean bean = ((BlackFruitVipApplication) getApplication()).getCityPick();
-        adapter.setLatLonPoint(new LatLonPoint(bean.getLatitude(), bean.getLongitude()));
+        cityBean = ((BlackFruitVipApplication) getApplication()).getCityPick();
+//        adapter.setLatLonPoint(new LatLonPoint(cityBean.getLatitude(), cityBean.getLongitude()));
     }
 
     private void getStoreList(String search) {
         RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_STORE_LIST);
         params.addQueryStringParameter("search", search);
-        params.addQueryStringParameter("lat", 0.0);
-        params.addQueryStringParameter("long", 0.0);
+        params.addQueryStringParameter("lat", cityBean.getLatitude());
+        params.addQueryStringParameter("long", cityBean.getLongitude());
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -203,8 +209,7 @@ public class SearchActivity extends BaseActivity {
 
     private void initList() {
         adapter = new SearchResultAdapter(storeList);
-        CityBean bean = ((BlackFruitVipApplication) getApplication()).getCityPick();
-        adapter.setLatLonPoint(new LatLonPoint(bean.getLatitude(), bean.getLongitude()));
+        adapter.setLatLonPoint(new LatLonPoint(cityBean.getLatitude(), cityBean.getLongitude()));
         adapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {

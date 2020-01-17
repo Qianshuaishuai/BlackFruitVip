@@ -22,20 +22,27 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
+            <LinearLayout
                 android:id="@+id/back"
-                android:layout_width="10dip"
-                android:layout_height="18dip"
-                android:layout_marginLeft="14dip"
-                android:src="@mipmap/ic_common_back" />
+                android:layout_width="44dip"
+                android:layout_height="44dip"
+                android:orientation="vertical">
 
+                <ImageView
+                    android:layout_width="16dip"
+                    android:layout_height="16dip"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="14dip"
+                    android:src="@mipmap/ic_common_back" />
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="32dip"
-                android:layout_marginLeft="44dip"
-                android:layout_marginRight="68dip"
+                android:layout_marginLeft="38dip"
+                android:layout_marginRight="72dip"
                 android:background="@drawable/shape_search_bg"
                 android:gravity="center"
                 android:hint="搜索店铺" />
@@ -74,7 +81,7 @@
         <LinearLayout
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
-            android:layout_height="290dip"
+            android:layout_height="340dip"
             android:background="#ffffff"
             android:orientation="vertical">
 
@@ -247,6 +254,18 @@
                     android:textColor="#363636"
                     android:textSize="16sp" />
             </RadioGroup>
+
+            <Button
+                android:id="@+id/go_in"
+                android:layout_width="match_parent"
+                android:layout_height="42dip"
+                android:layout_marginLeft="15dip"
+                android:layout_marginTop="20dip"
+                android:layout_marginRight="15dip"
+                android:background="@drawable/shape_logout_bg"
+                android:text="进入店铺"
+                android:textColor="#333333"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

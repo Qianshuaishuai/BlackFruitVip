@@ -1,11 +1,15 @@
 package com.heiguo.blackfruitvip.ui.order;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,6 +32,8 @@ import com.heiguo.blackfruitvip.response.AddressListResponse;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.OrderBuildResponse;
 import com.heiguo.blackfruitvip.ui.info.AddressActivity;
+import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.w3c.dom.Text;
@@ -55,11 +61,17 @@ public class ShopDetailActivity extends BaseActivity {
     private AddressBean addressBean;
     private List<AddressBean> addressList;
 
+    private int payType = Constant.PAY_TYPE_ALI;
+
+    private AlertDialog loadingDialog;
+    private AlertDialog payTypeDialog;
+
     private double totalPrice = 0.00;
     private double totalOldPrice = 0.00;
     private int totalCount = 0;
     private double savePrice = 0.00;
     private double needPayPrice = 0.00;
+    private double balancePayPrice = 0.00;
 
     @ViewInject(R.id.goods_list)
     private RecyclerView listRecycleView;
@@ -84,6 +96,9 @@ public class ShopDetailActivity extends BaseActivity {
 
     @ViewInject(R.id.mode_pay)
     private TextView modePayTextView;
+
+    @ViewInject(R.id.mode_name)
+    private TextView modeNameTextView;
 
     @ViewInject(R.id.con_phone)
     private TextView conPhoneTextView;
@@ -111,7 +126,7 @@ public class ShopDetailActivity extends BaseActivity {
 
     @Event(R.id.layout_mode)
     private void changePayMode(View view) {
-
+        payTypeDialog.show();
     }
 
     @Event(R.id.change_address)
@@ -121,7 +136,7 @@ public class ShopDetailActivity extends BaseActivity {
 
     @Event(R.id.go_pay)
     private void goPay(View view) {
-        buildNewOrder();
+        goToPay();
     }
 
     @Event(R.id.back)
@@ -132,13 +147,58 @@ public class ShopDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initView();
         initData();
+        initLoadingDialog();
+        initPayTypeDialog();
         getAddressList();
     }
 
-    private void buildNewOrder() {
+    private void goToPay() {
+        //如果余额足够支付
+        if (needPayPrice <= 0) {
+            RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_BUY_BALANCE);
+            params.addQueryStringParameter("phone", userBean.getPhone());
+            params.addQueryStringParameter("payCount", totalPrice);
+
+            x.http().post(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    CommonResponse response = gson.fromJson(result, CommonResponse.class);
+                    if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                        T.s("余额支付成功");
+                        buildNewOrder(Constant.IS_BALANCE);
+                    } else {
+                        T.s("余额支付失败");
+                    }
+
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    T.s("请求出错，请检查网络");
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+                    loadingDialog.cancel();
+                }
+            });
+
+            return;
+        }
+
+        buildNewOrder(Constant.IS_NOT_ALL_BALANCE);
+    }
+
+    private void buildNewOrder(final int isBalance) {
+
         //把商品信息转为string
         List<BuildGoodBean> buildGoodList = new ArrayList<>();
         for (int b = 0; b < buyCarList.size(); b++) {
@@ -153,9 +213,11 @@ public class ShopDetailActivity extends BaseActivity {
         Gson gson = new Gson();
         String goodBeanListStr = gson.toJson(buildGoodList);
 
+        loadingDialog.show();
         RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_ORDER_BUILD);
         params.setBodyContentType("application/json;charset=utf-8");
         params.addQueryStringParameter("phone", userBean.getPhone());
+        params.addQueryStringParameter("isBalance", isBalance);
         params.addQueryStringParameter("storeId", storeBean.getId());
         params.addQueryStringParameter("oldPrice", totalOldPrice);
         params.addQueryStringParameter("realPrice", totalPrice);
@@ -164,6 +226,8 @@ public class ShopDetailActivity extends BaseActivity {
         params.addQueryStringParameter("addressDetail", addressBean.getDetail());
         params.addQueryStringParameter("lat", addressBean.getLatitude());
         params.addQueryStringParameter("long", addressBean.getLongitude());
+        params.addQueryStringParameter("totalCount", totalCount);
+        params.addQueryStringParameter("contractName", addressBean.getName());
         params.setBodyContent(goodBeanListStr);
 
         x.http().post(params, new Callback.CommonCallback<String>() {
@@ -173,10 +237,12 @@ public class ShopDetailActivity extends BaseActivity {
                 OrderBuildResponse response = gson.fromJson(result, OrderBuildResponse.class);
                 if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                     T.s("创建成功");
-                    startOrderDetailActivity(response.getF_data());
+                    startOrderDetailActivity(response.getF_data(), isBalance);
                 } else {
+                    System.out.println(response.getF_responseMsg());
                     T.s("创建订单失败");
                 }
+
             }
 
             @Override
@@ -191,14 +257,37 @@ public class ShopDetailActivity extends BaseActivity {
 
             @Override
             public void onFinished() {
-
+                loadingDialog.cancel();
             }
         });
     }
 
-    private void startOrderDetailActivity(long orderId) {
+    private void initLoadingDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_loading, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        loadingDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("正在生成订单");
+
+        loadingDialog.setCancelable(false);
+    }
+
+    private void startOrderDetailActivity(long orderId, int isBalance) {
         Intent intent = new Intent(this, OrderDetailActivity.class);
         intent.putExtra("order-id", orderId);
+        if (isBalance != Constant.IS_BALANCE) {
+            intent.putExtra("start-mode", Constant.ORDER_DETAIL_TYPE_BUILD);
+            intent.putExtra("balance", balancePayPrice);
+            intent.putExtra("pay-type", payType);
+        }
         startActivity(intent);
     }
 
@@ -290,8 +379,10 @@ public class ShopDetailActivity extends BaseActivity {
         if (needPayPrice == 0) {
             modePayTextView.setText("无需另外支付");
             modeLayout.setVisibility(View.GONE);
+            balancePayPrice = totalPrice;
         } else {
             modePayTextView.setText("￥" + df.format(needPayPrice));
+            balancePayPrice = userBean.getBalance();
         }
 
         //更新店铺信息
@@ -372,6 +463,77 @@ public class ShopDetailActivity extends BaseActivity {
 
                 if (rbRight.isChecked()) {
                     serviceIndex = 2;
+                }
+            }
+        });
+    }
+
+    private void initPayTypeDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_select_pay, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        payTypeDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        Button sureButton = (Button) view.findViewById(R.id.sure);
+        sureButton.setText("确认");
+        final CheckBox aliBox = (CheckBox) view.findViewById(R.id.ali_bt);
+        final CheckBox wcBox = (CheckBox) view.findViewById(R.id.wechat_bt);
+        LinearLayout aliLayout = (LinearLayout) view.findViewById(R.id.layout_ali);
+        LinearLayout wcLayout = (LinearLayout) view.findViewById(R.id.layout_wechat);
+
+        if (payType == Constant.PAY_TYPE_ALI) {
+            aliBox.setChecked(true);
+            wcBox.setChecked(false);
+        } else if (payType == Constant.PAY_TYPE_WECHAT) {
+            aliBox.setChecked(false);
+            wcBox.setChecked(true);
+        }
+
+        aliLayout.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (payType != Constant.PAY_TYPE_ALI) {
+                    aliBox.setChecked(true);
+                    wcBox.setChecked(false);
+                    payType = Constant.PAY_TYPE_ALI;
+                }
+            }
+        });
+
+        wcLayout.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (payType != Constant.PAY_TYPE_WECHAT) {
+                    aliBox.setChecked(false);
+                    wcBox.setChecked(true);
+                    payType = Constant.PAY_TYPE_WECHAT;
+                }
+            }
+        });
+
+        payTypeDialog.setCancelable(false);
+
+        sureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                payTypeDialog.cancel();
+                switch (payType) {
+                    case Constant.PAY_TYPE_ALI:
+                        modeNameTextView.setText("支付宝");
+                        break;
+                    case Constant.PAY_TYPE_WECHAT:
+                        modeNameTextView.setText("微信支付");
+                        break;
                 }
             }
         });

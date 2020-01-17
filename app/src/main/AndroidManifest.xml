@@ -36,13 +36,7 @@
         <activity
             android:name=".ui.info.CityActivity"
             android:theme="@style/CityPickDiyStyle"></activity>
-        <activity android:name=".ui.order.OrderDetailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.order.OrderDetailActivity"></activity>
         <activity android:name=".ui.order.MenuActivity" />
         <activity android:name=".ui.info.VipActivity" />
         <activity android:name=".ui.order.GoodDetailActivity" />
@@ -57,7 +51,11 @@
         <activity android:name=".ui.user.ForgetActivity" />
         <activity android:name=".ui.user.RegisterActivity" />
         <activity android:name=".ui.user.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".ui.user.MainActivity" />
 

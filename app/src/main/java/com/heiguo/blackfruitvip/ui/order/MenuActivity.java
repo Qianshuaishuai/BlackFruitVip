@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.BuyCarAdapter;
@@ -24,6 +25,7 @@ import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.bean.TypeBean;
 import com.heiguo.blackfruitvip.response.GoodListResponse;
+import com.heiguo.blackfruitvip.ui.info.VipActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;
@@ -46,6 +48,8 @@ public class MenuActivity extends BaseActivity {
 
     private StoreBean storeBean;
     private int serviceIndex = 0;
+
+    private AlertDialog noVipDialog;
 
     private List<GoodBean> allList;
     private List<GoodBean> currentList;
@@ -85,6 +89,12 @@ public class MenuActivity extends BaseActivity {
 
     @Event(R.id.go_pay)
     private void goPay(View view) {
+
+        if (buycayList.size() <= 0) {
+            T.s("请先选择商品！");
+            return;
+        }
+
         Gson gson = new Gson();
         Intent intent = new Intent(this, ShopDetailActivity.class);
         String beanStr = gson.toJson(buycayList);
@@ -101,6 +111,63 @@ public class MenuActivity extends BaseActivity {
         initView();
         initDialog();
         initData();
+        initNoVipDialog();
+    }
+
+    private void initNoVipDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noVipDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你当前还不是黑果会员，不能选择购买商品，是否前去购买？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("返回退出");
+        rightButton.setText("前往购买");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noVipDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noVipDialog.cancel();
+                startVipActivity();
+            }
+        });
+
+        noVipDialog.setCancelable(false);
+    }
+
+
+    private void startVipActivity() {
+        Intent intent = new Intent(this, VipActivity.class);
+        startActivity(intent);
+    }
+
+    public boolean checkIsVip() {
+        if (!((BlackFruitVipApplication) getApplication()).isCurrentVip()) {
+            noVipDialog.show();
+            return false;
+        }
+
+        return true;
     }
 
     private void initData() {
@@ -135,6 +202,7 @@ public class MenuActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     T.s("请求出错，请检查网络");
+                    System.out.println(ex);
                     finish();
                 }
 
@@ -250,6 +318,8 @@ public class MenuActivity extends BaseActivity {
         Intent newIntent = new Intent(this, GoodDetailActivity.class);
         newIntent.putExtra("good-list", beanString);
         newIntent.putExtra("position", allListPosition(position));
+        newIntent.putExtra("store", gson.toJson(storeBean));
+        newIntent.putExtra("serviceIndex", serviceIndex);
         startActivityForResult(newIntent, Constant.GOOD_DETAIL_BACK_REQUEST_CODE);
     }
 

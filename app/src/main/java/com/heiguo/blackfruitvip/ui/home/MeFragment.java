@@ -20,6 +20,7 @@ import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.bean.UserBean;
+import com.heiguo.blackfruitvip.bean.event.UpdateInfoEvent;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.ui.info.AddressActivity;
 import com.heiguo.blackfruitvip.ui.info.VipActivity;
@@ -27,6 +28,9 @@ import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -95,6 +99,11 @@ public class MeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initView() {
@@ -198,12 +207,19 @@ public class MeFragment extends Fragment {
             }
         });
 
+        updateData();
+    }
+
+    private void updateData() {
         //更新数据
         userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
         phone.setText(userInfo.getPhone());
         balance.setText(Float.toString(userInfo.getBalance()) + "元");
         save.setText(Float.toString(userInfo.getSaveCount()) + "元");
         vipDay.setText(Integer.toString(userInfo.getVipDay()) + "天");
+        if (userInfo.getVipDay()<=0){
+            vipDay.setText("暂未开通");
+        }
     }
 
     private void callPhone() {
@@ -237,6 +253,18 @@ public class MeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -276,5 +304,10 @@ public class MeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UpdateInfoEvent event) {
+        updateData();
     }
 }

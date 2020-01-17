@@ -81,6 +81,9 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsVip()){
+                    return;
+                }
                 mList.get(position).setCount(mList.get(position).getCount() + 1);
                 holder.countTxt.setText("" + mList.get(position).getCount());
                 context.updateBuyCarAndTotal();
@@ -90,6 +93,9 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.reduceImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsVip()){
+                    return;
+                }
                 if (mList.get(position).getCount() > 0) {
                     mList.get(position).setCount(mList.get(position).getCount() - 1);
                     holder.countTxt.setText("" + mList.get(position).getCount());

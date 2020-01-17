@@ -8,6 +8,7 @@ public class OrderBean {
     private double realPrice;
     private double oldPrice;
     private int payType;
+    private int totalCount;
     private double payPrice;
     private String payOrder;
     private String payTime;
@@ -19,6 +20,7 @@ public class OrderBean {
     private int service;
     private String address;
     private String addressDetail;
+    private String contractName;
     private double latitude;
     private double longitude;
     private int payTimeOut;
@@ -192,5 +194,29 @@ public class OrderBean {
 
     public void setStore(StoreBean store) {
         this.store = store;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public String getCancelTime() {
+        return cancelTime;
+    }
+
+    public void setCancelTime(String cancelTime) {
+        this.cancelTime = cancelTime;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
     }
 }
