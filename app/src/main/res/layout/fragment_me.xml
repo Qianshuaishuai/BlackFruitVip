@@ -54,6 +54,7 @@
                     android:src="@mipmap/ic_common_vip" />
 
                 <LinearLayout
+                    android:id="@+id/info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="180dip"
                     android:layout_marginTop="40dip"
@@ -161,7 +162,7 @@
                         android:layout_marginLeft="15dip"
                         android:layout_marginTop="18dip"
                         android:layout_marginRight="15dip"
-                        android:background="#f3f3f3" />
+                        android:background="@mipmap/ic_common_share" />
                 </LinearLayout>
 
             </RelativeLayout>

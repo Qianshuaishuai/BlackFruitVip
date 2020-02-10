@@ -51,6 +51,7 @@ public class GoodDetailActivity extends BaseActivity {
     private int selectPosition = 0;
 
     private AlertDialog noVipDialog;
+    private AlertDialog noLoginDialog;
 
     @ViewInject(R.id.name)
     private TextView nameTextView;
@@ -79,6 +80,18 @@ public class GoodDetailActivity extends BaseActivity {
     @ViewInject(R.id.car_list)
     private RecyclerView buylList;
 
+    @ViewInject(R.id.total_count)
+    private TextView totalCountTextView;
+
+    @Event(R.id.bottom)
+    private void bottomClick(View view){
+        if(buylList.getVisibility() == View.VISIBLE){
+            buylList.setVisibility(View.GONE);
+        }else if(buylList.getVisibility() == View.GONE){
+            buylList.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Event(R.id.go_pay)
     private void goPay(View view) {
         if (buycayList.size() <= 0) {
@@ -103,6 +116,9 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.reduce)
     private void reduce(View view) {
+        if (!checkIsLogin()){
+            return;
+        }
         if (!checkIsVip()){
             return;
         }
@@ -114,6 +130,9 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.add)
     private void add(View view) {
+        if (!checkIsLogin()){
+            return;
+        }
         if (!checkIsVip()){
             return;
         }
@@ -137,12 +156,23 @@ public class GoodDetailActivity extends BaseActivity {
         initView();
         initData();
 
+        initNoLoginDialog();
         initNoVipDialog();
     }
 
     public boolean checkIsVip(){
         if (!((BlackFruitVipApplication) getApplication()).isCurrentVip()) {
             noVipDialog.show();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean checkIsLogin(){
+        String phone = ((BlackFruitVipApplication)getApplication()).getLoginPhone();
+        if (phone == "") {
+            noLoginDialog.show();
             return false;
         }
 
@@ -207,6 +237,7 @@ public class GoodDetailActivity extends BaseActivity {
         DecimalFormat df = new DecimalFormat("#.00");
         double allPrice = 0;
         double allOldPrice = 0;
+        int totalCount = 0;
         for (int a = 0; a < allList.size(); a++) {
             allPrice = allPrice + (allList.get(a).getPrice() * allList.get(a).getCount());
             allOldPrice = allOldPrice + (allList.get(a).getoPrice() * allList.get(a).getCount());
@@ -215,6 +246,12 @@ public class GoodDetailActivity extends BaseActivity {
             }
         }
 
+        for(int b = 0; b < buycayList.size(); b++){
+            totalCount = totalCount + buycayList.get(b).getCount();
+        }
+
+        totalCountTextView.setText("共"+ totalCount+"件商品");
+
         opTextView.getPaint().setAntiAlias(true);
         opTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
 
@@ -222,11 +259,11 @@ public class GoodDetailActivity extends BaseActivity {
         countTextView.setText("" + allList.get(selectPosition).getCount());
 
         if (buycayList.size() == 0) {
-            buylList.setVisibility(View.GONE);
+//            buylList.setVisibility(View.GONE);
             vpTextView.setText("未选购商品");
             opTextView.setVisibility(View.GONE);
         } else {
-            buylList.setVisibility(View.VISIBLE);
+//            buylList.setVisibility(View.VISIBLE);
             vpTextView.setText("" + df.format(allPrice));
             opTextView.setText("" + df.format(allOldPrice));
             opTextView.setVisibility(View.VISIBLE);
@@ -277,6 +314,53 @@ public class GoodDetailActivity extends BaseActivity {
 
     private void startVipActivity() {
         Intent intent = new Intent(this, VipActivity.class);
+        startActivity(intent);
+    }
+
+    private void initNoLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noLoginDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你还未登录，是否前去登录？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("继续浏览");
+        rightButton.setText("前往登录");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+                startLoginActivity();
+            }
+        });
+
+        noLoginDialog.setCancelable(false);
+    }
+
+    private void startLoginActivity() {
+        finish();
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }

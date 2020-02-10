@@ -81,6 +81,9 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsLogin()){
+                    return;
+                }
                 if (!context.checkIsVip()){
                     return;
                 }
@@ -93,6 +96,9 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.reduceImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!context.checkIsLogin()){
+                    return;
+                }
                 if (!context.checkIsVip()){
                     return;
                 }

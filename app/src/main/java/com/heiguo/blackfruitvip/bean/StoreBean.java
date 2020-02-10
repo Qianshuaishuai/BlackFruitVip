@@ -1,7 +1,7 @@
 package com.heiguo.blackfruitvip.bean;
 
 public class StoreBean {
-    private int id;
+    private long id;
     private String name;
     private String image;
     private String tel;
@@ -9,6 +9,9 @@ public class StoreBean {
     private double longitude;
     private String address;
     private String announ;
+    private double maxDistance;
+    private String time1Start;
+    private String time1End;
 
     private int service1;
     private int service2;
@@ -54,11 +57,11 @@ public class StoreBean {
         this.announ = announ;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -100,5 +103,29 @@ public class StoreBean {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public double getMaxDistance() {
+        return maxDistance;
+    }
+
+    public void setMaxDistance(double maxDistance) {
+        this.maxDistance = maxDistance;
+    }
+
+    public String getTime1Start() {
+        return time1Start;
+    }
+
+    public void setTime1Start(String time1Start) {
+        this.time1Start = time1Start;
+    }
+
+    public String getTime1End() {
+        return time1End;
+    }
+
+    public void setTime1End(String time1End) {
+        this.time1End = time1End;
     }
 }

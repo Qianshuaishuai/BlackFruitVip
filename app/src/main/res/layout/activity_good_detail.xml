@@ -46,8 +46,7 @@
         <ImageView
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:layout_height="220dip"
-            android:background="@mipmap/test_good" />
+            android:layout_height="220dip" />
 
         <View
             android:layout_width="match_parent"
@@ -184,6 +183,15 @@
             android:text="￥68.00"
             android:textColor="#999999"
             android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/total_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:text="共0件商品"
+            android:textColor="@color/colorYellow"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

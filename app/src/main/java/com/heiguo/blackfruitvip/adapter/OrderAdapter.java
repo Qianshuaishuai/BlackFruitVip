@@ -87,7 +87,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 holder.layoutBt.setVisibility(View.GONE);
                 break;
             case 4:
-                holder.tipTxt.setText("等待商家送货");
+                if(mList.get(position).getService() == 2){
+                    holder.tipTxt.setText("等待商家送货");
+                }else{
+                    holder.tipTxt.setText("查看取餐码");
+                }
                 break;
             case 5:
                 holder.tipTxt.setText("已完成");

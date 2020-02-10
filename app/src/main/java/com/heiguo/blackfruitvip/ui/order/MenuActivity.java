@@ -26,6 +26,7 @@ import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.bean.TypeBean;
 import com.heiguo.blackfruitvip.response.GoodListResponse;
 import com.heiguo.blackfruitvip.ui.info.VipActivity;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;
@@ -50,6 +51,7 @@ public class MenuActivity extends BaseActivity {
     private int serviceIndex = 0;
 
     private AlertDialog noVipDialog;
+    private AlertDialog noLoginDialog;
 
     private List<GoodBean> allList;
     private List<GoodBean> currentList;
@@ -77,6 +79,18 @@ public class MenuActivity extends BaseActivity {
 
     @ViewInject(R.id.name)
     private TextView nameTextView;
+
+    @ViewInject(R.id.total_count)
+    private TextView totalCountTextView;
+
+    @Event(R.id.bottom)
+    private void bottomClick(View view){
+        if(buylList.getVisibility() == View.VISIBLE){
+            buylList.setVisibility(View.GONE);
+        }else if(buylList.getVisibility() == View.GONE){
+            buylList.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Event(R.id.back)
     private void back(View view) {
@@ -112,6 +126,7 @@ public class MenuActivity extends BaseActivity {
         initDialog();
         initData();
         initNoVipDialog();
+        initNoLoginDialog();
     }
 
     private void initNoVipDialog() {
@@ -161,6 +176,63 @@ public class MenuActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private void initNoLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noLoginDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你还未登录，是否前去登录？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("继续浏览");
+        rightButton.setText("前往登录");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+                startLoginActivity();
+            }
+        });
+
+        noLoginDialog.setCancelable(false);
+    }
+
+    private void startLoginActivity() {
+        finish();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public boolean checkIsLogin(){
+        String phone = ((BlackFruitVipApplication)getApplication()).getLoginPhone();
+        if (phone == "") {
+            noLoginDialog.show();
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean checkIsVip() {
         if (!((BlackFruitVipApplication) getApplication()).isCurrentVip()) {
             noVipDialog.show();
@@ -177,7 +249,7 @@ public class MenuActivity extends BaseActivity {
         if (beanStr != null) {
             Gson gson = new Gson();
             storeBean = gson.fromJson(beanStr, StoreBean.class);
-
+            nameTextView.setText(storeBean.getName());
             RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_GOOD_LIST);
             params.addQueryStringParameter("store_id", storeBean.getId());
             x.http().get(params, new Callback.CommonCallback<String>() {
@@ -340,10 +412,11 @@ public class MenuActivity extends BaseActivity {
 
         currentList.clear();
         for (int a = 0; a < allList.size(); a++) {
-            if (allList.get(a).getId() == type) {
+            if (allList.get(a).getType() == type) {
                 currentList.add(allList.get(a));
             }
         }
+
         adapter.notifyDataSetChanged();
         dAdapter.notifyDataSetChanged();
     }
@@ -366,6 +439,7 @@ public class MenuActivity extends BaseActivity {
         DecimalFormat df = new DecimalFormat("#.00");
         double allPrice = 0;
         double allOldPrice = 0;
+        int totalCount = 0;
         for (int a = 0; a < allList.size(); a++) {
             allPrice = allPrice + (allList.get(a).getPrice() * allList.get(a).getCount());
             allOldPrice = allOldPrice + (allList.get(a).getoPrice() * allList.get(a).getCount());
@@ -374,18 +448,24 @@ public class MenuActivity extends BaseActivity {
             }
         }
 
+        for(int b = 0; b < buycayList.size(); b++){
+            totalCount = totalCount + buycayList.get(b).getCount();
+        }
+
         oldPriceTextView.getPaint().setAntiAlias(true);
         oldPriceTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+
+        totalCountTextView.setText("共"+ totalCount+"件商品");
 
         bAdapter.notifyDataSetChanged();
         dAdapter.notifyDataSetChanged();
 
         if (buycayList.size() == 0) {
-            buylList.setVisibility(View.GONE);
+//            buylList.setVisibility(View.GONE);
             vpriceTextView.setText("未选购商品");
             oldPriceTextView.setVisibility(View.GONE);
         } else {
-            buylList.setVisibility(View.VISIBLE);
+//            buylList.setVisibility(View.VISIBLE);
             vpriceTextView.setText("" + df.format(allPrice));
             oldPriceTextView.setText("" + df.format(allOldPrice));
             oldPriceTextView.setVisibility(View.VISIBLE);

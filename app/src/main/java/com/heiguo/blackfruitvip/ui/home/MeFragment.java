@@ -1,5 +1,6 @@
 package com.heiguo.blackfruitvip.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -67,7 +68,9 @@ public class MeFragment extends Fragment {
     private LinearLayout phoneLayout;
     private LinearLayout changeLayout;
     private LinearLayout addressLayout;
+    private LinearLayout infoLayout;
     private Button logout;
+    private AlertDialog noLoginDialog;
 
     public MeFragment() {
         // Required empty public constructor
@@ -118,6 +121,14 @@ public class MeFragment extends Fragment {
         phoneLayout = (LinearLayout) getActivity().findViewById(R.id.layout_phone);
         changeLayout = (LinearLayout) getActivity().findViewById(R.id.layout_change_password);
         addressLayout = (LinearLayout) getActivity().findViewById(R.id.layout_address);
+        infoLayout = (LinearLayout) getActivity().findViewById(R.id.info_layout);
+
+        infoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         logout = (Button) getActivity().findViewById(R.id.logout);
 
@@ -133,8 +144,10 @@ public class MeFragment extends Fragment {
         vip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userInfo.getPhone() == "默认用户") {
-                    T.s("请先登录");
+                System.out.println(userInfo.getPhone());
+                if (userInfo.getPhone().equals("未登录用户")) {
+//                    T.s("请先登录");
+                    noLoginDialog.show();
                     return;
                 }
 
@@ -162,7 +175,8 @@ public class MeFragment extends Fragment {
                 String phone = ((BlackFruitVipApplication) getActivity().getApplication()).getLoginPhone();
 
                 if (phone == "") {
-                    T.s("请先登录");
+//                    T.s("请先登录");
+                    noLoginDialog.show();
                     return;
                 }
 
@@ -206,7 +220,7 @@ public class MeFragment extends Fragment {
                 });
             }
         });
-
+        initNoLoginDialog();
         updateData();
     }
 
@@ -309,5 +323,52 @@ public class MeFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UpdateInfoEvent event) {
         updateData();
+    }
+
+    private void initNoLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(getActivity()).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noLoginDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你还未登录，是否前去登录？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("继续浏览");
+        rightButton.setText("前往登录");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+                startLoginActivity();
+            }
+        });
+
+        noLoginDialog.setCancelable(false);
+    }
+
+    private void startLoginActivity() {
+        getActivity().finish();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 }

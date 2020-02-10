@@ -39,6 +39,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.Map;
 
 @ContentView(R.layout.activity_vip)
@@ -49,17 +50,20 @@ public class VipActivity extends BaseActivity {
     private int payType = Constant.PAY_TYPE_ALI;
     private AlertDialog payTypeDialog;
 
-    @ViewInject(R.id.header)
-    private ImageView headerImageView;
-
-    @ViewInject(R.id.phone)
-    private TextView phoneTextView;
+//    @ViewInject(R.id.header)
+//    private ImageView headerImageView;
+//
+//    @ViewInject(R.id.phone)
+//    private TextView phoneTextView;
 
     @ViewInject(R.id.vip_price)
     private TextView vpTextView;
 
     @ViewInject(R.id.old_price)
     private TextView opTextView;
+
+    @ViewInject(R.id.iv_bg)
+    private ImageView ivBg;
 
     @Event(R.id.back)
     private void back(View view) {
@@ -91,12 +95,14 @@ public class VipActivity extends BaseActivity {
             finish();
             return;
         }
+
+//        phoneTextView.setText(phone);
     }
 
     private void initView() {
         opTextView.getPaint().setAntiAlias(true);
         opTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
-
+        x.image().bind(ivBg,Constant.VIP_IMAGE_URL);
         initPayTypeDialog();
     }
 

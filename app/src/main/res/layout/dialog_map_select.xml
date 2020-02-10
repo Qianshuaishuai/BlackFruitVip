@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dip"
+        android:gravity="center"
+        android:text="地图应用"
+        android:textColor="#333333"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dip"
+        android:text="请选择跳转的地图"
+        android:textColor="#999999"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/no_tip"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dip"
+        android:text="未检测到第三方地图应用，请先安装!"
+        android:textColor="#333333"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/layout_baidu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:src="@mipmap/ic_common_map_baidu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:text="百度地图"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/baidu_bt"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:background="@drawable/select_pay_type"
+                android:button="@null"
+                android:checked="true"
+                android:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_gaode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:src="@mipmap/ic_common_map_gaode" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:text="高德地图"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/gaode_bt"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:background="@drawable/select_pay_type"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_tengxun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:src="@mipmap/ic_common_map_tengxun" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dip"
+            android:text="腾讯地图"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/tengxun_bt"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:background="@drawable/select_pay_type"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/sure"
+        android:layout_width="match_parent"
+        android:layout_height="38dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="20dip"
+        android:layout_marginRight="15dip"
+        android:layout_marginBottom="15dip"
+        android:background="@drawable/shape_logout_bg"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+</LinearLayout>

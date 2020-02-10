@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity {
         titleTextView.setText("登录中");
 
         loadingDialog.setCancelable(false);
-        loadingDialog.show();
+//        loadingDialog.show();
     }
 
     private void initUserDialog() {

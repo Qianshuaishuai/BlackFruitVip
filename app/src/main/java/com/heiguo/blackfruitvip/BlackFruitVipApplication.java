@@ -19,6 +19,8 @@ import com.heiguo.blackfruitvip.response.UserInfoResponse;
 import com.heiguo.blackfruitvip.util.T;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
@@ -60,13 +62,22 @@ public class BlackFruitVipApplication extends Application {
         initSp();
 
         //进入应用就进行定位
-//        initLocationOption();
-//        startLocation();
         initCityBean();
         initUserInfo();
+        initLocationOption();
+        startLocation();
+
+        initUMConfig(this, Constant.UMENG_APP_KEY, Constant.UMENG_APP_CHANNEL, UMConfigure.DEVICE_TYPE_PHONE, null);
 
         //初始化注册
         wxApi = WXAPIFactory.createWXAPI(this, Constant.WeChatAppId);
+    }
+
+    private void initUMConfig(Context context, String appkey, String channel, int deviceType, String pushSecret) {
+        UMConfigure.init(context, appkey, channel, deviceType, pushSecret);
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        UMConfigure.setLogEnabled(true);
     }
 
     public IWXAPI getWxApi() {
@@ -141,11 +152,19 @@ public class BlackFruitVipApplication extends Application {
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                locationBean.setCity(aMapLocation.getCity());
-                locationBean.setProvince(aMapLocation.getProvince());
-                locationBean.setCode(aMapLocation.getCityCode());
-
-                System.out.println(locationBean.getCity());
+//                locationBean.setCity(aMapLocation.getCity());
+//                locationBean.setProvince(aMapLocation.getProvince());
+//                locationBean.setCode(aMapLocation.getCityCode());
+                if (getCityPick().getLatitude() == 39.92) {
+                    CityBean bean = new CityBean();
+                    bean.setCity(aMapLocation.getCity());
+                    bean.setCode(aMapLocation.getCityCode());
+                    bean.setProvince(aMapLocation.getProvince());
+                    bean.setAddress(aMapLocation.getAddress());
+                    bean.setLatitude(aMapLocation.getLatitude());
+                    bean.setLongitude(aMapLocation.getLongitude());
+                    saveCityPick(bean);
+                }
             }
         };
         //初始化定位
@@ -206,6 +225,15 @@ public class BlackFruitVipApplication extends Application {
 
     public CityBean getCityPick() {
         return gson.fromJson(sp.getString("city", ""), CityBean.class);
+    }
+
+    public void saveFirstGo(int mode) {
+        editor.putInt("first", mode);
+        editor.commit();
+    }
+
+    public int getFirstGo() {
+        return sp.getInt("first", 0);
     }
 
     public List<CityBean> getHistoryCityList() {

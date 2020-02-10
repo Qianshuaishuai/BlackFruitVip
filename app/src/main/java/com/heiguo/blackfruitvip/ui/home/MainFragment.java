@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -23,12 +25,17 @@ import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.MenuAdapter;
 import com.heiguo.blackfruitvip.adapter.PicAdapter;
+import com.heiguo.blackfruitvip.adapter.PicCAdapter;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.MainBean;
 import com.heiguo.blackfruitvip.response.MainResponse;
 import com.heiguo.blackfruitvip.ui.info.CityActivity;
 import com.heiguo.blackfruitvip.util.BannerImageLoader;
 import com.heiguo.blackfruitvip.util.T;
+import com.heiguo.blackfruitvip.view.EChangeScrollView;
+import com.heiguo.blackfruitvip.view.NewGridView;
+import com.heiguo.blackfruitvip.view.NewListView;
+import com.heiguo.blackfruitvip.view.SLinearLayoutManager;
 import com.youth.banner.Banner;
 
 import org.xutils.common.Callback;
@@ -58,13 +65,14 @@ public class MainFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Banner banner;
-    private GridView menu;
+    private NewGridView menu;
     private MenuAdapter menuAdapter;
-    private PicAdapter picAdapter;
-    private RecyclerView picRecycleView;
+    private PicCAdapter picAdapter;
+    private NewListView picRecycleView;
     private LinearLayout cityLayout;
     private TextView cityTip;
     private ImageView search;
+    private ScrollView ecs;
 
     private List<String> bannerImages = new ArrayList<>();
     private List<MainBean> adList = new ArrayList<>();
@@ -122,6 +130,7 @@ public class MainFragment extends Fragment {
                 startSearchActivity();
             }
         });
+
     }
 
     private void startCityActivity() {
@@ -200,11 +209,19 @@ public class MainFragment extends Fragment {
     }
 
     private void initPic() {
-        picRecycleView = (RecyclerView) getActivity().findViewById(R.id.pic);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
-        picRecycleView.setLayoutManager(layoutManager);
-        picAdapter = new PicAdapter(picList);
+        picRecycleView = (NewListView) getActivity().findViewById(R.id.pic);
+        picRecycleView.setScrollEnable(false);
+        picAdapter = new PicCAdapter(getContext(), picList, new PicCAdapter.PicListener() {
+            @Override
+            public void clickListener(View v) {
+
+            }
+        });
         picRecycleView.setAdapter(picAdapter);
+
+        ecs = (ScrollView)getActivity().findViewById(R.id.ecs);
+//        ecs.setListView(picRecycleView);
+        //解决数据加载不完的问题
     }
 
     @Override

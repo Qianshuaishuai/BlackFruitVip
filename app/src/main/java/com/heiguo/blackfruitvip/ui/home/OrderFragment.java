@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class OrderFragment extends Fragment {
     private View middleView;
     private View rightView;
 
+    private SwipeRefreshLayout srl;
     private RecyclerView orderList;
     private OrderAdapter adapter1;
     private OrderAdapter adapter2;
@@ -165,7 +167,9 @@ public class OrderFragment extends Fragment {
 
             @Override
             public void onFinished() {
-
+                if(srl.isRefreshing()){
+                    srl.setRefreshing(false);
+                }
             }
         });
     }
@@ -233,6 +237,7 @@ public class OrderFragment extends Fragment {
 
     private void initView() {
         orderList = (RecyclerView) getActivity().findViewById(R.id.order_list);
+        srl = (SwipeRefreshLayout) getActivity().findViewById(R.id.srl);
 
         leftTextView = (TextView) getActivity().findViewById(R.id.order_left);
         middleTextView = (TextView) getActivity().findViewById(R.id.order_middle);
@@ -324,11 +329,23 @@ public class OrderFragment extends Fragment {
 
         orderList.setLayoutManager(layoutManager);
         orderList.setAdapter(adapter1);
+
+        srl.setColorSchemeResources(R.color.colorYellow,R.color.colorYellow,R.color.colorYellow,R.color.colorYellow,R.color.colorYellow);
+        /*
+         * 设置下拉刷新的监听
+         */
+        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getOrderList();
+            }
+        });
     }
 
     private void startOrderDetailActivity(long orderId) {
         Intent intent = new Intent(this.getActivity(), OrderDetailActivity.class);
         intent.putExtra("order-id", orderId);
+        intent.putExtra("order-mode",Constant.ORDER_MODE_MAIN);
         startActivity(intent);
     }
 

@@ -50,7 +50,7 @@ public class MapActivity extends BaseActivity {
             mUiSettings.setMyLocationButtonEnabled(true);
             aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         }
-        initLocation();
+//        initLocation();
         initMarker();
     }
 
@@ -64,6 +64,7 @@ public class MapActivity extends BaseActivity {
 
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title(bean.getName()).snippet(bean.getAddress()));
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
         }
 
     }
@@ -76,6 +77,7 @@ public class MapActivity extends BaseActivity {
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行
         myLocationStyle.showMyLocation(true);
+
     }
 
     @Override

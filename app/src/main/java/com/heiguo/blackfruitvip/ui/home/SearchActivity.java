@@ -1,5 +1,7 @@
 package com.heiguo.blackfruitvip.ui.home;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,15 +9,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.BlackFruitVipApplication;
@@ -29,7 +37,9 @@ import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.StoreListResponse;
 import com.heiguo.blackfruitvip.ui.order.MenuActivity;
+import com.heiguo.blackfruitvip.util.MapUtil;
 import com.heiguo.blackfruitvip.util.T;
+import com.heiguo.blackfruitvip.util.TimeUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -50,6 +60,9 @@ public class SearchActivity extends BaseActivity {
 
     private StoreBean selectBean;
     private int serviceIndex = 0;
+
+    private AlertDialog mapSelectMap;
+    private int mapSelect = 0;
 
     @ViewInject(R.id.search)
     private EditText searchEditText;
@@ -96,16 +109,47 @@ public class SearchActivity extends BaseActivity {
 
     @Event(R.id.detail_map)
     private void mapDetail(View view) {
-        Gson gson = new Gson();
-        String selectBeanStr = gson.toJson(selectBean);
-
-        Intent newIntent = new Intent(this, MapActivity.class);
-        newIntent.putExtra("mapdata", selectBeanStr);
-        startActivity(newIntent);
+//        Gson gson = new Gson();
+//        String selectBeanStr = gson.toJson(selectBean);
+//
+//        Intent newIntent = new Intent(this, MapActivity.class);
+//        newIntent.putExtra("mapdata", selectBeanStr);
+//        startActivity(newIntent);
+        mapSelectMap.show();
     }
 
     @Event(R.id.go_in)
     private void goIn(View view) {
+        String time1Start = selectBean.getTime1Start();
+        String time1End = selectBean.getTime1End();
+
+        String[] time1Starts=time1Start.split(":");
+        String[] time1Ends=time1End.split(":");
+        int startHour = 0;
+        int startMin = 0;
+        int endHour = 0;
+        int endMin = 0;
+        if (time1Starts.length != 0){
+            startHour = Integer.parseInt(time1Starts[0]);
+            startMin = Integer.parseInt(time1Starts[1]);
+        }
+
+        if (time1Ends.length != 0){
+            endHour = Integer.parseInt(time1Ends[0]);
+            endMin = Integer.parseInt(time1Ends[1]);
+        }
+
+        LatLonPoint currentPoint = new LatLonPoint(selectBean.getLatitude(), selectBean.getLongitude());
+        double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(cityBean.getLatitude(), cityBean.getLongitude()));
+        if (selectBean.getMaxDistance() < distance) {
+            T.s("超出配送范围");
+            return;
+        }
+
+        if (!TimeUtil.isCurrentInTimeScope(startHour,startMin,endHour,endMin)) {
+            T.s("不在配送时间内");
+            return;
+        }
         startMenuActivity();
     }
 
@@ -154,6 +198,8 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         });
+
+        initMapDialog();
     }
 
     private void startMenuActivity() {
@@ -264,4 +310,142 @@ public class SearchActivity extends BaseActivity {
 
         layoutDetail.setVisibility(View.VISIBLE);
     }
+
+    // 百度地图
+    public void toBaidu(StoreBean bean){
+
+        Intent intent= new Intent("android.intent.action.VIEW", android.net.Uri.parse("baidumap://map/geocoder?location=" + bean.getLatitude() + "," + bean.getLongitude()));
+        startActivity(intent);
+    }
+
+    // 腾讯地图
+    public void toTencent(StoreBean bean){
+        Intent intent = new Intent("android.intent.action.VIEW", android.net.Uri.parse("qqmap://map/routeplan?type=drive&from=&fromcoord=&to=目的地&tocoord=" + bean.getLatitude() + "," + bean.getLongitude() + "&policy=0&referer=appName"));
+        startActivity(intent);
+
+    }
+
+    // 高德地图
+    public void toGaodeNavi(StoreBean bean){
+        Intent intent= new Intent("android.intent.action.VIEW", android.net.Uri.parse("androidamap://route?sourceApplication=appName&slat=&slon=&sname=我的位置&dlat="+ bean.getLatitude() +"&dlon="+ bean.getLongitude()+"&dname=目的地&dev=0&t=2"));
+        startActivity(intent);
+    }
+
+    private void initMapDialog() {
+        final List mList = MapUtil.hasMap(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_map_select, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        mapSelectMap = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        Button sureButton = (Button) view.findViewById(R.id.sure);
+        sureButton.setText("确认");
+        final TextView noTip = (TextView) view.findViewById(R.id.no_tip);
+        final CheckBox baiduBox = (CheckBox) view.findViewById(R.id.baidu_bt);
+        final CheckBox gaodeBox = (CheckBox) view.findViewById(R.id.gaode_bt);
+        final CheckBox tengxunBox = (CheckBox) view.findViewById(R.id.tengxun_bt);
+        LinearLayout baiduLayout = (LinearLayout) view.findViewById(R.id.layout_baidu);
+        LinearLayout gaodeLayout = (LinearLayout) view.findViewById(R.id.layout_gaode);
+        LinearLayout tengxunLayout = (LinearLayout) view.findViewById(R.id.layout_tengxun);
+
+        for (int i = 0; i < mList.size(); i++) {
+            if (mList.get(i).equals("com.autonavi.minimap")){
+                gaodeLayout.setVisibility(View.VISIBLE);
+            }else if (mList.get(i).equals("com.baidu.BaiduMap")){
+                baiduLayout.setVisibility(View.VISIBLE);
+            }else if (mList.get(i).equals("com.tencent.map")){
+                tengxunLayout.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (mList.size() == 0){
+            noTip.setVisibility(View.VISIBLE);
+            sureButton.setText("取消");
+        }
+
+        if (mapSelect == Constant.MAP_TYPE_BAIDU) {
+            baiduBox.setChecked(true);
+            gaodeBox.setChecked(false);
+            tengxunBox.setChecked(false);
+        } else if (mapSelect == Constant.MAP_TYPE_GAODE) {
+            baiduBox.setChecked(false);
+            gaodeBox.setChecked(true);
+            tengxunBox.setChecked(false);
+        }else if (mapSelect == Constant.MAP_TYPE_TENGXUN) {
+            baiduBox.setChecked(false);
+            gaodeBox.setChecked(false);
+            tengxunBox.setChecked(true);
+        }
+
+        baiduLayout.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (mapSelect != Constant.MAP_TYPE_BAIDU) {
+                    baiduBox.setChecked(true);
+                    gaodeBox.setChecked(false);
+                    tengxunBox.setChecked(false);
+                    mapSelect = Constant.MAP_TYPE_BAIDU;
+                }
+            }
+        });
+
+        gaodeLayout.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (mapSelect != Constant.MAP_TYPE_GAODE) {
+                    baiduBox.setChecked(false);
+                    gaodeBox.setChecked(true);
+                    tengxunBox.setChecked(false);
+                    mapSelect = Constant.MAP_TYPE_GAODE;
+                }
+            }
+        });
+
+        tengxunLayout.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                if (mapSelect != Constant.MAP_TYPE_TENGXUN) {
+                    baiduBox.setChecked(false);
+                    gaodeBox.setChecked(false);
+                    tengxunBox.setChecked(true);
+                    mapSelect = Constant.MAP_TYPE_TENGXUN;
+                }
+            }
+        });
+
+        mapSelectMap.setCancelable(false);
+
+        sureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapSelectMap.cancel();
+                if(mList.size()==0){
+                    return;
+                }
+                switch (mapSelect){
+                    case Constant.MAP_TYPE_BAIDU:
+                        toBaidu(selectBean);
+                        break;
+                    case Constant.MAP_TYPE_GAODE:
+                        toGaodeNavi(selectBean);
+                        break;
+                    case Constant.MAP_TYPE_TENGXUN:
+                        toTencent(selectBean);
+                        break;
+                }
+            }
+        });
+    }
+
 }

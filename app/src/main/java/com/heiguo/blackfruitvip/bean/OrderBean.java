@@ -21,6 +21,7 @@ public class OrderBean {
     private String address;
     private String addressDetail;
     private String contractName;
+    private String mealNumber;
     private double latitude;
     private double longitude;
     private int payTimeOut;
@@ -218,5 +219,13 @@ public class OrderBean {
 
     public void setContractName(String contractName) {
         this.contractName = contractName;
+    }
+
+    public String getMealNumber() {
+        return mealNumber;
+    }
+
+    public void setMealNumber(String mealNumber) {
+        this.mealNumber = mealNumber;
     }
 }

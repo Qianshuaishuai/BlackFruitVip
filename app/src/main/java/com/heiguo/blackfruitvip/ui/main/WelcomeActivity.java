@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
+import com.heiguo.blackfruitvip.ui.home.HomeActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 
 import org.xutils.view.annotation.ContentView;
@@ -41,29 +43,49 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void initSkipTime() {
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
+        switch (((BlackFruitVipApplication) getApplication()).getFirstGo()){
+            case 0:
+                timer = new Timer();
+                timerTask = new TimerTask() {
                     @Override
                     public void run() {
-                        skipButton.setText(skipTimeCount + " " + "跳过");
-                        skipTimeCount--;
-                        if (skipTimeCount == -1) {
-                            timer.cancel();
-                            skip();
-                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                skipButton.setText(skipTimeCount + " " + "跳过");
+                                skipTimeCount--;
+                                if (skipTimeCount == -1) {
+                                    timer.cancel();
+                                    skip();
+                                }
+                            }
+                        });
                     }
-                });
-            }
-        };
-        timer.schedule(timerTask, 0, 1000);
+                };
+                timer.schedule(timerTask, 0, 1000);
+                break;
+            case 1:
+                String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
+                if(phone == ""){
+                    Intent newIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
+                    startActivity(newIntent);
+                    finish();
+                }else{
+                    Intent newIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    startActivity(newIntent);
+                    finish();
+                }
+
+                break;
+        }
+
     }
 
     private void skip() {
-        Intent newIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
+        Intent newIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
         startActivity(newIntent);
         finish();
+        //保存状态
+        ((BlackFruitVipApplication) getApplication()).saveFirstGo(1);
     }
 }

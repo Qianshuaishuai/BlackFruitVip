@@ -80,6 +80,7 @@ public class OrderDetailActivity extends BaseActivity {
     private TimerTask payTimerTask;
     private Timer receiptTimer;
     private TimerTask receiptTimerTask;
+    private int modeType = Constant.ORDER_MODE_CREATE;
 
     @ViewInject(R.id.detail_list)
     private RecyclerView detailList;
@@ -143,6 +144,10 @@ public class OrderDetailActivity extends BaseActivity {
 
     @Event(R.id.back)
     private void back(View view) {
+        if(modeType == Constant.ORDER_MODE_MAIN){
+            finish();
+            return;
+        }
         finish();
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -189,6 +194,7 @@ public class OrderDetailActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         orderId = intent.getLongExtra("order-id", 0);
+        modeType = intent.getIntExtra("order-mode", 0);
         startMode = intent.getIntExtra("start-mode", Constant.ORDER_DETAIL_TYPE_COMMON);
         payType = intent.getIntExtra("pay-type", Constant.PAY_TYPE_ALI);
         balancePayPrice = intent.getDoubleExtra("balance", 0.0);
@@ -485,14 +491,44 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case 4:
                 updateReceiptTimeOutView();
-                stTextView.setText("配送中");
-                tipTextView.setText("商家正在配送中，请耐心等待");
+                switch (orderBean.getService()) {
+                    case 0:
+                        if(orderBean.getMealNumber().equals("")){
+                            atTextView.setText("未有取餐号");
+                            stTextView.setText("备餐中");
+                            tipTextView.setText("商家正在备餐中，请耐心等待");
+                        }else{
+                            atTextView.setText(orderBean.getMealNumber());
+                            atTextView.setTextColor(getResources().getColor(R.color.colorBlack));
+                            stTextView.setText("待取餐");
+                            tipTextView.setText("请前往取餐处取餐");
+                        }
+                        break;
+                    case 1:
+                        if(orderBean.getMealNumber().equals("")){
+                            atTextView.setText("未有取餐号");
+                            stTextView.setText("备餐中");
+                            tipTextView.setText("商家正在备餐中，请耐心等待");
+                        }else{
+                            atTextView.setText(orderBean.getMealNumber());
+                            atTextView.setTextColor(getResources().getColor(R.color.colorBlack));
+                            stTextView.setText("待取餐");
+                            tipTextView.setText("请前往取餐处取餐");
+                        }
+                        break;
+                    case 2:
+                        atTextView.setText("配送中");
+                        stTextView.setText("配送中");
+                        tipTextView.setText("商家正在配送中，请耐心等待");
+                        break;
+                }
                 payLayout.setVisibility(View.GONE);
                 payLayoutAnother.setVisibility(View.VISIBLE);
                 break;
             case 5:
                 updateReceiptTimeOutView();
                 stTextView.setText("已完成");
+                atTextView.setText("完成");
                 tipTextView.setText("订单已完成，祝用餐愉快");
                 payLayout.setVisibility(View.GONE);
                 payLayoutAnother.setVisibility(View.VISIBLE);

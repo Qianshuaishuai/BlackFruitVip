@@ -1,5 +1,7 @@
 package com.heiguo.blackfruitvip.ui.home;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -10,7 +12,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -21,6 +26,7 @@ import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.UserInfoResponse;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;
@@ -43,6 +49,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
     private MeFragment meFragment;
     private Fragment[] fragments;
     private int lastfragment = 0;
+    private AlertDialog noLoginDialog;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -60,6 +67,12 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
                     }
                     return true;
                 case R.id.navigation_order:
+                    String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
+                    if (phone == ""){
+                        noLoginDialog.show();
+                        backItemIcon();
+                        return false;
+                    }
                     if (lastfragment != 1) {
                         switchFragment(lastfragment, 1);
                         lastfragment = 1;
@@ -83,6 +96,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         super.onCreate(savedInstanceState);
 
         initNavigationBar();
+        initNoLoginDialog();
         ((BlackFruitVipApplication) getApplication()).updateUserInfo();
     }
 
@@ -133,8 +147,72 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         item3.setIcon(R.mipmap.ic_home_me_normal);
     }
 
+    private void backItemIcon(){
+        MenuItem item1 = navigation.getMenu().findItem(R.id.navigation_main);
+        MenuItem item2 = navigation.getMenu().findItem(R.id.navigation_order);
+        MenuItem item3 = navigation.getMenu().findItem(R.id.navigation_me);
+        switch (lastfragment){
+            case 0:
+                item1.setIcon(R.mipmap.ic_home_main_selected);
+                break;
+            case 1:
+                item2.setIcon(R.mipmap.ic_home_order_selected);
+                break;
+            case 2:
+                item3.setIcon(R.mipmap.ic_home_me_selected);
+                break;
+        }
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         System.out.println(uri);
+    }
+
+    private void initNoLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noLoginDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你还未登录，是否前去登录？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("继续浏览");
+        rightButton.setText("前往登录");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+                startLoginActivity();
+            }
+        });
+
+        noLoginDialog.setCancelable(false);
+    }
+
+    private void startLoginActivity() {
+        finish();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

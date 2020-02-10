@@ -3,12 +3,17 @@ package com.heiguo.blackfruitvip;
 public class Constant {
     public static final Boolean DEBUG = true;
 
+    //友盟相关
+    public static final String UMENG_APP_KEY = "5e26c2e30cafb2d55c000224";
+    public static final String UMENG_APP_CHANNEL = "HEIGUO_CHANNEL";
+
     //微信支付AppID
     public static final String WeChatAppId = "wxfdc5fb80436c453a";
 
     //Vip购买相关信息
     public static final String VIP_BUY_NAME = "黑果会员购买";
     public static final String VIP_BUY_COUNT = "9.9";
+    public static final String VIP_IMAGE_URL = "http://resource.360eliteclub.com/test-vip-bg.jpg";
 
     //支付对象
     public static final int PAY_FOR_ORDER = 1;
@@ -17,6 +22,11 @@ public class Constant {
     //支付方式
     public static final int PAY_TYPE_ALI = 1;
     public static final int PAY_TYPE_WECHAT = 2;
+
+    //地图第三方
+    public static final int MAP_TYPE_BAIDU = 1;
+    public static final int MAP_TYPE_GAODE = 2;
+    public static final int MAP_TYPE_TENGXUN = 3;
 
     //是否全部用余额支付
     public static final int IS_BALANCE = 1;
@@ -44,6 +54,9 @@ public class Constant {
     //地址列表模式
     public static final int ADDRESS_LIST_MODE_NORMAL = 1115;
     public static final int ADDRESS_LIST_MODE_PICKER = 1116;
+    //订单进入模式
+    public static final int ORDER_MODE_MAIN = 101;
+    public static final int ORDER_MODE_CREATE = 102;
 
     //验证码类型相关
     public static final int CODE_REGISTER = 101;
@@ -55,8 +68,8 @@ public class Constant {
     public static final int ORDER_DETAIL_TYPE_COMMON = 100000;
 
     //Api请求相关数据
-//    public static final String BASE_URL = "http://010.ming123.net";
-    public static final String BASE_URL = "http://192.168.1.239:6490";
+    public static final String BASE_URL = "http://010.ming123.net";
+//    public static final String BASE_URL = "http://192.168.1.239:6490";
     public static final String URL_CODE = "/v1/user/code";
     public static final String URL_AUTO = "/v1/user/auto";
     public static final String URL_GET = "/v1/user/get";
