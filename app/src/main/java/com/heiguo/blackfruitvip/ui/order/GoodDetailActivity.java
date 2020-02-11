@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -83,11 +84,20 @@ public class GoodDetailActivity extends BaseActivity {
     @ViewInject(R.id.total_count)
     private TextView totalCountTextView;
 
+    @ViewInject(R.id.ano_img)
+    private ImageView anoImg;
+
+    @ViewInject(R.id.ano_tip)
+    private TextView anoTip;
+
+    @ViewInject(R.id.layout_ano)
+    private LinearLayout anoLayout;
+
     @Event(R.id.bottom)
-    private void bottomClick(View view){
-        if(buylList.getVisibility() == View.VISIBLE){
+    private void bottomClick(View view) {
+        if (buylList.getVisibility() == View.VISIBLE) {
             buylList.setVisibility(View.GONE);
-        }else if(buylList.getVisibility() == View.GONE){
+        } else if (buylList.getVisibility() == View.GONE) {
             buylList.setVisibility(View.VISIBLE);
         }
     }
@@ -116,10 +126,10 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.reduce)
     private void reduce(View view) {
-        if (!checkIsLogin()){
+        if (!checkIsLogin()) {
             return;
         }
-        if (!checkIsVip()){
+        if (!checkIsVip()) {
             return;
         }
         if (allList.get(selectPosition).getCount() > 0) {
@@ -130,10 +140,10 @@ public class GoodDetailActivity extends BaseActivity {
 
     @Event(R.id.add)
     private void add(View view) {
-        if (!checkIsLogin()){
+        if (!checkIsLogin()) {
             return;
         }
-        if (!checkIsVip()){
+        if (!checkIsVip()) {
             return;
         }
         allList.get(selectPosition).setCount(allList.get(selectPosition).getCount() + 1);
@@ -160,7 +170,7 @@ public class GoodDetailActivity extends BaseActivity {
         initNoVipDialog();
     }
 
-    public boolean checkIsVip(){
+    public boolean checkIsVip() {
         if (!((BlackFruitVipApplication) getApplication()).isCurrentVip()) {
             noVipDialog.show();
             return false;
@@ -169,8 +179,8 @@ public class GoodDetailActivity extends BaseActivity {
         return true;
     }
 
-    public boolean checkIsLogin(){
-        String phone = ((BlackFruitVipApplication)getApplication()).getLoginPhone();
+    public boolean checkIsLogin() {
+        String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
         if (phone == "") {
             noLoginDialog.show();
             return false;
@@ -203,6 +213,23 @@ public class GoodDetailActivity extends BaseActivity {
         ogpTextView.setText("" + df.format(allList.get(position).getoPrice()));
         countTextView.setText("" + allList.get(position).getCount());
         x.image().bind(mainImageView, allList.get(position).getImage());
+
+        if (allList.get(position).getAnoImg().isEmpty() || allList.get(position).getAnoImg().equals("")) {
+            anoImg.setVisibility(View.GONE);
+        } else {
+            x.image().bind(anoImg, allList.get(position).getAnoImg());
+        }
+
+        if (allList.get(position).getAnoTitle().isEmpty() || allList.get(position).getAnoTitle().equals("")) {
+            anoTip.setVisibility(View.GONE);
+        } else {
+            anoTip.setText(allList.get(position).getAnoTitle());
+        }
+
+        if ((allList.get(position).getAnoImg().isEmpty() || allList.get(position).getAnoImg().equals("")) && (allList.get(position).getAnoTitle().isEmpty() || allList.get(position).getAnoTitle().equals(""))) {
+            anoLayout.setVisibility(View.GONE);
+        }
+
 
         updateBuyCarAndTotal();
     }
@@ -246,11 +273,11 @@ public class GoodDetailActivity extends BaseActivity {
             }
         }
 
-        for(int b = 0; b < buycayList.size(); b++){
+        for (int b = 0; b < buycayList.size(); b++) {
             totalCount = totalCount + buycayList.get(b).getCount();
         }
 
-        totalCountTextView.setText("共"+ totalCount+"件商品");
+        totalCountTextView.setText("共" + totalCount + "件商品");
 
         opTextView.getPaint().setAntiAlias(true);
         opTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线

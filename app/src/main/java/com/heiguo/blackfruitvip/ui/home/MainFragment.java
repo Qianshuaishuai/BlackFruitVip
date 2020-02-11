@@ -1,5 +1,6 @@
 package com.heiguo.blackfruitvip.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,8 +30,11 @@ import com.heiguo.blackfruitvip.adapter.PicAdapter;
 import com.heiguo.blackfruitvip.adapter.PicCAdapter;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.MainBean;
+import com.heiguo.blackfruitvip.bean.UserBean;
 import com.heiguo.blackfruitvip.response.MainResponse;
 import com.heiguo.blackfruitvip.ui.info.CityActivity;
+import com.heiguo.blackfruitvip.ui.info.VipActivity;
+import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.BannerImageLoader;
 import com.heiguo.blackfruitvip.util.T;
 import com.heiguo.blackfruitvip.view.EChangeScrollView;
@@ -37,6 +42,7 @@ import com.heiguo.blackfruitvip.view.NewGridView;
 import com.heiguo.blackfruitvip.view.NewListView;
 import com.heiguo.blackfruitvip.view.SLinearLayoutManager;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -73,6 +79,9 @@ public class MainFragment extends Fragment {
     private TextView cityTip;
     private ImageView search;
     private ScrollView ecs;
+
+    private UserBean userInfo;
+    private AlertDialog noLoginDialog;
 
     private List<String> bannerImages = new ArrayList<>();
     private List<MainBean> adList = new ArrayList<>();
@@ -152,6 +161,13 @@ public class MainFragment extends Fragment {
         banner.setImages(bannerImages);
         //banner设置方法全部调用完毕时最后调用
         banner.start();
+
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                jumpType(adList.get(position));
+            }
+        });
     }
 
     private void initMenu() {
@@ -160,7 +176,8 @@ public class MainFragment extends Fragment {
             @Override
             public void clickListener(View v) {
                 MenuAdapter.ViewHolder holder = (MenuAdapter.ViewHolder) v.getTag();
-                System.out.println(holder.menuImg.getTag());
+                int position = (int) holder.menuImg.getTag();
+                jumpType(picList.get(position));
             }
         });
         menu.setAdapter(menuAdapter);
@@ -206,6 +223,8 @@ public class MainFragment extends Fragment {
 
             }
         });
+
+        userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
     }
 
     private void initPic() {
@@ -214,14 +233,58 @@ public class MainFragment extends Fragment {
         picAdapter = new PicCAdapter(getContext(), picList, new PicCAdapter.PicListener() {
             @Override
             public void clickListener(View v) {
-
+                int position = (int) ((PicCAdapter.ViewHolder) v.getTag()).imageView.getTag();
+                jumpType(picList.get(position));
             }
         });
         picRecycleView.setAdapter(picAdapter);
 
-        ecs = (ScrollView)getActivity().findViewById(R.id.ecs);
+        ecs = (ScrollView) getActivity().findViewById(R.id.ecs);
 //        ecs.setListView(picRecycleView);
         //解决数据加载不完的问题
+    }
+
+    private void jumpType(MainBean bean) {
+        switch (bean.getJumpType()) {
+            case -1:
+                // not to do
+                break;
+            case 0:
+                // not to do
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                Intent intent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(bean.getUrl())
+                );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            case 5:
+                if (userInfo.getPhone().equals("未登录用户")) {
+//                    T.s("请先登录");
+                    noLoginDialog.show();
+                    return;
+                }
+
+                if (userInfo.getVipDay() >= 0) {
+                    T.s("你的Vip会员暂未过期！");
+                    return;
+                }
+
+                Intent newIntent = new Intent(getActivity(), VipActivity.class);
+                startActivity(newIntent);
+                break;
+            default:
+                // not to do
+                break;
+        }
     }
 
     @Override
@@ -258,6 +321,7 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initBaseView();
+        initNoLoginDialog();
     }
 
     private void updateCityTip() {
@@ -265,6 +329,53 @@ public class MainFragment extends Fragment {
         if (bean != null && cityTip != null) {
             cityTip.setText(bean.getCity());
         }
+    }
+
+    private void initNoLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(getActivity()).inflate(
+                R.layout.dialog_user_common, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        noLoginDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText("你还未登录，是否前去登录？");
+        Button leftButton = (Button) view.findViewById(R.id.left);
+        Button rightButton = (Button) view.findViewById(R.id.right);
+
+        leftButton.setText("继续浏览");
+        rightButton.setText("前往登录");
+
+        leftButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+            }
+        });
+
+        rightButton.setOnClickListener(new android.view.View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                noLoginDialog.cancel();
+                startLoginActivity();
+            }
+        });
+
+        noLoginDialog.setCancelable(false);
+    }
+
+    private void startLoginActivity() {
+        getActivity().finish();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
 
     @Override

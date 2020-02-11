@@ -27,7 +27,13 @@
             android:theme="@style/DefaultCityPickerTheme" />
         <activity
             android:name=".ui.test.TestActivity"
-            android:theme="@style/DefaultCityPickerTheme" />
+            android:theme="@style/DefaultCityPickerTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -48,11 +54,7 @@
             android:name=".ui.home.HomeActivity"
             android:label="@string/title_activity_home"></activity>
         <activity android:name=".ui.main.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.user.ForgetActivity" />
         <activity android:name=".ui.user.RegisterActivity" />

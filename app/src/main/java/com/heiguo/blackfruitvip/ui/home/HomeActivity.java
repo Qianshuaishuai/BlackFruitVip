@@ -1,16 +1,21 @@
 package com.heiguo.blackfruitvip.ui.home;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -51,6 +56,14 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
     private int lastfragment = 0;
     private AlertDialog noLoginDialog;
 
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CHANGE_WIFI_STATE,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
+            Manifest.permission.CALL_PHONE};
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -68,7 +81,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
                     return true;
                 case R.id.navigation_order:
                     String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
-                    if (phone == ""){
+                    if (phone == "") {
                         noLoginDialog.show();
                         backItemIcon();
                         return false;
@@ -94,7 +107,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initPermission();
         initNavigationBar();
         initNoLoginDialog();
         ((BlackFruitVipApplication) getApplication()).updateUserInfo();
@@ -147,11 +160,11 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         item3.setIcon(R.mipmap.ic_home_me_normal);
     }
 
-    private void backItemIcon(){
+    private void backItemIcon() {
         MenuItem item1 = navigation.getMenu().findItem(R.id.navigation_main);
         MenuItem item2 = navigation.getMenu().findItem(R.id.navigation_order);
         MenuItem item3 = navigation.getMenu().findItem(R.id.navigation_me);
-        switch (lastfragment){
+        switch (lastfragment) {
             case 0:
                 item1.setIcon(R.mipmap.ic_home_main_selected);
                 break;
@@ -214,5 +227,27 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         finish();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void initPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i = ContextCompat.checkSelfPermission(this, permissions[1]);
+            if (i != PackageManager.PERMISSION_GRANTED) {
+                showWaringDialog();
+            }
+        }
+    }
+
+    private void showWaringDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("警告！")
+                .setMessage("请前往设置->应用->黑果会员->权限中打开相关权限，否则功能无法正常运行！")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 一般情况下如果用户不授权的话，功能是无法运行的，做退出处理
+                        finish();
+                    }
+                }).show();
     }
 }

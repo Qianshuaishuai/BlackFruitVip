@@ -9,6 +9,8 @@ public class GoodBean {
     private double oPrice;
     private double vPrice;
     private String subtitle;
+    private String anoTitle;
+    private String anoImg;
     private int count = 0;
 
     public int getCount() {
@@ -82,4 +84,21 @@ public class GoodBean {
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
+
+    public String getAnoTitle() {
+        return anoTitle;
+    }
+
+    public void setAnoTitle(String anoTitle) {
+        this.anoTitle = anoTitle;
+    }
+
+    public String getAnoImg() {
+        return anoImg;
+    }
+
+    public void setAnoImg(String anoImg) {
+        this.anoImg = anoImg;
+    }
+
 }

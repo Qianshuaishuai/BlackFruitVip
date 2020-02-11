@@ -5,6 +5,11 @@ public class MainBean {
     private int type;
     private String name;
     private String image;
+    private int jumpType;
+    private long storeId;
+    private int storeTypeId;
+    private int goodId;
+    private String url;
 
     public int getId() {
         return id;
@@ -37,4 +42,45 @@ public class MainBean {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public int getJumpType() {
+        return jumpType;
+    }
+
+    public void setJumpType(int jumpType) {
+        this.jumpType = jumpType;
+    }
+
+    public long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(long storeId) {
+        this.storeId = storeId;
+    }
+
+    public int getStoreTypeId() {
+        return storeTypeId;
+    }
+
+    public void setStoreTypeId(int storeTypeId) {
+        this.storeTypeId = storeTypeId;
+    }
+
+    public int getGoodId() {
+        return goodId;
+    }
+
+    public void setGoodId(int goodId) {
+        this.goodId = goodId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }

@@ -27,6 +27,7 @@ import com.heiguo.blackfruitvip.ui.info.AddressActivity;
 import com.heiguo.blackfruitvip.ui.info.VipActivity;
 import com.heiguo.blackfruitvip.ui.user.ForgetActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
+import com.heiguo.blackfruitvip.util.CopyUtil;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.greenrobot.eventbus.EventBus;
@@ -144,7 +145,6 @@ public class MeFragment extends Fragment {
         vip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(userInfo.getPhone());
                 if (userInfo.getPhone().equals("未登录用户")) {
 //                    T.s("请先登录");
                     noLoginDialog.show();
@@ -220,6 +220,15 @@ public class MeFragment extends Fragment {
                 });
             }
         });
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String detail = ((BlackFruitVipApplication) getActivity().getApplication()).getShareDetail();
+                CopyUtil.copy(getActivity(), detail);
+                T.s("已将分享内容复制到粘帖板");
+            }
+        });
         initNoLoginDialog();
         updateData();
     }
@@ -231,7 +240,7 @@ public class MeFragment extends Fragment {
         balance.setText(Float.toString(userInfo.getBalance()) + "元");
         save.setText(Float.toString(userInfo.getSaveCount()) + "元");
         vipDay.setText(Integer.toString(userInfo.getVipDay()) + "天");
-        if (userInfo.getVipDay()<=0){
+        if (userInfo.getVipDay() <= 0) {
             vipDay.setText("暂未开通");
         }
     }

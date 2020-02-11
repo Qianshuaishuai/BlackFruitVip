@@ -3,6 +3,8 @@ package com.heiguo.blackfruitvip;
 public class Constant {
     public static final Boolean DEBUG = true;
 
+    public static final int STATUS_CODE_PERMISSION_REQUEST = 100000;
+
     //友盟相关
     public static final String UMENG_APP_KEY = "5e26c2e30cafb2d55c000224";
     public static final String UMENG_APP_CHANNEL = "HEIGUO_CHANNEL";
@@ -99,4 +101,6 @@ public class Constant {
 
     public static final String URL_PAY_ALI_CONFIG = "/v1/pay/ali/config";
     public static final String URL_PAY_WECHAT_CONFIG = "/v1/pay/wechat/config";
+
+    public static final String URL_SHARE = "/v1/share/detail";
 }

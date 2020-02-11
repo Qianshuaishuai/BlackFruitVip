@@ -1,8 +1,12 @@
 package com.heiguo.blackfruitvip;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
@@ -15,6 +19,7 @@ import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.LocationBean;
 import com.heiguo.blackfruitvip.bean.UserBean;
 import com.heiguo.blackfruitvip.bean.event.UpdateInfoEvent;
+import com.heiguo.blackfruitvip.response.ShareResponse;
 import com.heiguo.blackfruitvip.response.UserInfoResponse;
 import com.heiguo.blackfruitvip.util.T;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -71,6 +76,9 @@ public class BlackFruitVipApplication extends Application {
 
         //初始化注册
         wxApi = WXAPIFactory.createWXAPI(this, Constant.WeChatAppId);
+
+        //初始化获取分享内容
+        updateShareDetail();
     }
 
     private void initUMConfig(Context context, String appkey, String channel, int deviceType, String pushSecret) {
@@ -106,6 +114,35 @@ public class BlackFruitVipApplication extends Application {
             bean.setAddress("北京");
             saveCityPick(bean);
         }
+    }
+
+    public void updateShareDetail() {
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_SHARE);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                ShareResponse response = gson.fromJson(result, ShareResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    saveShareDetail(response.getF_data());
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     public void updateUserInfo() {
@@ -196,6 +233,15 @@ public class BlackFruitVipApplication extends Application {
         sp = getSharedPreferences("prod", Context.MODE_PRIVATE);
         editor = sp.edit();
         gson = new Gson();
+    }
+
+    public void saveShareDetail(String detail) {
+        editor.putString("share-detail", detail);
+        editor.commit();
+    }
+
+    public String getShareDetail() {
+        return sp.getString("share-detail", "");
     }
 
 
