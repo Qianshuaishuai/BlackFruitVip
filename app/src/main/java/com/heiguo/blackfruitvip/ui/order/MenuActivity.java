@@ -9,9 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heiguo.blackfruitvip.BlackFruitVipApplication;
@@ -20,10 +25,17 @@ import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.BuyCarAdapter;
 import com.heiguo.blackfruitvip.adapter.ShopDetailAdapter;
 import com.heiguo.blackfruitvip.adapter.ShopMenuAdapter;
+import com.heiguo.blackfruitvip.adapter.ShopMenuAnoAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.bean.TypeBean;
+import com.heiguo.blackfruitvip.linklayout.base.BaseScrollableContainer;
+import com.heiguo.blackfruitvip.linklayout.content.RecyclerViewContentContainer;
+import com.heiguo.blackfruitvip.linklayout.tab.ListViewTabContainer;
+import com.heiguo.blackfruitvip.linklayout.ui.LinkedLayout;
+import com.heiguo.blackfruitvip.linklayout.widget.RealSectionIndexer;
+import com.heiguo.blackfruitvip.linklayout.widget.SimpleArrayAdapter;
 import com.heiguo.blackfruitvip.response.GoodListResponse;
 import com.heiguo.blackfruitvip.ui.info.VipActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
@@ -38,12 +50,14 @@ import org.xutils.x;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ContentView(R.layout.activity_menu)
 public class MenuActivity extends BaseActivity {
 
-    private ShopMenuAdapter adapter;
+//    private ShopMenuAdapter adapter;
+    private ShopMenuAnoAdapter adapter;
     private ShopDetailAdapter dAdapter;
     private BuyCarAdapter bAdapter;
 
@@ -62,11 +76,23 @@ public class MenuActivity extends BaseActivity {
 
     private Dialog carDialog;
 
-    @ViewInject(R.id.menu_list)
-    private RecyclerView menuList;
+    private BaseScrollableContainer mTabContainer;      // 左边的 Tab 页
+    private BaseScrollableContainer mContentContainer;  // 右边的 content 页
 
-    @ViewInject(R.id.detail_list)
-    private RecyclerView detailList;
+    List<Integer> mData = Stream.iterate(0, item -> item+1)
+            .limit(10)
+            .collect(Collectors.toList());
+
+    private SectionIndexer mSectionIndexer = new RealSectionIndexer(mData);
+
+//    @ViewInject(R.id.menu_list)
+//    private RecyclerView menuList;
+//
+//    @ViewInject(R.id.detail_list)
+//    private RecyclerView detailList;
+//
+    @ViewInject(R.id.layout_main)
+    private LinkedLayout mainLayout;
 
     @ViewInject(R.id.car_list)
     private RecyclerView buylList;
@@ -322,6 +348,10 @@ public class MenuActivity extends BaseActivity {
         adapter.setSelectPosition(selectPoistion);
         adapter.notifyDataSetChanged();
         selectGoodList(selectPoistion);
+
+        initTabContainer();
+        initContentContainer();
+        initLinkedLayout();
     }
 
     private void initDialog() {
@@ -372,17 +402,22 @@ public class MenuActivity extends BaseActivity {
 
         storeBean = new StoreBean();
 
-        adapter = new ShopMenuAdapter(typeList);
+        adapter = new ShopMenuAnoAdapter(this, typeList, new ShopMenuAnoAdapter.ShopMenuClickListener() {
+            @Override
+            public void clickListener(View v) {
+
+            }
+        });
         dAdapter = new ShopDetailAdapter(this, currentList);
         bAdapter = new BuyCarAdapter(this, buycayList);
 
-        adapter.setOnItemClickListener(new ShopMenuAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                selectPoistion = position;
-                selectGoodList(position);
-            }
-        });
+//        adapter.setOnItemClickListener(new ShopMenuAdapter.OnItemClickListener() {
+//            @Override
+//            public void onClick(int position) {
+//                selectPoistion = position;
+//                selectGoodList(position);
+//            }
+//        });
 
         dAdapter.setOnItemClickListener(new ShopDetailAdapter.OnItemClickListener() {
             @Override
@@ -393,12 +428,12 @@ public class MenuActivity extends BaseActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         LinearLayoutManager dLayoutManager = new LinearLayoutManager(this);
         LinearLayoutManager bLayoutManager = new LinearLayoutManager(this);
-
-        menuList.setAdapter(adapter);
-        menuList.setLayoutManager(layoutManager);
-
-        detailList.setLayoutManager(dLayoutManager);
-        detailList.setAdapter(dAdapter);
+//
+//        menuList.setAdapter(adapter);
+//        menuList.setLayoutManager(layoutManager);
+//
+//        detailList.setLayoutManager(dLayoutManager);
+//        detailList.setAdapter(dAdapter);
 
         buylList.setLayoutManager(bLayoutManager);
         buylList.setAdapter(bAdapter);
@@ -507,5 +542,27 @@ public class MenuActivity extends BaseActivity {
             oldPriceTextView.setText("" + df.format(allOldPrice));
             oldPriceTextView.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    //特殊布局
+    private void initTabContainer() {
+        ListView mListView = new ListView(this);
+        mListView.setAdapter(adapter);
+
+        mTabContainer = new ListViewTabContainer(this, mListView);
+    }
+
+    private void initContentContainer() {
+        RecyclerView mRecyclerView = new RecyclerView(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(new SimpleArrayAdapter<>(this, mData, mSectionIndexer));
+
+        mContentContainer = new RecyclerViewContentContainer(this, mRecyclerView);
+    }
+
+    private void initLinkedLayout() {
+        mainLayout.setContainers(mTabContainer, mContentContainer);
+        mainLayout.setSectionIndexer(mSectionIndexer);
     }
 }

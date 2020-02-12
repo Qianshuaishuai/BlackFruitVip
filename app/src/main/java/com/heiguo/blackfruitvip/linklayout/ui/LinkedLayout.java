@@ -47,6 +47,7 @@ public class LinkedLayout extends LinearLayout implements EventDispatcher {
                 WEIGHT_CONTENT
         ));
 
+
         this.addView(mTabContainer.mViewGroup);
         this.addView(mContentContainer.mViewGroup);
         this.setOrientation(HORIZONTAL);

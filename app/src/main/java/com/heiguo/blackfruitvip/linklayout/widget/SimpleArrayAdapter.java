@@ -18,7 +18,7 @@ import java.util.List;
  * Time: 23:29
  * <br/><br/>
  */
-public abstract class SimpleArrayAdapter<T>
+public class SimpleArrayAdapter<T>
         extends RecyclerView.Adapter<SimpleArrayAdapter.ViewHolder>
         implements SectionIndexer{
 
@@ -33,16 +33,16 @@ public abstract class SimpleArrayAdapter<T>
         mObjects = objects;
         mRealSectionIndexer = realSectionIndexer;
     }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        holder.textView.setText(mObjects.get(position).toString());
-//        holder.textView.setOnClickListener(view -> new Object());   // enable ViewGroup.getTouchables()
-//    }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SimpleArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(View.inflate(mContext, mResource, null));
+    }
+
+    @Override
+    public void onBindViewHolder(SimpleArrayAdapter.ViewHolder holder, int position) {
+        holder.textView.setText(mObjects.get(position).toString());
+        holder.textView.setOnClickListener(view -> new Object());   // enable ViewGroup.getTouchables()
     }
 
     @Override
