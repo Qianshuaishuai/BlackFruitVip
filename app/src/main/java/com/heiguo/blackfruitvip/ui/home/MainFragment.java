@@ -21,6 +21,9 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
@@ -30,13 +33,18 @@ import com.heiguo.blackfruitvip.adapter.PicAdapter;
 import com.heiguo.blackfruitvip.adapter.PicCAdapter;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.MainBean;
+import com.heiguo.blackfruitvip.bean.StoreBean;
 import com.heiguo.blackfruitvip.bean.UserBean;
+import com.heiguo.blackfruitvip.response.GoodListResponse;
 import com.heiguo.blackfruitvip.response.MainResponse;
+import com.heiguo.blackfruitvip.response.StoreDetailResponse;
 import com.heiguo.blackfruitvip.ui.info.CityActivity;
 import com.heiguo.blackfruitvip.ui.info.VipActivity;
+import com.heiguo.blackfruitvip.ui.order.MenuActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.BannerImageLoader;
 import com.heiguo.blackfruitvip.util.T;
+import com.heiguo.blackfruitvip.util.TimeUtil;
 import com.heiguo.blackfruitvip.view.EChangeScrollView;
 import com.heiguo.blackfruitvip.view.NewGridView;
 import com.heiguo.blackfruitvip.view.NewListView;
@@ -81,6 +89,7 @@ public class MainFragment extends Fragment {
     private ScrollView ecs;
 
     private UserBean userInfo;
+    private CityBean cityBean;
     private AlertDialog noLoginDialog;
 
     private List<String> bannerImages = new ArrayList<>();
@@ -177,7 +186,7 @@ public class MainFragment extends Fragment {
             public void clickListener(View v) {
                 MenuAdapter.ViewHolder holder = (MenuAdapter.ViewHolder) v.getTag();
                 int position = (int) holder.menuImg.getTag();
-                jumpType(picList.get(position));
+                jumpType(menuList.get(position));
             }
         });
         menu.setAdapter(menuAdapter);
@@ -225,6 +234,7 @@ public class MainFragment extends Fragment {
         });
 
         userInfo = ((BlackFruitVipApplication) getActivity().getApplication()).getUserInfo();
+        cityBean = ((BlackFruitVipApplication) getActivity().getApplication()).getCityPick();
     }
 
     private void initPic() {
@@ -253,18 +263,35 @@ public class MainFragment extends Fragment {
                 // not to do
                 break;
             case 1:
+                goToStoreTypeList(bean.getStoreTypeId());
                 break;
             case 2:
+                goToStoreDetail(bean.getStoreId());
                 break;
             case 3:
+                goToGoodDetail(bean.getGoodId());
                 break;
             case 4:
-                Intent intent = new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(bean.getUrl())
-                );
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+//                Intent intent = new Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse(bean.getUrl())
+//                );
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+                try {
+                    Uri uri = Uri.parse(bean.getUrl());
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+
+//                intent.setData(uri);
+                    intent.setDataAndType(uri, "text/html");
+
+                    startActivity(intent);
+                } catch (Exception e) {
+                    T.s("未发现有浏览器");
+                }
+
                 break;
             case 5:
                 if (userInfo.getPhone().equals("未登录用户")) {
@@ -285,6 +312,121 @@ public class MainFragment extends Fragment {
                 // not to do
                 break;
         }
+    }
+
+    private void goToGoodDetail(int goodId) {
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_STORE_GOOD);
+        params.addQueryStringParameter("goodId", goodId);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                StoreDetailResponse response = gson.fromJson(result, StoreDetailResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    if (isCanGoToStore(response.getF_data())) {
+                        Intent intent = new Intent(getActivity(), MenuActivity.class);
+                        intent.putExtra("store", gson.toJson(response.getF_data()));
+                        intent.putExtra("store-mode", Constant.GOOD_DETAIL_JUMP_TYPE);
+                        intent.putExtra("good", goodId);
+                        startActivity(intent);
+                    }
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                T.s("请求出错，请检查网络");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private void goToStoreDetail(long storeId) {
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_STORE_DETAIL);
+        params.addQueryStringParameter("storeId", storeId);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                StoreDetailResponse response = gson.fromJson(result, StoreDetailResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    if (isCanGoToStore(response.getF_data())) {
+                        Intent intent = new Intent(getActivity(), MenuActivity.class);
+                        intent.putExtra("store", gson.toJson(response.getF_data()));
+                        startActivity(intent);
+                    }
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                T.s("请求出错，请检查网络");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    private boolean isCanGoToStore(StoreBean bean) {
+        String time1Start = bean.getTime1Start();
+        String time1End = bean.getTime1End();
+
+        String[] time1Starts = time1Start.split(":");
+        String[] time1Ends = time1End.split(":");
+        int startHour = 0;
+        int startMin = 0;
+        int endHour = 0;
+        int endMin = 0;
+        if (time1Starts.length != 0) {
+            startHour = Integer.parseInt(time1Starts[0]);
+            startMin = Integer.parseInt(time1Starts[1]);
+        }
+
+        if (time1Ends.length != 0) {
+            endHour = Integer.parseInt(time1Ends[0]);
+            endMin = Integer.parseInt(time1Ends[1]);
+        }
+
+        LatLonPoint currentPoint = new LatLonPoint(bean.getLatitude(), bean.getLongitude());
+        double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(cityBean.getLatitude(), cityBean.getLongitude()));
+        if (bean.getMaxDistance() < distance) {
+            T.s("超出配送范围");
+            return false;
+        }
+
+        if (!TimeUtil.isCurrentInTimeScope(startHour, startMin, endHour, endMin)) {
+            T.s("不在配送时间内");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void goToStoreTypeList(int storeType) {
+        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        intent.putExtra("storeType", storeType);
+        startActivity(intent);
     }
 
     @Override
@@ -373,8 +515,8 @@ public class MainFragment extends Fragment {
     }
 
     private void startLoginActivity() {
-        getActivity().finish();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

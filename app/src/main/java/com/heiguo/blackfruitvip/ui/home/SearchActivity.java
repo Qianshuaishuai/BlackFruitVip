@@ -123,18 +123,18 @@ public class SearchActivity extends BaseActivity {
         String time1Start = selectBean.getTime1Start();
         String time1End = selectBean.getTime1End();
 
-        String[] time1Starts=time1Start.split(":");
-        String[] time1Ends=time1End.split(":");
+        String[] time1Starts = time1Start.split(":");
+        String[] time1Ends = time1End.split(":");
         int startHour = 0;
         int startMin = 0;
         int endHour = 0;
         int endMin = 0;
-        if (time1Starts.length != 0){
+        if (time1Starts.length != 0) {
             startHour = Integer.parseInt(time1Starts[0]);
             startMin = Integer.parseInt(time1Starts[1]);
         }
 
-        if (time1Ends.length != 0){
+        if (time1Ends.length != 0) {
             endHour = Integer.parseInt(time1Ends[0]);
             endMin = Integer.parseInt(time1Ends[1]);
         }
@@ -146,7 +146,7 @@ public class SearchActivity extends BaseActivity {
             return;
         }
 
-        if (!TimeUtil.isCurrentInTimeScope(startHour,startMin,endHour,endMin)) {
+        if (!TimeUtil.isCurrentInTimeScope(startHour, startMin, endHour, endMin)) {
             T.s("不在配送时间内");
             return;
         }
@@ -159,9 +159,20 @@ public class SearchActivity extends BaseActivity {
 
         //暂时测试
         getCurrentCityBean();
-        getStoreList("");
 
         initView();
+        initData();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        int storeType = intent.getIntExtra("storeType", 0);
+
+        if (storeType == 0) {
+            getStoreList("");
+        } else {
+            getStoreListForType(storeType);
+        }
     }
 
     private void initView() {
@@ -215,6 +226,40 @@ public class SearchActivity extends BaseActivity {
     private void getCurrentCityBean() {
         cityBean = ((BlackFruitVipApplication) getApplication()).getCityPick();
 //        adapter.setLatLonPoint(new LatLonPoint(cityBean.getLatitude(), cityBean.getLongitude()));
+    }
+
+    private void getStoreListForType(int storeType) {
+        RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_STORE_TYPE);
+        params.addQueryStringParameter("storeType", storeType);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson = new Gson();
+                StoreListResponse response = gson.fromJson(result, StoreListResponse.class);
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+                    storeList = response.getF_data();
+                } else {
+
+                }
+
+                initList();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                T.s("请求出错，请检查网络");
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
     }
 
     private void getStoreList(String search) {
@@ -287,6 +332,10 @@ public class SearchActivity extends BaseActivity {
         if (bean.getService1() == 0) {
             rbLeft.setTextColor(getResources().getColor(R.color.colorTv));
             rbLeft.setClickable(false);
+
+            if (serviceIndex == 0) {
+                serviceIndex = 1;
+            }
         } else {
             rbLeft.setTextColor(getResources().getColor(R.color.colorBlack));
             rbLeft.setClickable(true);
@@ -295,6 +344,14 @@ public class SearchActivity extends BaseActivity {
         if (bean.getService2() == 0) {
             rbMiddle.setTextColor(getResources().getColor(R.color.colorTv));
             rbMiddle.setClickable(false);
+
+            if (serviceIndex == 1) {
+                if (bean.getService1() == 0) {
+                    serviceIndex = 2;
+                } else {
+                    serviceIndex = 0;
+                }
+            }
         } else {
             rbMiddle.setTextColor(getResources().getColor(R.color.colorBlack));
             rbMiddle.setClickable(true);
@@ -312,22 +369,22 @@ public class SearchActivity extends BaseActivity {
     }
 
     // 百度地图
-    public void toBaidu(StoreBean bean){
+    public void toBaidu(StoreBean bean) {
 
-        Intent intent= new Intent("android.intent.action.VIEW", android.net.Uri.parse("baidumap://map/geocoder?location=" + bean.getLatitude() + "," + bean.getLongitude()));
+        Intent intent = new Intent("android.intent.action.VIEW", android.net.Uri.parse("baidumap://map/geocoder?location=" + bean.getLatitude() + "," + bean.getLongitude()));
         startActivity(intent);
     }
 
     // 腾讯地图
-    public void toTencent(StoreBean bean){
+    public void toTencent(StoreBean bean) {
         Intent intent = new Intent("android.intent.action.VIEW", android.net.Uri.parse("qqmap://map/routeplan?type=drive&from=&fromcoord=&to=目的地&tocoord=" + bean.getLatitude() + "," + bean.getLongitude() + "&policy=0&referer=appName"));
         startActivity(intent);
 
     }
 
     // 高德地图
-    public void toGaodeNavi(StoreBean bean){
-        Intent intent= new Intent("android.intent.action.VIEW", android.net.Uri.parse("androidamap://route?sourceApplication=appName&slat=&slon=&sname=我的位置&dlat="+ bean.getLatitude() +"&dlon="+ bean.getLongitude()+"&dname=目的地&dev=0&t=2"));
+    public void toGaodeNavi(StoreBean bean) {
+        Intent intent = new Intent("android.intent.action.VIEW", android.net.Uri.parse("androidamap://route?sourceApplication=appName&slat=&slon=&sname=我的位置&dlat=" + bean.getLatitude() + "&dlon=" + bean.getLongitude() + "&dname=目的地&dev=0&t=2"));
         startActivity(intent);
     }
 
@@ -354,16 +411,16 @@ public class SearchActivity extends BaseActivity {
         LinearLayout tengxunLayout = (LinearLayout) view.findViewById(R.id.layout_tengxun);
 
         for (int i = 0; i < mList.size(); i++) {
-            if (mList.get(i).equals("com.autonavi.minimap")){
+            if (mList.get(i).equals("com.autonavi.minimap")) {
                 gaodeLayout.setVisibility(View.VISIBLE);
-            }else if (mList.get(i).equals("com.baidu.BaiduMap")){
+            } else if (mList.get(i).equals("com.baidu.BaiduMap")) {
                 baiduLayout.setVisibility(View.VISIBLE);
-            }else if (mList.get(i).equals("com.tencent.map")){
+            } else if (mList.get(i).equals("com.tencent.map")) {
                 tengxunLayout.setVisibility(View.VISIBLE);
             }
         }
 
-        if (mList.size() == 0){
+        if (mList.size() == 0) {
             noTip.setVisibility(View.VISIBLE);
             sureButton.setText("取消");
         }
@@ -376,7 +433,7 @@ public class SearchActivity extends BaseActivity {
             baiduBox.setChecked(false);
             gaodeBox.setChecked(true);
             tengxunBox.setChecked(false);
-        }else if (mapSelect == Constant.MAP_TYPE_TENGXUN) {
+        } else if (mapSelect == Constant.MAP_TYPE_TENGXUN) {
             baiduBox.setChecked(false);
             gaodeBox.setChecked(false);
             tengxunBox.setChecked(true);
@@ -430,10 +487,10 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mapSelectMap.cancel();
-                if(mList.size()==0){
+                if (mList.size() == 0) {
                     return;
                 }
-                switch (mapSelect){
+                switch (mapSelect) {
                     case Constant.MAP_TYPE_BAIDU:
                         toBaidu(selectBean);
                         break;

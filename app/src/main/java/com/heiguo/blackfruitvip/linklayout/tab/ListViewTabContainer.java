@@ -4,9 +4,6 @@ import android.content.Context;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import com.fashare.linkedscrolldemo.EventReceiver;
-import com.fashare.linkedscrolldemo.base.BaseScrollableContainer;
-import com.fashare.linkedscrolldemo.base.BaseViewGroupUtil;
 import com.heiguo.blackfruitvip.linklayout.EventReceiver;
 import com.heiguo.blackfruitvip.linklayout.base.BaseScrollableContainer;
 import com.heiguo.blackfruitvip.linklayout.base.BaseViewGroupUtil;

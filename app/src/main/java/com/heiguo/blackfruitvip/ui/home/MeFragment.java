@@ -376,8 +376,8 @@ public class MeFragment extends Fragment {
     }
 
     private void startLoginActivity() {
-        getActivity().finish();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

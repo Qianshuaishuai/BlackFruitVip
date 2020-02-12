@@ -386,8 +386,8 @@ public class GoodDetailActivity extends BaseActivity {
     }
 
     private void startLoginActivity() {
-        finish();
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

@@ -33,16 +33,16 @@ public abstract class SimpleArrayAdapter<T>
         mObjects = objects;
         mRealSectionIndexer = realSectionIndexer;
     }
+//
+//    @Override
+//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        holder.textView.setText(mObjects.get(position).toString());
+//        holder.textView.setOnClickListener(view -> new Object());   // enable ViewGroup.getTouchables()
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(View.inflate(mContext, mResource, null));
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.textView.setText(mObjects.get(position).toString());
-        holder.textView.setOnClickListener(view -> new Object());   // enable ViewGroup.getTouchables()
     }
 
     @Override

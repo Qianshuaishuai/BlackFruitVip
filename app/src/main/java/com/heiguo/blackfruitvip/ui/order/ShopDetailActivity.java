@@ -398,6 +398,10 @@ public class ShopDetailActivity extends BaseActivity {
         if (storeBean.getService1() == 0) {
             rbLeft.setTextColor(getResources().getColor(R.color.colorTv));
             rbLeft.setClickable(false);
+
+            if (serviceIndex == 0){
+                serviceIndex = 1;
+            }
         } else {
             rbLeft.setTextColor(getResources().getColor(R.color.colorBlack));
             rbLeft.setClickable(true);
@@ -406,6 +410,14 @@ public class ShopDetailActivity extends BaseActivity {
         if (storeBean.getService2() == 0) {
             rbMiddle.setTextColor(getResources().getColor(R.color.colorTv));
             rbMiddle.setClickable(false);
+
+            if (serviceIndex == 1){
+                if (storeBean.getService1() == 0){
+                    serviceIndex = 2;
+                }else{
+                    serviceIndex = 0;
+                }
+            }
         } else {
             rbMiddle.setTextColor(getResources().getColor(R.color.colorBlack));
             rbMiddle.setClickable(true);

@@ -47,6 +47,10 @@ public class Constant {
     //Activity回传码
     public static final int GOOD_DETAIL_BACK_REQUEST_CODE = 111;
 
+    //跳转模式
+    public static final int GOOD_DETAIL_JUMP_TYPE = 11111;
+    public static final int GOOD_DETAIL_NORMAL = 11000;
+
     //地址编辑模式
     public static final int ADDRESS_MODE_GO_ADD = 1111;
     public static final int ADDRESS_MODE_GO_EDIT = 1112;
@@ -71,7 +75,7 @@ public class Constant {
 
     //Api请求相关数据
     public static final String BASE_URL = "http://010.ming123.net";
-//    public static final String BASE_URL = "http://192.168.1.239:6490";
+    //    public static final String BASE_URL = "http://192.168.1.239:6490";
     public static final String URL_CODE = "/v1/user/code";
     public static final String URL_AUTO = "/v1/user/auto";
     public static final String URL_GET = "/v1/user/get";
@@ -85,6 +89,9 @@ public class Constant {
     public static final String URL_MAIN_ALL = "/v1/home/all";
 
     public static final String URL_STORE_LIST = "/v1/store/list";
+    public static final String URL_STORE_GOOD = "/v1/store/good";
+    public static final String URL_STORE_TYPE = "/v1/store/type";
+    public static final String URL_STORE_DETAIL = "/v1/store/detail";
 
     public static final String URL_GOOD_LIST = "/v1/good/list";
 

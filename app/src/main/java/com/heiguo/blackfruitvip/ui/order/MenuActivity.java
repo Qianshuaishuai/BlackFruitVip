@@ -84,10 +84,10 @@ public class MenuActivity extends BaseActivity {
     private TextView totalCountTextView;
 
     @Event(R.id.bottom)
-    private void bottomClick(View view){
-        if(buylList.getVisibility() == View.VISIBLE){
+    private void bottomClick(View view) {
+        if (buylList.getVisibility() == View.VISIBLE) {
             buylList.setVisibility(View.GONE);
-        }else if(buylList.getVisibility() == View.GONE){
+        } else if (buylList.getVisibility() == View.GONE) {
             buylList.setVisibility(View.VISIBLE);
         }
     }
@@ -218,13 +218,13 @@ public class MenuActivity extends BaseActivity {
     }
 
     private void startLoginActivity() {
-        finish();
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
-    public boolean checkIsLogin(){
-        String phone = ((BlackFruitVipApplication)getApplication()).getLoginPhone();
+    public boolean checkIsLogin() {
+        String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
         if (phone == "") {
             noLoginDialog.show();
             return false;
@@ -264,6 +264,7 @@ public class MenuActivity extends BaseActivity {
                         for (int t = 0; t < response.getF_data().getStoreTypes().size(); t++) {
                             typeList.add(response.getF_data().getStoreTypes().get(t));
                         }
+                        isGoToGoodDetail();
                         updateList();
                     } else {
                         T.s("获取商品列表失败");
@@ -292,6 +293,29 @@ public class MenuActivity extends BaseActivity {
             T.s("获取商品列表失败");
             finish();
         }
+    }
+
+    private void isGoToGoodDetail() {
+        Intent intent = getIntent();
+        int mode = intent.getIntExtra("store-mode", Constant.GOOD_DETAIL_NORMAL);
+        int goodId = intent.getIntExtra("good", 0);
+
+        if (mode == Constant.GOOD_DETAIL_JUMP_TYPE) {
+            int position = getGoodPositionFromAllList(goodId);
+            if (position != -1) {
+                startGoodDetailActivityForAno(position);
+            }
+        }
+    }
+
+    private int getGoodPositionFromAllList(int goodId) {
+        for (int a = 0; a < allList.size(); a++) {
+            if (allList.get(a).getId() == goodId) {
+                return a;
+            }
+        }
+
+        return -1;
     }
 
     private void updateList() {
@@ -395,6 +419,19 @@ public class MenuActivity extends BaseActivity {
         startActivityForResult(newIntent, Constant.GOOD_DETAIL_BACK_REQUEST_CODE);
     }
 
+    private void startGoodDetailActivityForAno(int position) {
+        Gson gson = new Gson();
+        String beanString = gson.toJson(allList);
+
+        Intent newIntent = new Intent(this, GoodDetailActivity.class);
+        newIntent.putExtra("good-list", beanString);
+        newIntent.putExtra("position", position);
+        newIntent.putExtra("store", gson.toJson(storeBean));
+        newIntent.putExtra("serviceIndex", serviceIndex);
+        startActivityForResult(newIntent, Constant.GOOD_DETAIL_BACK_REQUEST_CODE);
+    }
+
+
     private int allListPosition(int currnetPosition) {
         int id = currentList.get(currnetPosition).getId();
         int newPosition = -1;
@@ -448,14 +485,14 @@ public class MenuActivity extends BaseActivity {
             }
         }
 
-        for(int b = 0; b < buycayList.size(); b++){
+        for (int b = 0; b < buycayList.size(); b++) {
             totalCount = totalCount + buycayList.get(b).getCount();
         }
 
         oldPriceTextView.getPaint().setAntiAlias(true);
         oldPriceTextView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
 
-        totalCountTextView.setText("共"+ totalCount+"件商品");
+        totalCountTextView.setText("共" + totalCount + "件商品");
 
         bAdapter.notifyDataSetChanged();
         dAdapter.notifyDataSetChanged();
