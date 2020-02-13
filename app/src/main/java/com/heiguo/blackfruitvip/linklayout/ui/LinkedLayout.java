@@ -36,15 +36,15 @@ public class LinkedLayout extends LinearLayout implements EventDispatcher {
 
         // 设置 LayoutParams
         mTabContainer.mViewGroup.setLayoutParams(new LayoutParams(
-                MEASURE_BY_WEIGHT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                WEIGHT_TAB
+                75,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0
         ));
 
         mContentContainer.mViewGroup.setLayoutParams(new LayoutParams(
-                MEASURE_BY_WEIGHT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                WEIGHT_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0
         ));
 
 
@@ -78,7 +78,7 @@ public class LinkedLayout extends LinearLayout implements EventDispatcher {
 
     @Override
     public void dispatchItemSelectedEvent(int pos, View fromView) {
-        if(mSectionIndexer == null){
+        if (mSectionIndexer == null) {
             throw new NullPointerException("you should set mSectionIndexer first!!");
         }
         int convertPos;

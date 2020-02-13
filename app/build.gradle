@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.umeng.umsdk:common:2.0.0'
     // stream: java8 第三方 stream
     implementation 'com.annimon:stream:1.0.9'
+//    implementation 'com.kunminx.linkage:linkage-recyclerview:1.9.2'
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

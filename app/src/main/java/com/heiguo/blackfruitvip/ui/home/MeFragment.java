@@ -112,7 +112,7 @@ public class MeFragment extends Fragment {
 
     private void initView() {
         header = (ImageView) getActivity().findViewById(R.id.header);
-        img = (ImageView) getActivity().findViewById(R.id.img);
+        img = (ImageView) getActivity().findViewById(R.id.img_share);
         vip = (ImageView) getActivity().findViewById(R.id.go_vip);
         phone = (TextView) getActivity().findViewById(R.id.phone);
         save = (TextView) getActivity().findViewById(R.id.save);

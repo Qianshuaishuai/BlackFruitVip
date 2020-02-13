@@ -46,17 +46,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="60dip">
 
             <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/menu_list"-->
-                <!--android:layout_width="75dip"-->
-                <!--android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
+            <!--android:id="@+id/menu_list"-->
+            <!--android:layout_width="75dip"-->
+            <!--android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
 
             <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/detail_list"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
+            <!--android:id="@+id/detail_list"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
             <com.heiguo.blackfruitvip.linklayout.ui.LinkedLayout
                 android:id="@+id/layout_main"
                 android:layout_width="match_parent"

@@ -56,7 +56,7 @@ import java.util.List;
 @ContentView(R.layout.activity_menu)
 public class MenuActivity extends BaseActivity {
 
-//    private ShopMenuAdapter adapter;
+    //    private ShopMenuAdapter adapter;
     private ShopMenuAnoAdapter adapter;
     private ShopDetailAdapter dAdapter;
     private BuyCarAdapter bAdapter;
@@ -72,6 +72,8 @@ public class MenuActivity extends BaseActivity {
     private List<GoodBean> buycayList;
     private List<TypeBean> typeList;
 
+    private SectionIndexer mSectionIndexer;
+
     private int selectPoistion = 0;
 
     private Dialog carDialog;
@@ -79,13 +81,7 @@ public class MenuActivity extends BaseActivity {
     private BaseScrollableContainer mTabContainer;      // 左边的 Tab 页
     private BaseScrollableContainer mContentContainer;  // 右边的 content 页
 
-    List<Integer> mData = Stream.iterate(0, item -> item+1)
-            .limit(10)
-            .collect(Collectors.toList());
-
-    private SectionIndexer mSectionIndexer = new RealSectionIndexer(mData);
-
-//    @ViewInject(R.id.menu_list)
+    //    @ViewInject(R.id.menu_list)
 //    private RecyclerView menuList;
 //
 //    @ViewInject(R.id.detail_list)
@@ -285,7 +281,6 @@ public class MenuActivity extends BaseActivity {
                     GoodListResponse response = gson.fromJson(result, GoodListResponse.class);
                     if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                         allList = response.getF_data().getGoods();
-
                         typeList.clear();
                         for (int t = 0; t < response.getF_data().getStoreTypes().size(); t++) {
                             typeList.add(response.getF_data().getStoreTypes().get(t));
@@ -348,6 +343,9 @@ public class MenuActivity extends BaseActivity {
         adapter.setSelectPosition(selectPoistion);
         adapter.notifyDataSetChanged();
         selectGoodList(selectPoistion);
+
+
+        mSectionIndexer = new RealSectionIndexer(typeList, allList);
 
         initTabContainer();
         initContentContainer();
@@ -547,8 +545,14 @@ public class MenuActivity extends BaseActivity {
 
     //特殊布局
     private void initTabContainer() {
+//        ListView mListView = new ListView(this);
+//        mListView.setAdapter(adapter);
+//
+//        mTabContainer = new ListViewTabContainer(this, mListView);
         ListView mListView = new ListView(this);
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(new ArrayAdapter<>(this, R.layout.item_common,
+                Arrays.asList(mSectionIndexer.getSections())
+        ));
 
         mTabContainer = new ListViewTabContainer(this, mListView);
     }
@@ -556,7 +560,7 @@ public class MenuActivity extends BaseActivity {
     private void initContentContainer() {
         RecyclerView mRecyclerView = new RecyclerView(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new SimpleArrayAdapter<>(this, mData, mSectionIndexer));
+        mRecyclerView.setAdapter(new SimpleArrayAdapter<>(this, allList, mSectionIndexer));
 
         mContentContainer = new RecyclerViewContentContainer(this, mRecyclerView);
     }

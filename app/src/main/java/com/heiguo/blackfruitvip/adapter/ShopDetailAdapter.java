@@ -71,7 +71,7 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.oldPriceTxt.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
 
         DecimalFormat df = new DecimalFormat("#.00");
-        holder.nameTxt.setText(mList.get(position).getName());
+        holder.nameTxt.setText(mList.get(position).getName() + ":" + mList.get(position).getType());
         holder.oldPriceTxt.setText("" + df.format(mList.get(position).getoPrice()));
         holder.priceTxt.setText("" + df.format(mList.get(position).getPrice()));
         holder.countTxt.setText("" + mList.get(position).getCount());
@@ -81,10 +81,10 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!context.checkIsLogin()){
+                if (!context.checkIsLogin()) {
                     return;
                 }
-                if (!context.checkIsVip()){
+                if (!context.checkIsVip()) {
                     return;
                 }
                 mList.get(position).setCount(mList.get(position).getCount() + 1);
@@ -96,10 +96,10 @@ public class ShopDetailAdapter extends RecyclerView.Adapter<ShopDetailAdapter.Vi
         holder.reduceImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!context.checkIsLogin()){
+                if (!context.checkIsLogin()) {
                     return;
                 }
-                if (!context.checkIsVip()){
+                if (!context.checkIsVip()) {
                     return;
                 }
                 if (mList.get(position).getCount() > 0) {
