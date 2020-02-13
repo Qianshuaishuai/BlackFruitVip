@@ -140,7 +140,15 @@ public class SimpleArrayAdapter<T>
         return mRealSectionIndexer.getPositionForSection(sectionIndex);
     }
 
-    private ShopDetailAdapter.OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onClick(int position);
+    }
+
+    private OnItemClickListener listener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public int getSectionForPosition(int position) {

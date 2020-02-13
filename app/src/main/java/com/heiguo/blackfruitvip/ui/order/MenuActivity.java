@@ -58,7 +58,7 @@ public class MenuActivity extends BaseActivity {
 
     //    private ShopMenuAdapter adapter;
     private ShopMenuAnoAdapter adapter;
-    private ShopDetailAdapter dAdapter;
+    private SimpleArrayAdapter dAdapter;
     private BuyCarAdapter bAdapter;
 
     private StoreBean storeBean;
@@ -406,7 +406,7 @@ public class MenuActivity extends BaseActivity {
 
             }
         });
-        dAdapter = new ShopDetailAdapter(this, currentList);
+//        dAdapter = new ShopDetailAdapter(this, currentList);
         bAdapter = new BuyCarAdapter(this, buycayList);
 
 //        adapter.setOnItemClickListener(new ShopMenuAdapter.OnItemClickListener() {
@@ -416,13 +416,13 @@ public class MenuActivity extends BaseActivity {
 //                selectGoodList(position);
 //            }
 //        });
-
-        dAdapter.setOnItemClickListener(new ShopDetailAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                startGoodDetailActivity(position);
-            }
-        });
+//        dAdapter = new SimpleArrayAdapter<>(this, allList, mSectionIndexer);
+//        dAdapter.setOnItemClickListener(new SimpleArrayAdapter.OnItemClickListener() {
+//            @Override
+//            public void onClick(int position) {
+//                startGoodDetailActivity(position);
+//            }
+//        });
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         LinearLayoutManager dLayoutManager = new LinearLayoutManager(this);
         LinearLayoutManager bLayoutManager = new LinearLayoutManager(this);
@@ -446,7 +446,7 @@ public class MenuActivity extends BaseActivity {
 
         Intent newIntent = new Intent(this, GoodDetailActivity.class);
         newIntent.putExtra("good-list", beanString);
-        newIntent.putExtra("position", allListPosition(position));
+        newIntent.putExtra("position", position);
         newIntent.putExtra("store", gson.toJson(storeBean));
         newIntent.putExtra("serviceIndex", serviceIndex);
         startActivityForResult(newIntent, Constant.GOOD_DETAIL_BACK_REQUEST_CODE);
