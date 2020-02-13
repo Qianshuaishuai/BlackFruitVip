@@ -1,6 +1,7 @@
 package com.heiguo.blackfruitvip.linklayout.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -36,18 +37,18 @@ public class LinkedLayout extends LinearLayout implements EventDispatcher {
 
         // 设置 LayoutParams
         mTabContainer.mViewGroup.setLayoutParams(new LayoutParams(
-                75,
+                0,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                0
+                7
         ));
 
         mContentContainer.mViewGroup.setLayoutParams(new LayoutParams(
+                0,
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0
+                26
         ));
 
-
+        mContentContainer.mViewGroup.setBackgroundColor(Color.rgb(245,245,245));
         this.addView(mTabContainer.mViewGroup);
         this.addView(mContentContainer.mViewGroup);
         this.setOrientation(HORIZONTAL);

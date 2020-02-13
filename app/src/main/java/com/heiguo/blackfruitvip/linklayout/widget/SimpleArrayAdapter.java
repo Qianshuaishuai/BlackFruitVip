@@ -30,10 +30,11 @@ import java.util.List;
  */
 public class SimpleArrayAdapter<T>
         extends RecyclerView.Adapter<SimpleArrayAdapter.ViewHolder>
-        implements SectionIndexer{
+        implements SectionIndexer {
 
     private final MenuActivity context;
-    private final @LayoutRes int mResource;
+    private final @LayoutRes
+    int mResource;
     private List<T> mObjects;
     private SectionIndexer mRealSectionIndexer; // 代理
 
@@ -76,10 +77,10 @@ public class SimpleArrayAdapter<T>
         holder.addImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!context.checkIsLogin()){
+                if (!context.checkIsLogin()) {
                     return;
                 }
-                if (!context.checkIsVip()){
+                if (!context.checkIsVip()) {
                     return;
                 }
                 bean.setCount(bean.getCount() + 1);
@@ -91,10 +92,10 @@ public class SimpleArrayAdapter<T>
         holder.reduceImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!context.checkIsLogin()){
+                if (!context.checkIsLogin()) {
                     return;
                 }
-                if (!context.checkIsVip()){
+                if (!context.checkIsVip()) {
                     return;
                 }
                 if (bean.getCount() > 0) {
@@ -108,7 +109,7 @@ public class SimpleArrayAdapter<T>
 
     @Override
     public int getItemCount() {
-        return mObjects==null? 0: mObjects.size();
+        return mObjects == null ? 0 : mObjects.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

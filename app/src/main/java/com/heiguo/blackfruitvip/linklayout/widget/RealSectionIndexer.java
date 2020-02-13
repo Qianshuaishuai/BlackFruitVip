@@ -50,10 +50,7 @@ public class RealSectionIndexer implements SectionIndexer {
     @Override
     public int getPositionForSection(int sectionIndex) {
         int count = 0;
-        if (sectionIndex == 0) {
-            return 0;
-        }
-        for (int s = 0; s < sectionIndex; s++) {
+        for (int s = 0; s < sectionIndex + 1; s++) {
             count = count + mTypeObjects.get(s).getCount();
         }
         return count;

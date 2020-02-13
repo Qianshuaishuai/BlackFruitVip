@@ -52,7 +52,7 @@ public abstract class BaseViewGroupUtil<VG extends ViewGroup> {
     }
 
     protected void setViewSelected(View view, boolean isSelected){
-        view.setBackgroundColor(isSelected? Color.WHITE: Color.LTGRAY);
+        view.setBackgroundColor(isSelected? Color.WHITE: Color.WHITE);
     }
 
     /**

@@ -54,6 +54,6 @@ public class RecyclerViewUtil extends BaseViewGroupUtil<RecyclerView> {
 
     @Override
     protected void setViewSelected(View view, boolean isSelected){
-        view.setBackgroundColor(isSelected? Color.WHITE: Color.GRAY);
+//        view.setBackgroundColor(isSelected? Color.rgb(245,245,245): Color.rgb(245,245,245));
     }
 }
