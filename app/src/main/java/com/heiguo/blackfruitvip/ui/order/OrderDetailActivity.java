@@ -81,6 +81,7 @@ public class OrderDetailActivity extends BaseActivity {
     private Timer receiptTimer;
     private TimerTask receiptTimerTask;
     private int modeType = Constant.ORDER_MODE_CREATE;
+//    private int payDetailType = Constant.OTHER_PAY_FOR_ORDER;
 
     @ViewInject(R.id.detail_list)
     private RecyclerView detailList;

@@ -64,6 +64,11 @@ public class Constant {
     public static final int ORDER_MODE_MAIN = 101;
     public static final int ORDER_MODE_CREATE = 102;
 
+    //订单退出付款状态
+    public static final int IS_PAY_FOR_ORDER = 1111111;
+    public static final int NOT_PAY_FOR_ORDER = 1111112;
+    public static final int OTHER_PAY_FOR_ORDER = 1111110;
+
     //验证码类型相关
     public static final int CODE_REGISTER = 101;
     public static final int CODE_CHANGE_PASSWORD = 102;

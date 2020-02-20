@@ -41,7 +41,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
+    public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
 
     @ViewInject(R.id.navigation)
     private BottomNavigationView navigation;
