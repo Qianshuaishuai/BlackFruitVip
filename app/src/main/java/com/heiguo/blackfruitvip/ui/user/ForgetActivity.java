@@ -179,7 +179,6 @@ public class ForgetActivity extends BaseActivity {
         String forgetMode = intent.getStringExtra("forget-mode");
 
         if (forgetMode.equals("1")) {
-            System.out.println(forgetMode);
             loginButton.setVisibility(View.GONE);
         }
     }

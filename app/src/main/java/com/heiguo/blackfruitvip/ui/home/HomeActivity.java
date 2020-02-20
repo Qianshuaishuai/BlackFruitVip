@@ -179,7 +179,7 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        System.out.println(uri);
+
     }
 
     private void initNoLoginDialog() {
