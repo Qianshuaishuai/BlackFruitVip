@@ -179,7 +179,7 @@ import org.xutils.x;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        System.out.println(uri);
+
     }
 
     private void initNoLoginDialog() {

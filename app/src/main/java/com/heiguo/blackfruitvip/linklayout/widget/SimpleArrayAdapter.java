@@ -45,6 +45,10 @@ public class SimpleArrayAdapter<T>
         mRealSectionIndexer = realSectionIndexer;
     }
 
+    public void updateList(List<T> newObjects){
+        this.mObjects = newObjects;
+    }
+
     @Override
     public SimpleArrayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(View.inflate(context, mResource, null));
@@ -62,6 +66,8 @@ public class SimpleArrayAdapter<T>
         });
 
         GoodBean bean = (GoodBean) mObjects.get(position);
+//        System.out.println(bean.getName());
+//        System.out.println(bean.getCount());
 
         holder.oldPriceTxt.getPaint().setAntiAlias(true);
         holder.oldPriceTxt.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线

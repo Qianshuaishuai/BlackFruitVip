@@ -88,13 +88,15 @@ public abstract class BaseScrollableContainer<VG extends ViewGroup>
         @Override
         public void onScrollStop() {
             isTouching = false;
-            mViewUtil.smoothScrollTo(mCurPosition);    // 调正位置
+//            mViewUtil.smoothScrollTo(mCurPosition);    // 调正位置
             mViewUtil.setViewSelected(mCurPosition);
         }
 
         @Override
         public void onScrolled() {
+//            System.out.println("mCurPosition1:"+mCurPosition);
             mCurPosition = mViewUtil.updatePosOnScrolled(mCurPosition);
+//            System.out.println("mCurPosition2:"+mCurPosition);
             if(isTouching)          // 来自用户, 通知 对方 联动
                 onScrolledByUser();
             else                    // 来自对方, 被动滑动不响应

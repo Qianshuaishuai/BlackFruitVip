@@ -19,11 +19,11 @@ public class RecyclerViewUtil extends BaseViewGroupUtil<RecyclerView> {
 
     public RecyclerViewUtil(RecyclerView recyclerView) {
         super(recyclerView);
-        mLinearLayoutManager = (LinearLayoutManager)mViewGroup.getLayoutManager();
+        mLinearLayoutManager = (LinearLayoutManager) mViewGroup.getLayoutManager();
     }
 
     @Override
-    public void updateEdges(){
+    public void updateEdges() {
         beginPos = mLinearLayoutManager.findFirstVisibleItemPosition();
         endPos = mLinearLayoutManager.findLastVisibleItemPosition();
     }
@@ -32,6 +32,7 @@ public class RecyclerViewUtil extends BaseViewGroupUtil<RecyclerView> {
      * Android RecyclerView滚动定位
      * 仅用于 item 高度固定
      * 来自 http://blog.csdn.net/tyzlmjj/article/details/49227601
+     *
      * @param pos
      */
     @Override
@@ -39,10 +40,12 @@ public class RecyclerViewUtil extends BaseViewGroupUtil<RecyclerView> {
         updateEdges();
         final int itemHeight = mViewGroup.getChildAt(0).getHeight();
         final int beginTop = mViewGroup.getChildAt(0).getTop();
-        mViewGroup.smoothScrollBy(0, beginTop + itemHeight * (pos-beginPos)); // 仅用于 item 高度固定
+        mViewGroup.smoothScrollBy(0, beginTop + itemHeight * (pos - beginPos)); // 仅用于 item 高度固定
     }
 
-    /** 始终选中 beginPos
+    /**
+     * 始终选中 beginPos
+     *
      * @param pos
      * @return
      */
@@ -53,7 +56,7 @@ public class RecyclerViewUtil extends BaseViewGroupUtil<RecyclerView> {
     }
 
     @Override
-    protected void setViewSelected(View view, boolean isSelected){
+    protected void setViewSelected(View view, boolean isSelected) {
 //        view.setBackgroundColor(isSelected? Color.rgb(245,245,245): Color.rgb(245,245,245));
     }
 }

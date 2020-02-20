@@ -287,6 +287,7 @@ public class MenuActivity extends BaseActivity {
                         }
                         isGoToGoodDetail();
                         updateList();
+                        initMainLayout();
                     } else {
                         T.s("获取商品列表失败");
                         finish();
@@ -343,7 +344,9 @@ public class MenuActivity extends BaseActivity {
         adapter.setSelectPosition(selectPoistion);
         adapter.notifyDataSetChanged();
         selectGoodList(selectPoistion);
+    }
 
+    private void initMainLayout(){
 
         mSectionIndexer = new RealSectionIndexer(typeList, allList);
 
@@ -488,7 +491,7 @@ public class MenuActivity extends BaseActivity {
         }
 
         adapter.notifyDataSetChanged();
-        dAdapter.notifyDataSetChanged();
+//        dAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -528,6 +531,7 @@ public class MenuActivity extends BaseActivity {
         totalCountTextView.setText("共" + totalCount + "件商品");
 
         bAdapter.notifyDataSetChanged();
+        dAdapter.updateList(allList);
         dAdapter.notifyDataSetChanged();
 
         if (buycayList.size() == 0) {
@@ -560,7 +564,14 @@ public class MenuActivity extends BaseActivity {
     private void initContentContainer() {
         RecyclerView mRecyclerView = new RecyclerView(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new SimpleArrayAdapter<>(this, allList, mSectionIndexer));
+        dAdapter = new SimpleArrayAdapter<>(this, allList, mSectionIndexer);
+        dAdapter.setOnItemClickListener(new SimpleArrayAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                startGoodDetailActivity(position);
+            }
+        });
+        mRecyclerView.setAdapter(dAdapter);
 
         mContentContainer = new RecyclerViewContentContainer(this, mRecyclerView);
     }
