@@ -104,7 +104,7 @@ public class BlackFruitVipApplication extends Application {
     }
 
     private void initCityBean() {
-        if (getCityPick() == null) {
+        if (getCityPick() == null || getCityPick().getAddress().equals("")) {
             CityBean bean = new CityBean();
             bean.setLongitude(116.46);
             bean.setLatitude(39.92);
@@ -189,9 +189,6 @@ public class BlackFruitVipApplication extends Application {
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-//                locationBean.setCity(aMapLocation.getCity());
-//                locationBean.setProvince(aMapLocation.getProvince());
-//                locationBean.setCode(aMapLocation.getCityCode());
                 if (getCityPick().getLatitude() == 39.92) {
                     CityBean bean = new CityBean();
                     bean.setCity(aMapLocation.getCity());

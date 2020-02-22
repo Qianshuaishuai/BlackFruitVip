@@ -140,7 +140,7 @@
                 android:id="@+id/order_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="80dip"></android.support.v7.widget.RecyclerView>
+                android:paddingBottom="60dip"></android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 

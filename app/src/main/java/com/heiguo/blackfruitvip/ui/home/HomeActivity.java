@@ -29,11 +29,13 @@ import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
+import com.heiguo.blackfruitvip.bean.event.OrderStatusEvent;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.UserInfoResponse;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -41,7 +43,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_home)
-    public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
+public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
 
     @ViewInject(R.id.navigation)
     private BottomNavigationView navigation;
@@ -70,6 +72,7 @@ import org.xutils.x;
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             refreshItemIcon();
+            String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
             switch (item.getItemId()) {
                 case R.id.navigation_main:
 //                    item.setTextColor(getResources().getColor(R.color.colorYellow));
@@ -80,7 +83,6 @@ import org.xutils.x;
                     }
                     return true;
                 case R.id.navigation_order:
-                    String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
                     if (phone == "") {
                         noLoginDialog.show();
                         backItemIcon();
@@ -93,6 +95,11 @@ import org.xutils.x;
                     }
                     return true;
                 case R.id.navigation_me:
+                    if (phone == "") {
+                        noLoginDialog.show();
+                        backItemIcon();
+                        return false;
+                    }
                     if (lastfragment != 2) {
                         switchFragment(lastfragment, 2);
                         lastfragment = 2;
@@ -111,6 +118,22 @@ import org.xutils.x;
         initNavigationBar();
         initNoLoginDialog();
         ((BlackFruitVipApplication) getApplication()).updateUserInfo();
+
+        initData();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        int orderStatus = intent.getIntExtra("order-status", 0);
+
+        if (orderStatus != 0) {
+//            switchFragment(lastfragment, 1);
+//            refreshItemIcon();
+//            MenuItem item2 = navigation.getMenu().findItem(R.id.navigation_order);
+//            item2.setIcon(R.mipmap.ic_home_order_selected);
+            navigation.setSelectedItemId(R.id.navigation_order);
+//            EventBus.getDefault().post(new OrderStatusEvent(orderStatus));
+        }
     }
 
     @Override
@@ -128,10 +151,18 @@ import org.xutils.x;
         MenuItem item1 = navigation.getMenu().findItem(R.id.navigation_main);
         item1.setIcon(R.mipmap.ic_home_main_selected);
 
+        Intent intent = getIntent();
+        int orderStatus = intent.getIntExtra("order-status", 0);
+
         //加入fragment
         mainFragment = new MainFragment();
         orderFragment = new OrderFragment();
         meFragment = new MeFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("order-status", orderStatus);
+        orderFragment.setArguments(bundle);
+
         fragments = new Fragment[]{mainFragment, orderFragment, meFragment};
 
         getSupportFragmentManager().beginTransaction().replace(R.id.layout, mainFragment).show(mainFragment).commit();

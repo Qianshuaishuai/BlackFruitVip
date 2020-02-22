@@ -151,6 +151,7 @@ public class OrderDetailActivity extends BaseActivity {
         }
         finish();
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("order-status",orderBean.getStatus());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

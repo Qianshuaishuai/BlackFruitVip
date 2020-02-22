@@ -226,7 +226,7 @@ public class MeFragment extends Fragment {
             public void onClick(View view) {
                 String detail = ((BlackFruitVipApplication) getActivity().getApplication()).getShareDetail();
                 CopyUtil.copy(getActivity(), detail);
-                T.s("已将分享内容复制到粘帖板");
+                T.s("已将分享内容复制到粘帖板，请到微信粘帖发送!");
             }
         });
         initNoLoginDialog();

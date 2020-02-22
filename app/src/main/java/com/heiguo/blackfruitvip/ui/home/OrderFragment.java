@@ -24,6 +24,7 @@ import com.heiguo.blackfruitvip.adapter.OrderAdapter;
 import com.heiguo.blackfruitvip.bean.OrderBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
 import com.heiguo.blackfruitvip.bean.UserBean;
+import com.heiguo.blackfruitvip.bean.event.OrderStatusEvent;
 import com.heiguo.blackfruitvip.bean.event.UpdateInfoEvent;
 import com.heiguo.blackfruitvip.response.AddressListResponse;
 import com.heiguo.blackfruitvip.response.CommonResponse;
@@ -32,6 +33,8 @@ import com.heiguo.blackfruitvip.ui.order.OrderDetailActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -167,7 +170,7 @@ public class OrderFragment extends Fragment {
 
             @Override
             public void onFinished() {
-                if(srl.isRefreshing()){
+                if (srl.isRefreshing()) {
                     srl.setRefreshing(false);
                 }
             }
@@ -195,6 +198,24 @@ public class OrderFragment extends Fragment {
             }
         }
 
+        Bundle bundle = getArguments();
+        int status = bundle.getInt("order-status", 0);
+
+        switch (status) {
+            case 0:
+                order_type = 0;
+                break;
+            case 2:
+                order_type = 0;
+                break;
+            case 3:
+                order_type = 1;
+                break;
+            default:
+                order_type = 2;
+                break;
+        }
+
         switch (order_type) {
             case 0:
                 adapter1.notifyDataSetChanged();
@@ -207,6 +228,14 @@ public class OrderFragment extends Fragment {
                     orderList.setVisibility(View.VISIBLE);
                     noneTipTextView.setVisibility(View.GONE);
                 }
+
+                leftTextView.setTextColor(getActivity().getResources().getColor(R.color.colorYellow));
+                leftView.setVisibility(View.VISIBLE);
+                middleTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                middleView.setVisibility(View.GONE);
+                rightTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                rightView.setVisibility(View.GONE);
+
                 break;
             case 1:
                 adapter2.notifyDataSetChanged();
@@ -219,6 +248,13 @@ public class OrderFragment extends Fragment {
                     orderList.setVisibility(View.VISIBLE);
                     noneTipTextView.setVisibility(View.GONE);
                 }
+
+                leftTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                leftView.setVisibility(View.GONE);
+                middleTextView.setTextColor(getActivity().getResources().getColor(R.color.colorYellow));
+                middleView.setVisibility(View.VISIBLE);
+                rightTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                rightView.setVisibility(View.GONE);
                 break;
             case 2:
                 adapter3.notifyDataSetChanged();
@@ -231,6 +267,14 @@ public class OrderFragment extends Fragment {
                     orderList.setVisibility(View.VISIBLE);
                     noneTipTextView.setVisibility(View.GONE);
                 }
+
+                leftTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                leftView.setVisibility(View.GONE);
+                middleTextView.setTextColor(getActivity().getResources().getColor(R.color.colorTv));
+                middleView.setVisibility(View.GONE);
+                rightTextView.setTextColor(getActivity().getResources().getColor(R.color.colorYellow));
+                rightView.setVisibility(View.VISIBLE);
+                order_type = 2;
                 break;
         }
     }
@@ -330,7 +374,7 @@ public class OrderFragment extends Fragment {
         orderList.setLayoutManager(layoutManager);
         orderList.setAdapter(adapter1);
 
-        srl.setColorSchemeResources(R.color.colorYellow,R.color.colorYellow,R.color.colorYellow,R.color.colorYellow,R.color.colorYellow);
+        srl.setColorSchemeResources(R.color.colorYellow, R.color.colorYellow, R.color.colorYellow, R.color.colorYellow, R.color.colorYellow);
         /*
          * 设置下拉刷新的监听
          */
@@ -345,7 +389,7 @@ public class OrderFragment extends Fragment {
     private void startOrderDetailActivity(long orderId) {
         Intent intent = new Intent(this.getActivity(), OrderDetailActivity.class);
         intent.putExtra("order-id", orderId);
-        intent.putExtra("order-mode",Constant.ORDER_MODE_MAIN);
+        intent.putExtra("order-mode", Constant.ORDER_MODE_MAIN);
         startActivity(intent);
     }
 
