@@ -329,6 +329,10 @@ public class SearchActivity extends BaseActivity {
 
         selectBean = bean;
 
+        if (bean.getExchange() == -1){
+            groupService.setVisibility(View.GONE);
+        }
+
         if (bean.getService1() == 0) {
             rbLeft.setTextColor(getResources().getColor(R.color.colorTv));
             rbLeft.setClickable(false);

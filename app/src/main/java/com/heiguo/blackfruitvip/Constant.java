@@ -5,6 +5,9 @@ public class Constant {
 
     public static final int STATUS_CODE_PERMISSION_REQUEST = 100000;
 
+    //微信支付AppID
+    public static final int REQUEST_PERMISSION_CODE = 1000001;
+
     //友盟相关
     public static final String UMENG_APP_KEY = "5e26c2e30cafb2d55c000224";
     public static final String UMENG_APP_CHANNEL = "HEIGUO_CHANNEL";
