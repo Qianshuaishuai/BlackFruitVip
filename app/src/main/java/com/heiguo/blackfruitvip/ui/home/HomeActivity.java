@@ -279,8 +279,9 @@ public class HomeActivity extends BaseActivity implements EasyPermissions.Permis
 //                                .setNegativeButtonText(R.string.rationale_ask_cancel)
 //                                .setTheme(R.style.my_fancy_style)
 //                                .build());
-                EasyPermissions.requestPermissions(this, "a",
-                        101, permissions);
+
+                EasyPermissions.requestPermissions(this, "您需要允许以下权限，才可以正常使用应用",
+                        Constant.REQUEST_PERMISSION_CODE, permissions);
             }
         }
     }
@@ -317,7 +318,18 @@ public class HomeActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
+        if (requestCode == Constant.REQUEST_PERMISSION_CODE) {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("警告！")
+                    .setMessage("如拒绝权限将无法正常使用应用！")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 一般情况下如果用户不授权的话，功能是无法运行的，做退出处理
+                            finish();
+                        }
+                    }).show();
+        }
     }
 
     @Override
