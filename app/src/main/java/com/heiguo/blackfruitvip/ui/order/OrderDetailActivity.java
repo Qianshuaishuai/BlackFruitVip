@@ -149,11 +149,7 @@ public class OrderDetailActivity extends BaseActivity {
             finish();
             return;
         }
-        finish();
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("order-status",orderBean.getStatus());
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        startHomeActivity();
     }
 
     @Event(R.id.layout_status)
@@ -688,12 +684,22 @@ public class OrderDetailActivity extends BaseActivity {
                 T.s("支付成功");
             } else {
                 // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+//                startHomeActivity();
                 T.s("支付失败");
+
             }
         }
 
         ;
     };
+
+    private void startHomeActivity(){
+        finish();
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("order-status",orderBean.getStatus());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
     private void initView() {
         goodList = new ArrayList<>();

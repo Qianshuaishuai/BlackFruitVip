@@ -82,7 +82,7 @@
             <com.heiguo.blackfruitvip.view.NewListView
                 android:id="@+id/pic"
                 android:layout_width="match_parent"
-                android:layout_height="400dip"
+                android:layout_height="800dip"
                 android:layout_below="@id/menu"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"

@@ -42,8 +42,14 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.List;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+import pub.devrel.easypermissions.PermissionRequest;
+
 @ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
+public class HomeActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, MainFragment.OnFragmentInteractionListener, MeFragment.OnFragmentInteractionListener, OrderFragment.OnFragmentInteractionListener {
 
     @ViewInject(R.id.navigation)
     private BottomNavigationView navigation;
@@ -264,10 +270,32 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i = ContextCompat.checkSelfPermission(this, permissions[1]);
             if (i != PackageManager.PERMISSION_GRANTED) {
-                showWaringDialog();
+//                showWaringDialog();
+
+//                EasyPermissions.requestPermissions(
+//                        new PermissionRequest.Builder(this, RC_CAMERA_AND_LOCATION, perms)
+//                                .setRationale(R.string.camera_and_location_rationale)
+//                                .setPositiveButtonText(R.string.rationale_ask_ok)
+//                                .setNegativeButtonText(R.string.rationale_ask_cancel)
+//                                .setTheme(R.style.my_fancy_style)
+//                                .build());
+                EasyPermissions.requestPermissions(this, "a",
+                        101, permissions);
             }
         }
     }
+
+//    @AfterPermissionGranted(RC_CAMERA_AND_LOCATION)
+//    private void methodRequiresTwoPermission() {
+//        if (EasyPermissions.hasPermissions(this, permissions)) {
+//            // Already have permission, do the thing
+//            // ...
+//        } else {
+//            // Do not have permissions, request them now
+//            EasyPermissions.requestPermissions(this, getString(R.string.camera_and_location_rationale),
+//                    RC_CAMERA_AND_LOCATION, permissions);
+//        }
+//    }
 
     private void showWaringDialog() {
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -280,5 +308,28 @@ public class HomeActivity extends BaseActivity implements MainFragment.OnFragmen
                         finish();
                     }
                 }).show();
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }

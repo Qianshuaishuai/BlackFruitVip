@@ -17,6 +17,16 @@ public class StoreBean {
     private int service2;
     private int service3;
 
+    private int exchange;
+
+    public int getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(int exchange) {
+        this.exchange = exchange;
+    }
+
     public int getService1() {
         return service1;
     }

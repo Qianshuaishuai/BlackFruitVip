@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -240,6 +242,7 @@ public class MainFragment extends Fragment {
     private void initPic() {
         picRecycleView = (NewListView) getActivity().findViewById(R.id.pic);
         picRecycleView.setScrollEnable(false);
+        int picCount = picList.size();
         picAdapter = new PicCAdapter(getContext(), picList, new PicCAdapter.PicListener() {
             @Override
             public void clickListener(View v) {
@@ -248,11 +251,44 @@ public class MainFragment extends Fragment {
             }
         });
         picRecycleView.setAdapter(picAdapter);
-
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)picRecycleView.getLayoutParams();
+//        params.height = picCount * 200;
+//        picRecycleView.setLayoutParams(params);
+//        RelativeLayout.LayoutParams aparams = (RelativeLayout.LayoutParams)picRecycleView.getLayoutParams();
+//        System.out.println(aparams.height);
         ecs = (ScrollView) getActivity().findViewById(R.id.ecs);
+        setListViewHeightBasedOnChildren(picRecycleView);
 //        ecs.setListView(picRecycleView);
         //解决数据加载不完的问题
     }
+
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+
+        // 获取ListView对应的Adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            // 计算子项View 的宽高
+            listItem.measure(0, 0);
+            // 统计所有子项的总高度
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1))
+                + 300;
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
+    }
+
 
     private void jumpType(MainBean bean) {
         switch (bean.getJumpType()) {

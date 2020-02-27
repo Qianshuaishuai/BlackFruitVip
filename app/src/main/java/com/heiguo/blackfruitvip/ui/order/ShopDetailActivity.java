@@ -442,6 +442,12 @@ public class ShopDetailActivity extends BaseActivity {
                 rbRight.setChecked(true);
                 break;
         }
+
+
+        if (storeBean.getExchange() == -1){
+            groupService.setVisibility(View.GONE);
+        }
+
     }
 
     private void initView() {
