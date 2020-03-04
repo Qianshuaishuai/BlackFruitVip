@@ -292,6 +292,6 @@ public class BlackFruitVipApplication extends Application {
 
     public boolean isCurrentVip() {
         UserBean bean = getUserInfo();
-        return bean.getVipDay() != -1;
+        return bean.getVipDay() > -1;
     }
 }

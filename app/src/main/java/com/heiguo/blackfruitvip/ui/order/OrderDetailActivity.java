@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,11 @@ import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.OrderDetailAdapter;
+import com.heiguo.blackfruitvip.adapter.OrderExchangeOneAdapter;
+import com.heiguo.blackfruitvip.adapter.OrderExchangeThreeAdapter;
+import com.heiguo.blackfruitvip.adapter.OrderExchangeTwoAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
+import com.heiguo.blackfruitvip.bean.ExChangeBean;
 import com.heiguo.blackfruitvip.bean.GoodBean;
 import com.heiguo.blackfruitvip.bean.OrderBean;
 import com.heiguo.blackfruitvip.bean.ShopBean;
@@ -57,6 +62,10 @@ import java.util.TimerTask;
 public class OrderDetailActivity extends BaseActivity {
 
     private OrderDetailAdapter adapter;
+    private OrderExchangeOneAdapter oneAdapter;
+    private OrderExchangeTwoAdapter twoAdapter;
+    private OrderExchangeThreeAdapter threeAdapter;
+    private List<ExChangeBean> exchangeList;
     private List<GoodBean> goodList;
     private OrderBean orderBean;
     private UserBean userBean;
@@ -64,6 +73,8 @@ public class OrderDetailActivity extends BaseActivity {
     private double balancePayPrice;
     private int payType;
     private AlertDialog payTypeDialog;
+    private AlertDialog scanDetailDialog;
+    private ImageView ivScanDetail;
 
     private int startMode = Constant.ORDER_DETAIL_TYPE_COMMON;
     private boolean firstTipPay = true;
@@ -143,9 +154,21 @@ public class OrderDetailActivity extends BaseActivity {
     @ViewInject(R.id.show_img)
     private ImageView showImg;
 
+    @ViewInject(R.id.exchange_layout)
+    private LinearLayout exchangeLayout;
+
+    @ViewInject(R.id.common_layout)
+    private LinearLayout commonLayout;
+
+    @ViewInject(R.id.exchange_tip)
+    private TextView exchangeTipTv;
+
+    @ViewInject(R.id.rv_exchange)
+    private RecyclerView rvExchangeView;
+
     @Event(R.id.back)
     private void back(View view) {
-        if(modeType == Constant.ORDER_MODE_MAIN){
+        if (modeType == Constant.ORDER_MODE_MAIN) {
             finish();
             return;
         }
@@ -456,7 +479,22 @@ public class OrderDetailActivity extends BaseActivity {
         ctTextView.setText(orderBean.getCreateTime());
         oiTextView.setText("" + orderBean.getId());
         upTextView.setText("" + orderBean.getContractName());
-        sertTextView.setText(Constant.SERVICETIPS[orderBean.getService()]);
+        if (orderBean.getExchange() == -1) {
+            sertTextView.setText(Constant.SERVICETIPS[orderBean.getService()]);
+        } else {
+            switch (orderBean.getExchange()) {
+                case 1:
+                    sertTextView.setText("兑换码");
+                    break;
+                case 2:
+                    sertTextView.setText("卡密");
+                    break;
+                case 3:
+                    sertTextView.setText("二维码");
+                    break;
+            }
+        }
+
 
         if (orderBean.getPayOrder() == "") {
             layoutPayId.setVisibility(View.GONE);
@@ -488,26 +526,43 @@ public class OrderDetailActivity extends BaseActivity {
                 payLayoutAnother.setVisibility(View.VISIBLE);
                 break;
             case 4:
-                updateReceiptTimeOutView();
+//                updateReceiptTimeOutView();
                 switch (orderBean.getService()) {
                     case 0:
-                        if(orderBean.getMealNumber().equals("")){
-                            atTextView.setText("未有取餐号");
-                            stTextView.setText("备餐中");
-                            tipTextView.setText("商家正在备餐中，请耐心等待");
-                        }else{
-                            atTextView.setText(orderBean.getMealNumber());
-                            atTextView.setTextColor(getResources().getColor(R.color.colorBlack));
-                            stTextView.setText("待取餐");
-                            tipTextView.setText("请前往取餐处取餐");
+                        if (orderBean.getExchange() == -1) {
+                            if (orderBean.getMealNumber().equals("")) {
+                                atTextView.setText("未有取餐号");
+                                stTextView.setText("备餐中");
+                                tipTextView.setText("商家正在备餐中，请耐心等待");
+                            } else {
+                                atTextView.setText(orderBean.getMealNumber());
+                                atTextView.setTextColor(getResources().getColor(R.color.colorBlack));
+                                stTextView.setText("待取餐");
+                                tipTextView.setText("请前往取餐处取餐");
+                            }
+                        } else {
+                            switch (orderBean.getExchange()) {
+                                case 1:
+                                    stTextView.setText("兑换码生产中");
+                                    break;
+                                case 2:
+                                    stTextView.setText("卡密生产中");
+                                    break;
+                                case 3:
+                                    stTextView.setText("二维码生产中");
+                                    break;
+                            }
+
+                            tipTextView.setText("兑换方式请查看商品详情页");
                         }
+
                         break;
                     case 1:
-                        if(orderBean.getMealNumber().equals("")){
+                        if (orderBean.getMealNumber().equals("")) {
                             atTextView.setText("未有取餐号");
                             stTextView.setText("备餐中");
                             tipTextView.setText("商家正在备餐中，请耐心等待");
-                        }else{
+                        } else {
                             atTextView.setText(orderBean.getMealNumber());
                             atTextView.setTextColor(getResources().getColor(R.color.colorBlack));
                             stTextView.setText("待取餐");
@@ -524,12 +579,47 @@ public class OrderDetailActivity extends BaseActivity {
                 payLayoutAnother.setVisibility(View.VISIBLE);
                 break;
             case 5:
-                updateReceiptTimeOutView();
-                stTextView.setText("已完成");
-                atTextView.setText("完成");
-                tipTextView.setText("订单已完成，祝用餐愉快");
-                payLayout.setVisibility(View.GONE);
-                payLayoutAnother.setVisibility(View.VISIBLE);
+                if (orderBean.getExchange() == -1) {
+                    updateReceiptTimeOutView();
+                    stTextView.setText("已完成");
+                    atTextView.setText("完成");
+                    tipTextView.setText("订单已完成，祝用餐愉快");
+                    payLayout.setVisibility(View.GONE);
+                    payLayoutAnother.setVisibility(View.VISIBLE);
+                } else {
+                    updateReceiptTimeOutView();
+                    stTextView.setText("凭此兑换");
+                    atTextView.setText("完成");
+                    tipTextView.setText("订单已完成，祝用餐愉快");
+                    payLayout.setVisibility(View.GONE);
+                    payLayoutAnother.setVisibility(View.VISIBLE);
+
+                    commonLayout.setVisibility(View.GONE);
+                    exchangeLayout.setVisibility(View.VISIBLE);
+
+                    exchangeList = new ArrayList<>();
+                    for (int e = 0; e < orderBean.getExchanges().size(); e++) {
+                        exchangeList.add(orderBean.getExchanges().get(e));
+                    }
+                    LinearLayoutManager manager = new LinearLayoutManager(this);
+                    switch (orderBean.getExchange()) {
+                        case 1:
+                            oneAdapter = new OrderExchangeOneAdapter(this, exchangeList);
+                            rvExchangeView.setLayoutManager(manager);
+                            rvExchangeView.setAdapter(oneAdapter);
+                            break;
+                        case 2:
+                            twoAdapter = new OrderExchangeTwoAdapter(this, exchangeList);
+                            rvExchangeView.setLayoutManager(manager);
+                            rvExchangeView.setAdapter(twoAdapter);
+                            break;
+                        case 3:
+                            threeAdapter = new OrderExchangeThreeAdapter(this, exchangeList);
+                            rvExchangeView.setLayoutManager(manager);
+                            rvExchangeView.setAdapter(threeAdapter);
+                            break;
+                    }
+                }
                 break;
         }
     }
@@ -693,10 +783,10 @@ public class OrderDetailActivity extends BaseActivity {
         ;
     };
 
-    private void startHomeActivity(){
+    private void startHomeActivity() {
         finish();
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("order-status",orderBean.getStatus());
+        intent.putExtra("order-status", orderBean.getStatus());
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -711,5 +801,41 @@ public class OrderDetailActivity extends BaseActivity {
         detailList.setAdapter(adapter);
 
         initPayTypeDialog();
+        initScanDetailDialog();
+    }
+
+    public void showScanDetailDialog(String imgUrl) {
+        x.image().bind(ivScanDetail, imgUrl);
+        scanDetailDialog.show();
+    }
+
+    private void initScanDetailDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 创建一个view，并且将布局加入view中
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.dialog_scan_detail, null, false);
+        // 将view添加到builder中
+        builder.setView(view);
+        // 创建dialog
+        scanDetailDialog = builder.create();
+        // 初始化控件，注意这里是通过view.findViewById
+        ivScanDetail = (ImageView) view.findViewById(R.id.detail_scan);
+
+        scanDetailDialog.setCancelable(true);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            if (modeType == Constant.ORDER_MODE_MAIN) {
+                finish();
+                return false;
+            }
+            startHomeActivity();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 }

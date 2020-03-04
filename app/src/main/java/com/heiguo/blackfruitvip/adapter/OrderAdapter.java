@@ -36,13 +36,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private int selectPosition;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView countTxt, dateTxt, totalTxt, tipTxt;
+        TextView countTxt, dateTxt, totalTxt, tipTxt, nameTipTxt;
         Button btOne, btTwo;
         LinearLayout layoutBt;
 
         public ViewHolder(View view) {
             super(view);
             countTxt = (TextView) view.findViewById(R.id.count);
+            nameTipTxt = (TextView) view.findViewById(R.id.name_tip);
             dateTxt = (TextView) view.findViewById(R.id.date);
             totalTxt = (TextView) view.findViewById(R.id.total);
             tipTxt = (TextView) view.findViewById(R.id.tip);
@@ -87,15 +88,28 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 holder.layoutBt.setVisibility(View.GONE);
                 break;
             case 4:
-                if(mList.get(position).getService() == 2){
-                    holder.tipTxt.setText("等待商家送货");
-                }else{
-                    holder.tipTxt.setText("查看取餐码");
+                if (mList.get(position).getExchange() == -1) {
+                    if (mList.get(position).getService() == 2) {
+                        holder.tipTxt.setText("等待商家送货");
+                    } else {
+                        holder.tipTxt.setText("查看取餐码");
+                    }
+                } else {
+                    holder.tipTxt.setText("查看兑换码");
                 }
                 break;
             case 5:
                 holder.tipTxt.setText("已完成");
                 holder.layoutBt.setVisibility(View.GONE);
+                break;
+        }
+
+        switch (mList.get(position).getExchange()) {
+            case -1:
+                holder.nameTipTxt.setText("份餐品");
+                break;
+            default:
+                holder.nameTipTxt.setText("份商品");
                 break;
         }
 

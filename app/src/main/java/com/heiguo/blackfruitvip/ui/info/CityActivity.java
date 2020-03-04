@@ -2,7 +2,6 @@ package com.heiguo.blackfruitvip.ui.info;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,12 +30,11 @@ import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.adapter.HistoryCityAdapter;
-import com.heiguo.blackfruitvip.adapter.MenuAdapter;
 import com.heiguo.blackfruitvip.adapter.SearchMapAdapter;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.CityBean;
 import com.heiguo.blackfruitvip.bean.DistanceBean;
-import com.heiguo.blackfruitvip.bean.ShopBean;
+import com.heiguo.blackfruitvip.util.T;
 import com.zaaach.citypicker.CityPicker;
 import com.zaaach.citypicker.adapter.OnPickListener;
 import com.zaaach.citypicker.model.City;
@@ -64,6 +62,7 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
     private List<PoiItem> searchMapList = new ArrayList<>();
 
     private List<CityBean> hList;
+    private AMapLocation location;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient;
@@ -101,7 +100,10 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
     private ScrollView sv;
 
     @ViewInject(R.id.current_city)
-    private Button currentCity;
+    private TextView currentCity;
+
+    @ViewInject(R.id.current_location)
+    private TextView currentLocation;
 
     @Event(R.id.back)
     private void back(View view) {
@@ -111,6 +113,35 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
     @Event(R.id.current_city)
     private void showCityPicker(View view) {
         picker.show();
+    }
+
+    @Event(R.id.re_location)
+    private void reLocation(View view) {
+        startLocation();
+    }
+
+    @Event(R.id.current_location)
+    private void location(View view) {
+        if (currentLocation.getText().toString().equals("定位中")) {
+            T.s("当前定位有误，稍候重试!");
+            return;
+        }
+        CityBean bean = new CityBean();
+        bean.setAddress(location.getAddress());
+        bean.setCity(location.getCity());
+        bean.setProvince(location.getProvince());
+        bean.setCode(location.getCityCode());
+        bean.setLatitude(location.getLatitude());
+        bean.setLongitude(location.getLongitude());
+        if (mode == Constant.CITY_MODE_FROM_MAIN) {
+            ((BlackFruitVipApplication) getApplication()).saveCityPick(bean);
+        } else {
+            Gson gson = new Gson();
+            Intent intent = new Intent();
+            intent.putExtra("city", gson.toJson(bean));
+            setResult(Constant.CITY_MODE_FROM_ADDRESS, intent);
+        }
+        finish();
     }
 
     @Override
@@ -150,7 +181,7 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
                         selectCity = data.getName();
                         selectProvince = data.getProvince();
                         selectCode = data.getCode();
-                        currentCity.setText("当前：" + data.getName());
+                        currentCity.setText(data.getName());
                     }
 
                     @Override
@@ -188,11 +219,16 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
                 selectCity = aMapLocation.getCity();
                 selectProvince = aMapLocation.getProvince();
                 selectCode = aMapLocation.getCityCode();
-                currentCity.setText("当前：" + locationCity);
+                currentCity.setText(locationCity);
                 locationPoint.setLatitude(aMapLocation.getLatitude());
                 locationPoint.setLongitude(aMapLocation.getLongitude());
                 searchMapAdapter.setLatLonPoint(locationPoint);
                 searchMapAdapter.notifyDataSetChanged();
+
+                String simpleAddress = aMapLocation.getAddress().replace(aMapLocation.getProvince(), "").replace(aMapLocation.getCity(), "");
+                currentLocation.setText(aMapLocation.getPoiName());
+
+                location = aMapLocation;
             }
         };
         //初始化定位
@@ -227,7 +263,7 @@ public class CityActivity extends BaseActivity implements PoiSearch.OnPoiSearchL
                 int index = (int) holder.nameTv.getTag();
                 if (mode == Constant.CITY_MODE_FROM_MAIN) {
                     ((BlackFruitVipApplication) getApplication()).saveCityPick(hList.get(index));
-                }else {
+                } else {
                     Gson gson = new Gson();
                     Intent intent = new Intent();
                     intent.putExtra("city", gson.toJson(hList.get(index)));

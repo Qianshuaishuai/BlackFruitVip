@@ -97,6 +97,9 @@ public class ShopDetailActivity extends BaseActivity {
     @ViewInject(R.id.mode_pay)
     private TextView modePayTextView;
 
+    @ViewInject(R.id.layout_service)
+    private LinearLayout layoutService;
+
     @ViewInject(R.id.mode_name)
     private TextView modeNameTextView;
 
@@ -375,7 +378,13 @@ public class ShopDetailActivity extends BaseActivity {
         if (needPayPrice <= 0) {
             needPayPrice = 0;
         }
-        balanceTextView.setText("￥" + df.format(userBean.getBalance()));
+
+        if (userBean.getBalance() == 0.0){
+            balanceTextView.setText("￥0.00");
+        }else{
+            balanceTextView.setText("￥" + df.format(userBean.getBalance()));
+        }
+
         if (needPayPrice == 0) {
             modePayTextView.setText("无需另外支付");
             modeLayout.setVisibility(View.GONE);
@@ -399,7 +408,7 @@ public class ShopDetailActivity extends BaseActivity {
             rbLeft.setTextColor(getResources().getColor(R.color.colorTv));
             rbLeft.setClickable(false);
 
-            if (serviceIndex == 0){
+            if (serviceIndex == 0) {
                 serviceIndex = 1;
             }
         } else {
@@ -411,10 +420,10 @@ public class ShopDetailActivity extends BaseActivity {
             rbMiddle.setTextColor(getResources().getColor(R.color.colorTv));
             rbMiddle.setClickable(false);
 
-            if (serviceIndex == 1){
-                if (storeBean.getService1() == 0){
+            if (serviceIndex == 1) {
+                if (storeBean.getService1() == 0) {
                     serviceIndex = 2;
-                }else{
+                } else {
                     serviceIndex = 0;
                 }
             }
@@ -443,11 +452,9 @@ public class ShopDetailActivity extends BaseActivity {
                 break;
         }
 
-
-        if (storeBean.getExchange() == -1){
-            groupService.setVisibility(View.GONE);
+        if (storeBean.getExchange() != -1) {
+            layoutService.setVisibility(View.GONE);
         }
-
     }
 
     private void initView() {

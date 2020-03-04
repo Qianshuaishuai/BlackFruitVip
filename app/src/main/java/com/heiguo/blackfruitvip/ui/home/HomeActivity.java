@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.heiguo.blackfruitvip.BlackFruitVipApplication;
@@ -32,6 +33,7 @@ import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.bean.event.OrderStatusEvent;
 import com.heiguo.blackfruitvip.response.CommonResponse;
 import com.heiguo.blackfruitvip.response.UserInfoResponse;
+import com.heiguo.blackfruitvip.ui.main.WelcomeActivity;
 import com.heiguo.blackfruitvip.ui.user.LoginActivity;
 import com.heiguo.blackfruitvip.util.T;
 
@@ -126,6 +128,7 @@ public class HomeActivity extends BaseActivity implements EasyPermissions.Permis
         ((BlackFruitVipApplication) getApplication()).updateUserInfo();
 
         initData();
+        jdugeCanAutoLogin();
     }
 
     private void initData() {
@@ -343,5 +346,50 @@ public class HomeActivity extends BaseActivity implements EasyPermissions.Permis
 
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    private void jdugeCanAutoLogin() {
+        String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
+        if (phone == "") {
+            return;
+        } else {
+//            phoneEditText.setText(phone);
+//            loadingDialog.show();
+            RequestParams params = new RequestParams(Constant.BASE_URL + Constant.URL_AUTO);
+            params.addQueryStringParameter("phone", phone);
+            x.http().get(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Gson gson = new Gson();
+                    CommonResponse response = gson.fromJson(result, CommonResponse.class);
+                    if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
+//                        T.s("自动登录成功");
+//                        startHomeActivity();
+                    } else {
+                        T.s("登录已失效，请重新登录");
+                        ((BlackFruitVipApplication) getApplication()).saveLoginPhone("");
+                        Intent newIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                        startActivity(newIntent);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    System.out.println(ex);
+                    T.s("请求出错，请检查网络");
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+//                    loadingDialog.cancel();
+                }
+            });
+        }
     }
 }

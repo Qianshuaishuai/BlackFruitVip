@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity {
 
         initUserDialog();
         initLoadingDialog();
-        jdugeCanAutoLogin();
+//        jdugeCanAutoLogin();
     }
 
     private void startHomeActivity() {

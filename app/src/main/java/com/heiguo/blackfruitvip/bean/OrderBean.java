@@ -28,6 +28,24 @@ public class OrderBean {
     private int receiptTimeOut;
     private List<GoodBean> goods;
     private StoreBean store;
+    private int exchange;
+    private List<ExChangeBean> exchanges;
+
+    public List<ExChangeBean> getExchanges() {
+        return exchanges;
+    }
+
+    public void setExchanges(List<ExChangeBean> exchanges) {
+        this.exchanges = exchanges;
+    }
+
+    public int getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(int exchange) {
+        this.exchange = exchange;
+    }
 
     public String getPayOrder() {
         return payOrder;

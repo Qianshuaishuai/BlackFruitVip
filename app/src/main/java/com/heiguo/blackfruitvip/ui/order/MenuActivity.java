@@ -289,6 +289,7 @@ public class MenuActivity extends BaseActivity {
                         updateList();
                         initMainLayout();
                     } else {
+                        System.out.println(response.getF_responseMsg());
                         T.s("获取商品列表失败");
                         finish();
                     }

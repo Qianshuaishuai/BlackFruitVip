@@ -86,15 +86,9 @@ public class WelcomeActivity extends BaseActivity {
                 break;
             case 1:
                 String phone = ((BlackFruitVipApplication) getApplication()).getLoginPhone();
-                if (phone == "") {
-                    Intent newIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
-                    startActivity(newIntent);
-                    finish();
-                } else {
-                    Intent newIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                    startActivity(newIntent);
-                    finish();
-                }
+                Intent newIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
+                startActivity(newIntent);
+                finish();
 
                 break;
         }

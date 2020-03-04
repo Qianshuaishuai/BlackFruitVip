@@ -1,6 +1,7 @@
 package com.heiguo.blackfruitvip.ui.home;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -199,6 +200,7 @@ public class MeFragment extends Fragment {
                         CommonResponse response = gson.fromJson(result, CommonResponse.class);
                         if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                             T.s("登出成功");
+                            ((BlackFruitVipApplication)getActivity().getApplication()).saveLoginPhone("");
                             backLoginActivity();
                         }
                     }

@@ -198,23 +198,26 @@ public class OrderFragment extends Fragment {
             }
         }
 
-        Bundle bundle = getArguments();
-        int status = bundle.getInt("order-status", 0);
+        if (order_type == 0) {
+            Bundle bundle = getArguments();
+            int status = bundle.getInt("order-status", 0);
 
-        switch (status) {
-            case 0:
-                order_type = 0;
-                break;
-            case 2:
-                order_type = 0;
-                break;
-            case 3:
-                order_type = 1;
-                break;
-            default:
-                order_type = 2;
-                break;
+            switch (status) {
+                case 0:
+                    order_type = 0;
+                    break;
+                case 2:
+                    order_type = 0;
+                    break;
+                case 3:
+                    order_type = 1;
+                    break;
+                default:
+                    order_type = 2;
+                    break;
+            }
         }
+
 
         switch (order_type) {
             case 0:

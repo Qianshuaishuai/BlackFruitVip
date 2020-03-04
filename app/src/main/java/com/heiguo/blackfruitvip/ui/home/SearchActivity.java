@@ -85,6 +85,9 @@ public class SearchActivity extends BaseActivity {
     @ViewInject(R.id.detail_tip)
     private TextView tipDetail;
 
+    @ViewInject(R.id.service_tip)
+    private TextView tipService;
+
     @ViewInject(R.id.group_service)
     private RadioGroup groupService;
 
@@ -141,7 +144,7 @@ public class SearchActivity extends BaseActivity {
 
         LatLonPoint currentPoint = new LatLonPoint(selectBean.getLatitude(), selectBean.getLongitude());
         double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(cityBean.getLatitude(), cityBean.getLongitude()));
-        if (selectBean.getMaxDistance() < distance) {
+        if (selectBean.getExchange() == -1 && selectBean.getMaxDistance() < distance) {
             T.s("超出配送范围");
             return;
         }
@@ -329,7 +332,8 @@ public class SearchActivity extends BaseActivity {
 
         selectBean = bean;
 
-        if (bean.getExchange() == -1){
+        if (bean.getExchange() != -1) {
+            tipService.setVisibility(View.GONE);
             groupService.setVisibility(View.GONE);
         }
 
