@@ -87,6 +87,18 @@ public class GoodDetailActivity extends BaseActivity {
     @ViewInject(R.id.ano_img)
     private ImageView anoImg;
 
+    @ViewInject(R.id.ano_img1)
+    private ImageView anoImg1;
+
+    @ViewInject(R.id.ano_img2)
+    private ImageView anoImg2;
+
+    @ViewInject(R.id.ano_img3)
+    private ImageView anoImg3;
+
+    @ViewInject(R.id.ano_img4)
+    private ImageView anoImg4;
+
     @ViewInject(R.id.ano_tip)
     private TextView anoTip;
 
@@ -218,6 +230,30 @@ public class GoodDetailActivity extends BaseActivity {
             anoImg.setVisibility(View.GONE);
         } else {
             x.image().bind(anoImg, allList.get(position).getAnoImg());
+        }
+
+        if (allList.get(position).getAnoImg1().isEmpty() || allList.get(position).getAnoImg1().equals("")) {
+            anoImg1.setVisibility(View.GONE);
+        } else {
+            x.image().bind(anoImg1, allList.get(position).getAnoImg1());
+        }
+
+        if (allList.get(position).getAnoImg2().isEmpty() || allList.get(position).getAnoImg2().equals("")) {
+            anoImg2.setVisibility(View.GONE);
+        } else {
+            x.image().bind(anoImg2, allList.get(position).getAnoImg2());
+        }
+
+        if (allList.get(position).getAnoImg3().isEmpty() || allList.get(position).getAnoImg3().equals("")) {
+            anoImg3.setVisibility(View.GONE);
+        } else {
+            x.image().bind(anoImg3, allList.get(position).getAnoImg3());
+        }
+
+        if (allList.get(position).getAnoImg4().isEmpty() || allList.get(position).getAnoImg4().equals("")) {
+            anoImg4.setVisibility(View.GONE);
+        } else {
+            x.image().bind(anoImg4, allList.get(position).getAnoImg4());
         }
 
         if (allList.get(position).getAnoTitle().isEmpty() || allList.get(position).getAnoTitle().equals("")) {

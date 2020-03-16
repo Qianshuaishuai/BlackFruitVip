@@ -84,7 +84,7 @@ public class OrderFragment extends Fragment {
 
     private UserBean userBean;
 
-    private int order_type = 0;
+    private int order_type = 1;
 
     public OrderFragment() {
         // Required empty public constructor

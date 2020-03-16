@@ -89,10 +89,10 @@
                 android:overScrollMode="never"
                 android:scrollbars="none" />
             <!--<View-->
-                <!--android:layout_below="@+id/pic"-->
-                <!--android:background="#ffffff"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="160dip"></View>-->
+            <!--android:layout_below="@+id/pic"-->
+            <!--android:background="#ffffff"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="160dip"></View>-->
         </RelativeLayout>
     </ScrollView>
 

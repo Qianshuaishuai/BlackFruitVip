@@ -71,16 +71,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.addressTxt.setText(mList.get(position).getAddress());
         holder.tipTxt.setText(mList.get(position).getAnnoun());
 
-        LatLonPoint currentPoint = new LatLonPoint(mList.get(position).getLatitude(),mList.get(position).getLongitude());
+        LatLonPoint currentPoint = new LatLonPoint(mList.get(position).getLatitude(), mList.get(position).getLongitude());
         double distance = AMapUtils.calculateLineDistance(new LatLng(currentPoint.getLatitude(), currentPoint.getLongitude()), new LatLng(point.getLatitude(), point.getLongitude()));
-        if (distance < 1000) {
-            holder.distanceTxt.setText((int) distance + "m");
-        } else {
-            DecimalFormat df = new DecimalFormat("#.0");
-            holder.distanceTxt.setText(df.format(distance / 1000) + "km");
+        if (mList.get(position).getExchange() == -1) {
+            if (distance < 1000) {
+                holder.distanceTxt.setText((int) distance + "m");
+            } else {
+                DecimalFormat df = new DecimalFormat("#.0");
+                holder.distanceTxt.setText(df.format(distance / 1000) + "km");
+            }
         }
 
-        x.image().bind(holder.picImage,mList.get(position).getImage());
+
+        x.image().bind(holder.picImage, mList.get(position).getImage());
     }
 
     @Override

@@ -11,6 +11,10 @@ public class GoodBean {
     private String subtitle;
     private String anoTitle;
     private String anoImg;
+    private String anoImg1;
+    private String anoImg2;
+    private String anoImg3;
+    private String anoImg4;
     private int count = 0;
 
     public int getCount() {
@@ -101,4 +105,35 @@ public class GoodBean {
         this.anoImg = anoImg;
     }
 
+    public String getAnoImg1() {
+        return anoImg1;
+    }
+
+    public void setAnoImg1(String anoImg1) {
+        this.anoImg1 = anoImg1;
+    }
+
+    public String getAnoImg2() {
+        return anoImg2;
+    }
+
+    public void setAnoImg2(String anoImg2) {
+        this.anoImg2 = anoImg2;
+    }
+
+    public String getAnoImg3() {
+        return anoImg3;
+    }
+
+    public void setAnoImg3(String anoImg3) {
+        this.anoImg3 = anoImg3;
+    }
+
+    public String getAnoImg4() {
+        return anoImg4;
+    }
+
+    public void setAnoImg4(String anoImg4) {
+        this.anoImg4 = anoImg4;
+    }
 }

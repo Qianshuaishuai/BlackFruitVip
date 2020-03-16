@@ -1,5 +1,6 @@
 package com.heiguo.blackfruitvip.ui.user;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -8,10 +9,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.heiguo.blackfruitvip.BlackFruitVipApplication;
 import com.heiguo.blackfruitvip.Constant;
 import com.heiguo.blackfruitvip.R;
 import com.heiguo.blackfruitvip.base.BaseActivity;
 import com.heiguo.blackfruitvip.response.CommonResponse;
+import com.heiguo.blackfruitvip.ui.home.HomeActivity;
 import com.heiguo.blackfruitvip.util.T;
 
 import org.xutils.common.Callback;
@@ -87,9 +90,11 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                     T.s("注册成功");
-                }else {
+                    ((BlackFruitVipApplication) getApplication()).saveLoginPhone(phoneTextView.getText().toString());
+                    startHomeActivity();
+                } else {
                     T.s(response.getF_responseMsg());
                 }
             }
@@ -125,9 +130,9 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(String result) {
                 Gson gson = new Gson();
                 CommonResponse response = gson.fromJson(result, CommonResponse.class);
-                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS){
+                if (response.getF_responseNo() == Constant.REQUEST_SUCCESS) {
                     T.s("发送成功");
-                }else {
+                } else {
                     T.s(response.getF_responseMsg());
                 }
             }
@@ -170,6 +175,12 @@ public class RegisterActivity extends BaseActivity {
             }
         };
         timer.schedule(timerTask, 0, 1000);
+    }
+
+    private void startHomeActivity() {
+        Intent newIntent = new Intent(this, HomeActivity.class);
+        startActivity(newIntent);
+        finish();
     }
 
     @Override

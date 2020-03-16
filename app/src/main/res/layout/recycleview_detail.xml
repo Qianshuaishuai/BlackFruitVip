@@ -21,7 +21,7 @@
             android:layout_marginLeft="10dip"
             android:src="@mipmap/test_good2" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="4dip"
@@ -33,7 +33,10 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="9dip"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="北海道冰淇淋之神"
                 android:textColor="#333333"
                 android:textSize="14sp" />
@@ -42,7 +45,9 @@
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dip"
+                android:layout_below="@+id/name"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="16dip"
                 android:text="￥25.00"
                 android:textColor="@color/colorYellow"
                 android:textSize="18sp" />
@@ -51,6 +56,8 @@
                 android:id="@+id/old_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/price"
+                android:layout_alignParentRight="true"
                 android:layout_marginTop="4dip"
                 android:text="原价￥28.00"
                 android:textColor="#999999"
@@ -59,7 +66,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -87,6 +96,6 @@
                     android:background="#ffffff"
                     android:src="@mipmap/ic_common_add" />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

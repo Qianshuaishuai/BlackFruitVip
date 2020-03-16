@@ -100,6 +100,9 @@ public class SearchActivity extends BaseActivity {
     @ViewInject(R.id.rb_right)
     private RadioButton rbRight;
 
+    @ViewInject(R.id.detail_map)
+    private TextView mapDetail;
+
     @Event(R.id.back)
     private void back(View view) {
         finish();
@@ -335,6 +338,7 @@ public class SearchActivity extends BaseActivity {
         if (bean.getExchange() != -1) {
             tipService.setVisibility(View.GONE);
             groupService.setVisibility(View.GONE);
+            mapDetail.setVisibility(View.GONE);
         }
 
         if (bean.getService1() == 0) {

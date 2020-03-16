@@ -63,7 +63,7 @@ public class OrderExchangeOneAdapter extends RecyclerView.Adapter<OrderExchangeO
         holder.copyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CopyUtil.copy(context, mList.get(position).getContent().replace("码:", ""));
+                CopyUtil.copy(context, mList.get(position).getContent().replace("码", "").replace("码", "").replace(":",""));
                 T.s("复制成功");
             }
         });

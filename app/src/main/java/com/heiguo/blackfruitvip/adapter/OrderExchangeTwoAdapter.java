@@ -58,13 +58,18 @@ public class OrderExchangeTwoAdapter extends RecyclerView.Adapter<OrderExchangeT
         });
 
         String[] dataTxt = mList.get(position).getContent().split(",");
-        holder.exchangeCardTxt.setText(dataTxt[0]);
-        holder.exchangePassTxt.setText(dataTxt[1]);
+        if (dataTxt.length == 2) {
+            holder.exchangeCardTxt.setText(dataTxt[0]);
+            holder.exchangePassTxt.setText(dataTxt[1]);
+        } else {
+            holder.exchangeCardTxt.setText("卡密解析错误");
+            holder.exchangePassTxt.setText("密码解析错误");
+        }
 
         holder.copyCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CopyUtil.copy(context, dataTxt[0].replace("卡号:", ""));
+                CopyUtil.copy(context, dataTxt[0].replace("卡号", "").replace(":", "").replace("：", ""));
                 T.s("复制成功");
             }
         });
@@ -72,7 +77,7 @@ public class OrderExchangeTwoAdapter extends RecyclerView.Adapter<OrderExchangeT
         holder.copyPassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CopyUtil.copy(context, dataTxt[1].replace("密码:", ""));
+                CopyUtil.copy(context, dataTxt[1].replace("密码", "").replace(":", "").replace("：", ""));
                 T.s("复制成功");
             }
         });
